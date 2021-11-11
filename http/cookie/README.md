@@ -4,7 +4,7 @@
 
 ### Import
 
-```
+```go
 import (
     "github.com/noknow-hub/pkg-go/http/cookie"
 )

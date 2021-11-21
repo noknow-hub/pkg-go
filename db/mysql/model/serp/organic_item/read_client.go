@@ -1,17 +1,23 @@
 //////////////////////////////////////////////////////////////////////
 // read_client.go
 //////////////////////////////////////////////////////////////////////
-package serp
+package organic_item
 
 import (
     "context"
     "database/sql"
     _ "github.com/go-sql-driver/mysql"
     mySelectStatement "github.com/noknow-hub/pkg-go/db/mysql/query/select_statement"
+    mySerp "github.com/noknow-hub/pkg-go/db/mysql/model/serp"
 )
 
 type ReadClient struct {
     BaseClient *mySelectStatement.Client
+}
+
+type ReadClientWithSerp struct {
+    BaseClient *mySelectStatement.Client
+    RefTable string
 }
 
 
@@ -56,6 +62,17 @@ func NewReadClientWithTxContext(tableName string, tx *sql.Tx, ctx context.Contex
 
 
 //////////////////////////////////////////////////////////////////////
+// New ReadClient with reference serp table.
+//////////////////////////////////////////////////////////////////////
+func (c *ReadClient) NewReadClientWithSerp(refTable string) *ReadClientWithSerp {
+    return &ReadClientWithSerp{
+        BaseClient: c.BaseClient,
+        RefTable: refTable,
+    }
+}
+
+
+//////////////////////////////////////////////////////////////////////
 // Query.
 //////////////////////////////////////////////////////////////////////
 func (c *ReadClient) Query() (*mySelectStatement.ResultQuery, error) {
@@ -75,18 +92,40 @@ func (c *ReadClient) QueryRow() (*mySelectStatement.ResultQueryRow, error) {
 //////////////////////////////////////////////////////////////////////
 // Run.
 //////////////////////////////////////////////////////////////////////
-func (c *ReadClient) Run() (*Serp, *mySelectStatement.Result, error) {
-    var serp *Serp
+func (c *ReadClient) Run() (*OrganicItem, *mySelectStatement.Result, error) {
+    var organicItem *OrganicItem
     c.BaseClient.SetLimit(1)
     result, err := c.BaseClient.Run()
     if err != nil {
-        return serp, result, err
+        return organicItem, result, err
     }
     if result != nil && len(result.Rows) != 1 {
-        return serp, result, err
+        return organicItem, result, err
     }
-    if err := scanSerp(result.Rows[0], serp); err != nil {
-        return serp, result, err
+    if err := scanOrganicItem(result.Rows[0], organicItem); err != nil {
+        return organicItem, result, err
     }
-    return serp, result, nil
+    return organicItem, result, nil
+}
+
+
+//////////////////////////////////////////////////////////////////////
+// Run with INNER JOIN.
+//////////////////////////////////////////////////////////////////////
+func (c *ReadClientWithSerp) RunInJoin() (*SerpOrganicItem, *mySelectStatement.Result, error) {
+    var serpOrganicItem *SerpOrganicItem
+    c.BaseClient.AppendInnerJoinTables(c.BaseClient.TableName, COL_SERP_ID, c.RefTable, mySerp.COL_ID)
+    result, err := c.BaseClient.Run()
+    if err != nil {
+        return serpOrganicItem, result, err
+    }
+    if result != nil && len(result.Rows) != 1 {
+        return serpOrganicItem, result, err
+    }
+    serp := &mySerp.Serp{}
+    organicItem := &OrganicItem{}
+    if err := scanSerpOrganicItem(result.Rows[0], c.BaseClient.TableName, c.RefTable, organicItem, serp); err != nil {
+        return serpOrganicItem, result, err
+    }
+    return serpOrganicItem, result, nil
 }

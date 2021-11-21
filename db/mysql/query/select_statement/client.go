@@ -108,22 +108,32 @@ func NewClientWithTxContext(tableName string, tx *sql.Tx, ctx context.Context) *
 
 
 //////////////////////////////////////////////////////////////////////
+// Append column.
+//////////////////////////////////////////////////////////////////////
+func (c *Client) AppendColumn(column string) *Client {
+    c.Columns = append(c.Columns, column)
+    return c
+}
+
+
+//////////////////////////////////////////////////////////////////////
 // Append INNER JOIN clause.
 //////////////////////////////////////////////////////////////////////
-func (c *Client) AppendInnerJoinTables(sourceTableName, sourceCoulmn, toTableName, toCoulmn string) {
+func (c *Client) AppendInnerJoinTables(sourceTableName, sourceCoulmn, toTableName, toCoulmn string) *Client {
     c.InnerJoinTables = append(c.InnerJoinTables, &myUtil.InnerJoinTable{
         SourceTableName: sourceTableName,
         SourceCoulmn: sourceCoulmn,
         ToTableName: toTableName,
         ToCoulmn: toCoulmn,
     })
+    return c
 }
 
 
 //////////////////////////////////////////////////////////////////////
 // Append OUTER JOIN clause.
 //////////////////////////////////////////////////////////////////////
-func (c *Client) AppendOuterJoinTables(sourceTableName, sourceCoulmn, toTableName, toCoulmn string, isLeft bool) {
+func (c *Client) AppendOuterJoinTables(sourceTableName, sourceCoulmn, toTableName, toCoulmn string, isLeft bool) *Client {
     c.OuterJoinTables = append(c.OuterJoinTables, &myUtil.OuterJoinTable{
         SourceTableName: sourceTableName,
         SourceCoulmn: sourceCoulmn,
@@ -131,6 +141,7 @@ func (c *Client) AppendOuterJoinTables(sourceTableName, sourceCoulmn, toTableNam
         ToCoulmn: toCoulmn,
         IsLeft: isLeft,
     })
+    return c
 }
 
 

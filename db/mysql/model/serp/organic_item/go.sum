@@ -1,0 +1,11 @@
+github.com/go-sql-driver/mysql v1.6.0 h1:BCTh4TKNUYmOmMUcQ3IipzF5prigylS7XXjEkfCHuOE=
+github.com/go-sql-driver/mysql v1.6.0/go.mod h1:DCzpHaOWr8IXmIStZouvnhqoel9Qv2LBy8hT2VhHyBg=
+github.com/noknow-hub/pkg-go v0.0.0-20211120180606-03571ea6769c h1:4reFIvNDqaMEqgwQg6XoW16pM2TPgzIeIkKiknO3O9s=
+github.com/noknow-hub/pkg-go/db/mysql v0.0.0-20211111201930-183548ea2684/go.mod h1:yVqIz2i8lTOkYBiT42E63Kf89o04bZuwupdoIEnSxKs=
+github.com/noknow-hub/pkg-go/db/mysql v0.0.0-20211120180606-03571ea6769c h1:EvjRkbstci5JfDtjBxirpFSpxk0iN3M0ZacJrsK1KOs=
+github.com/noknow-hub/pkg-go/db/mysql v0.0.0-20211120180606-03571ea6769c/go.mod h1:yVqIz2i8lTOkYBiT42E63Kf89o04bZuwupdoIEnSxKs=
+github.com/noknow-hub/pkg-go/db/mysql/model/serp v0.0.0-20211120180606-03571ea6769c h1:WQ/jDXUboh81Qd0eBOSgTFXfAlLxL98SMBpEPI+Yhoc=
+github.com/noknow-hub/pkg-go/db/mysql/model/serp v0.0.0-20211120180606-03571ea6769c/go.mod h1:v8L9F+UN67DjDnpgcLcyQ9SAaHWjKpsSYfH5UKIbI0A=
+github.com/noknow-hub/pkg-go/db/mysql/model/util v0.0.0-20211111201930-183548ea2684/go.mod h1:fCQ5oFEcRTo6lZ88A4CHcIl8NsR304bpyKO1hBBR/Tc=
+github.com/noknow-hub/pkg-go/db/mysql/model/util v0.0.0-20211120180606-03571ea6769c h1:13TpOUkO2BjUa05qIzGEuSkBmeN3YmdSkxXUF4TMElQ=
+github.com/noknow-hub/pkg-go/db/mysql/model/util v0.0.0-20211120180606-03571ea6769c/go.mod h1:fCQ5oFEcRTo6lZ88A4CHcIl8NsR304bpyKO1hBBR/Tc=

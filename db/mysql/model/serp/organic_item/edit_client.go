@@ -75,15 +75,15 @@ func (c *EditClient) RunById(id string) (*myUpdateStatement.Result, error) {
 //////////////////////////////////////////////////////////////////////
 // Run with all by "id".
 //////////////////////////////////////////////////////////////////////
-func (c *EditClient) RunWithAllById(currentId string, id, serpId, rank, domain, url, title, groupRank, timestamp, snippet, relatedUrl, cacheUrl *string) (*myUpdateStatement.Result, error) {
+func (c *EditClient) RunWithAllById(currentId string, id, serpId, ranking, domain, url, title, groupRanking, timestamp, snippet, relatedUrl, cacheUrl *string) (*myUpdateStatement.Result, error) {
     if id != nil {
         c.BaseClient.AssignmentList.Append(COL_ID, *id)
     }
     if serpId != nil {
         c.BaseClient.AssignmentList.Append(COL_SERP_ID, *serpId)
     }
-    if rank != nil {
-        c.BaseClient.AssignmentList.Append(COL_RANK, *rank)
+    if ranking != nil {
+        c.BaseClient.AssignmentList.Append(COL_RANKING, *ranking)
     }
     if domain != nil {
         c.BaseClient.AssignmentList.Append(COL_DOMAIN, *domain)
@@ -94,8 +94,8 @@ func (c *EditClient) RunWithAllById(currentId string, id, serpId, rank, domain, 
     if title != nil {
         c.BaseClient.AssignmentList.Append(COL_TITLE, *title)
     }
-    if groupRank != nil {
-        c.BaseClient.AssignmentList.Append(COL_GROUP_RANK, *groupRank)
+    if groupRanking != nil {
+        c.BaseClient.AssignmentList.Append(COL_GROUP_RANKING, *groupRanking)
     }
     if timestamp != nil {
         c.BaseClient.AssignmentList.Append(COL_TIMESTAMP, *timestamp)

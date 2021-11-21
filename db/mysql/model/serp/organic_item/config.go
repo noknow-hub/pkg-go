@@ -12,9 +12,9 @@ const (
     COL_CACHE_URL = "cache_url"
     COL_CREATED_AT = "created_at"
     COL_DOMAIN = "domain"
-    COL_GROUP_RANK = "group_rank"
+    COL_GROUP_RANKING = "group_ranking"
     COL_ID = "id"
-    COL_RANK = "rank"
+    COL_RANKING = "ranking"
     COL_RELATED_URL = "related_url"
     COL_SERP_ID = "serp_id"
     COL_SNIPPET =  "snippet"
@@ -29,8 +29,8 @@ const (
 type OrganicItem struct {
     Id string
     SerpId string
-    Rank string
-    GroupRank string
+    Ranking string
+    GroupRanking string
     Domain string
     Url string
     Title string

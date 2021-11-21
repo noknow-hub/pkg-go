@@ -33,17 +33,17 @@ func scanOrganicItem(row *myQueryUtil.Row, organicItem *OrganicItem) error {
             } else {
                 organicItem.SerpId = val
             }
-        } else if col.Name == COL_RANK {
+        } else if col.Name == COL_RANKING {
             if val, err := myModelUtil.ConvertInterfaceToString(col.Value); err != nil {
                 return err
             } else {
-                organicItem.Rank = val
+                organicItem.Ranking = val
             }
-        } else if col.Name == COL_GROUP_RANK {
+        } else if col.Name == COL_GROUP_RANKING {
             if val, err := myModelUtil.ConvertInterfaceToString(col.Value); err != nil {
                 return err
             } else {
-                organicItem.GroupRank = val
+                organicItem.GroupRanking = val
             }
         } else if col.Name == COL_DOMAIN {
             if val, err := myModelUtil.ConvertInterfaceToString(col.Value); err != nil {
@@ -147,17 +147,17 @@ func scanSerpOrganicItem(row *myQueryUtil.Row, organicItemTable, refTable string
             } else {
                 organicItem.SerpId = val
             }
-        } else if col.Name == COL_RANK {
+        } else if col.Name == COL_RANKING {
             if val, err := myModelUtil.ConvertInterfaceToString(col.Value); err != nil {
                 return err
             } else {
-                organicItem.Rank = val
+                organicItem.Ranking = val
             }
-        } else if col.Name == COL_GROUP_RANK {
+        } else if col.Name == COL_GROUP_RANKING {
             if val, err := myModelUtil.ConvertInterfaceToString(col.Value); err != nil {
                 return err
             } else {
-                organicItem.GroupRank = val
+                organicItem.GroupRanking = val
             }
         } else if col.Name == COL_DOMAIN {
             if val, err := myModelUtil.ConvertInterfaceToString(col.Value); err != nil {

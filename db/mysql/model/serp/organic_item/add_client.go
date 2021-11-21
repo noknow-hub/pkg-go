@@ -75,15 +75,15 @@ func (c *AddClient) Run() (*myInsertStatement.Result, error) {
 //////////////////////////////////////////////////////////////////////
 // Run with all.
 //////////////////////////////////////////////////////////////////////
-func (c *AddClient) RunWithAll(id, serpId, rank, domain, url, title string, groupRank, timestamp, snippet, relatedUrl, cacheUrl *string) (*myInsertStatement.Result, error) {
+func (c *AddClient) RunWithAll(id, serpId, ranking, domain, url, title string, groupRanking, timestamp, snippet, relatedUrl, cacheUrl *string) (*myInsertStatement.Result, error) {
     var cols []string
     var vals []interface{}
 
-    cols = append(cols, COL_ID, COL_SERP_ID, COL_RANK, COL_DOMAIN, COL_URL, COL_TITLE)
-    vals = append(vals, id, serpId, rank, domain, url, title)
-    if groupRank != nil {
-        cols = append(cols, COL_GROUP_RANK)
-        vals = append(vals, *groupRank)
+    cols = append(cols, COL_ID, COL_SERP_ID, COL_RANKING, COL_DOMAIN, COL_URL, COL_TITLE)
+    vals = append(vals, id, serpId, ranking, domain, url, title)
+    if groupRanking != nil {
+        cols = append(cols, COL_GROUP_RANKING)
+        vals = append(vals, *groupRanking)
     }
     if timestamp != nil {
         cols = append(cols, COL_TIMESTAMP)
@@ -112,9 +112,9 @@ func (c *AddClient) RunWithAll(id, serpId, rank, domain, url, title string, grou
 //////////////////////////////////////////////////////////////////////
 // Run with required.
 //////////////////////////////////////////////////////////////////////
-func (c *AddClient) RunWithRequired(id, serpId, rank, domain, url, title string) (*myInsertStatement.Result, error) {
+func (c *AddClient) RunWithRequired(id, serpId, ranking, domain, url, title string) (*myInsertStatement.Result, error) {
     c.BaseClient.
-        SetColNames([]string{COL_ID, COL_SERP_ID, COL_RANK, COL_DOMAIN, COL_URL, COL_TITLE}).
-        AppendValues([]interface{}{id, serpId, rank, domain, url, title})
+        SetColNames([]string{COL_ID, COL_SERP_ID, COL_RANKING, COL_DOMAIN, COL_URL, COL_TITLE}).
+        AppendValues([]interface{}{id, serpId, ranking, domain, url, title})
     return c.BaseClient.Run()
 }

@@ -77,13 +77,13 @@ func (c *CreateTableClient) Run() (*myCreateTableStatement.Result, error) {
                 SetComment("SERP ID."),
         ).
         AppendColumnDefinition(
-            myCreateTableStatement.NewColumnDefinition(COL_RANK, "INT UNSIGNED").
+            myCreateTableStatement.NewColumnDefinition(COL_RANKING, "INT UNSIGNED").
                 SetNotNull().
-                SetComment("Rank."),
+                SetComment("Ranking."),
         ).
         AppendColumnDefinition(
-            myCreateTableStatement.NewColumnDefinition(COL_GROUP_RANK, "INT UNSIGNED").
-                SetComment("Group rank."),
+            myCreateTableStatement.NewColumnDefinition(COL_GROUP_RANKING, "INT UNSIGNED").
+                SetComment("Group ranking."),
         ).
         AppendColumnDefinition(
             myCreateTableStatement.NewColumnDefinition(COL_DOMAIN, "VARCHAR(150)").
@@ -129,7 +129,7 @@ func (c *CreateTableClient) Run() (*myCreateTableStatement.Result, error) {
         ).
         AppendConstraint("", COL_SERP_ID, c.RefTableName, mySerp.COL_ID, true, true).
         SetPrimaryKeys([]string{COL_ID}).
-        SetIndexKeys([]string{COL_RANK, COL_DOMAIN}).
+        SetIndexKeys([]string{COL_RANKING, COL_DOMAIN}).
         SetComment(c.TableName + " table.")
     return c.Client.Run()
 }

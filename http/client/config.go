@@ -105,3 +105,12 @@ func (c *Config) AddXWwwFormUrlencodedData(key, value string) *Config {
     c.XWwwFormUrlencodedData.Add(key, value)
     return c
 }
+
+
+//////////////////////////////////////////////////////////////////////
+// Set JsonData
+//////////////////////////////////////////////////////////////////////
+func (c *Config) SetJsonData(data []byte) *Config {
+    c.JsonData = data
+    return c
+}

@@ -1,22 +1,22 @@
 //////////////////////////////////////////////////////////////////////
-// organic_task_post_client.go
+// task_post_client.go
 //////////////////////////////////////////////////////////////////////
-package google
+package standard
 
 import (
     "encoding/json"
-    myConstant "github.com/noknow-hub/pkg-go/vendor/dataforseo/constant"
-    myAuthentication "github.com/noknow-hub/pkg-go/vendor/dataforseo/client/authentication"
+    myAuthentication "github.com/noknow-hub/pkg-go/dataforseo/authentication"
+    myConstant "github.com/noknow-hub/pkg-go/dataforseo/constant"
     myHttpClient "github.com/noknow-hub/pkg-go/http/client"
-    myResult "github.com/noknow-hub/pkg-go/vendor/dataforseo/result/v3/serp/google"
+    myResult "github.com/noknow-hub/pkg-go/dataforseo/result/v3/serp/google/organic/standard"
 )
 
-type OrganicTaskPostClient struct {
-    *myAuthentication.Authentication,
+type TaskPostClient struct {
+    *myAuthentication.Authentication
     EndpointUrl string
 }
 
-type OrganicTaskPostData struct {
+type TaskPostData struct {
     Keyword string                    `json:"keyword,omitempty"`
     Url string                        `json:"url,omitempty"`
     Priority int                      `json:"priority,omitempty"`
@@ -42,14 +42,14 @@ type OrganicTaskPostData struct {
 
 
 //////////////////////////////////////////////////////////////////////
-// New OrganicTaskPostClient object.
+// New TaskPostClient object.
 //////////////////////////////////////////////////////////////////////
-func NewOrganicTaskPostClient(login, password string, isSandbox bool) *OrganicTaskPostClient {
+func NewTaskPostClient(login, password string, isSandbox bool) *TaskPostClient {
     endpointUrl := myConstant.ENDPOINT_SERP_GOOGLE_ORGANIC_TASK_POST_V3
     if isSandbox {
         endpointUrl = myConstant.ENDPOINT_SERP_GOOGLE_ORGANIC_TASK_POST_V3_SANDBOX
     }
-    return &OrganicTaskPostClient{
+    return &TaskPostClient{
         Authentication: myAuthentication.NewAuthentication(login, password),
         EndpointUrl: endpointUrl,
     }
@@ -57,10 +57,10 @@ func NewOrganicTaskPostClient(login, password string, isSandbox bool) *OrganicTa
 
 
 //////////////////////////////////////////////////////////////////////
-// New OrganicTaskPostData.
+// New TaskPostData.
 //////////////////////////////////////////////////////////////////////
-func NewOrganicTaskPostData(keyword, postbackData string, langCode int, locationCode string) *OrganicTaskPostData {
-    return &OrganicTaskPostData{
+func NewTaskPostData(keyword, postbackData string, langCode string, locationCode int) *TaskPostData {
+    return &TaskPostData{
         Keyword: keyword,
         PostbackData: postbackData,
         LanguageCode: langCode,
@@ -70,9 +70,9 @@ func NewOrganicTaskPostData(keyword, postbackData string, langCode int, location
 
 
 //////////////////////////////////////////////////////////////////////
-// Do.
+// Run.
 //////////////////////////////////////////////////////////////////////
-func (c *OrganicTaskPostClient) Do(data []*OrganicTaskPostData) (int, *myResult.Result, error) {
+func (c *TaskPostClient) Run(data []*TaskPostData) (int, *myResult.TaskPostResults, error) {
     jsonData, err := json.Marshal(data)
     if err != nil {
         return 0, nil, err
@@ -87,20 +87,20 @@ func (c *OrganicTaskPostClient) Do(data []*OrganicTaskPostData) (int, *myResult.
     if err != nil {
         return 0, nil, err
     }
-    var result *myResult.Result
+    var result *myResult.TaskPostResults
     if err := json.Unmarshal(resp.Body, &result); err != nil {
         return 0, nil, err
     }
-    result.Raw = string(respBody)
+    result.Raw = string(resp.Body)
 
-    return statusCode, result, nil
+    return resp.StatusCode, result, nil
 }
 
 
 //////////////////////////////////////////////////////////////////////
 // Set "url".
 //////////////////////////////////////////////////////////////////////
-func (o *OrganicTaskPostData) SetUrl(url string) *OrganicTaskPostData {
+func (o *TaskPostData) SetUrl(url string) *TaskPostData {
     o.Url = url
     return o
 }
@@ -109,7 +109,7 @@ func (o *OrganicTaskPostData) SetUrl(url string) *OrganicTaskPostData {
 //////////////////////////////////////////////////////////////////////
 // Set "priority".
 //////////////////////////////////////////////////////////////////////
-func (o *OrganicTaskPostData) SetPriority(priority int) *OrganicTaskPostData {
+func (o *TaskPostData) SetPriority(priority int) *TaskPostData {
     o.Priority = priority
     return o
 }
@@ -118,7 +118,7 @@ func (o *OrganicTaskPostData) SetPriority(priority int) *OrganicTaskPostData {
 //////////////////////////////////////////////////////////////////////
 // Set "depth".
 //////////////////////////////////////////////////////////////////////
-func (o *OrganicTaskPostData) SetDepth(depth int) *OrganicTaskPostData {
+func (o *TaskPostData) SetDepth(depth int) *TaskPostData {
     o.Depth = depth
     return o
 }
@@ -127,7 +127,7 @@ func (o *OrganicTaskPostData) SetDepth(depth int) *OrganicTaskPostData {
 //////////////////////////////////////////////////////////////////////
 // Set "location_name".
 //////////////////////////////////////////////////////////////////////
-func (o *OrganicTaskPostData) SetLocationName(locationName string) *OrganicTaskPostData {
+func (o *TaskPostData) SetLocationName(locationName string) *TaskPostData {
     o.LocationName = locationName
     return o
 }
@@ -136,7 +136,7 @@ func (o *OrganicTaskPostData) SetLocationName(locationName string) *OrganicTaskP
 //////////////////////////////////////////////////////////////////////
 // Set "location_coordinate".
 //////////////////////////////////////////////////////////////////////
-func (o *OrganicTaskPostData) SetLocationCoordinate(locationCoordinate string) *OrganicTaskPostData {
+func (o *TaskPostData) SetLocationCoordinate(locationCoordinate string) *TaskPostData {
     o.LocationCoordinate = locationCoordinate
     return o
 }
@@ -145,7 +145,7 @@ func (o *OrganicTaskPostData) SetLocationCoordinate(locationCoordinate string) *
 //////////////////////////////////////////////////////////////////////
 // Set "language_name".
 //////////////////////////////////////////////////////////////////////
-func (o *OrganicTaskPostData) SetLanguageName(languageName string) *OrganicTaskPostData {
+func (o *TaskPostData) SetLanguageName(languageName string) *TaskPostData {
     o.LanguageName = languageName
     return o
 }
@@ -154,7 +154,7 @@ func (o *OrganicTaskPostData) SetLanguageName(languageName string) *OrganicTaskP
 //////////////////////////////////////////////////////////////////////
 // Set "se_domain".
 //////////////////////////////////////////////////////////////////////
-func (o *OrganicTaskPostData) SetSeDomain(seDomain string) *OrganicTaskPostData {
+func (o *TaskPostData) SetSeDomain(seDomain string) *TaskPostData {
     o.SeDomain = seDomain
     return o
 }
@@ -163,7 +163,7 @@ func (o *OrganicTaskPostData) SetSeDomain(seDomain string) *OrganicTaskPostData 
 //////////////////////////////////////////////////////////////////////
 // Set "device".
 //////////////////////////////////////////////////////////////////////
-func (o *OrganicTaskPostData) SetDevice(device string) *OrganicTaskPostData {
+func (o *TaskPostData) SetDevice(device string) *TaskPostData {
     o.Device = device
     return o
 }
@@ -172,7 +172,7 @@ func (o *OrganicTaskPostData) SetDevice(device string) *OrganicTaskPostData {
 //////////////////////////////////////////////////////////////////////
 // Set "os".
 //////////////////////////////////////////////////////////////////////
-func (o *OrganicTaskPostData) SetOs(os string) *OrganicTaskPostData {
+func (o *TaskPostData) SetOs(os string) *TaskPostData {
     o.Os = os
     return o
 }
@@ -181,7 +181,7 @@ func (o *OrganicTaskPostData) SetOs(os string) *OrganicTaskPostData {
 //////////////////////////////////////////////////////////////////////
 // Set "calculate_rectangles".
 //////////////////////////////////////////////////////////////////////
-func (o *OrganicTaskPostData) SetCalculateRectangles(calculateRectangles bool) *OrganicTaskPostData {
+func (o *TaskPostData) SetCalculateRectangles(calculateRectangles bool) *TaskPostData {
     o.CalculateRectangles = calculateRectangles
     return o
 }
@@ -190,7 +190,7 @@ func (o *OrganicTaskPostData) SetCalculateRectangles(calculateRectangles bool) *
 //////////////////////////////////////////////////////////////////////
 // Set "browser_screen_width".
 //////////////////////////////////////////////////////////////////////
-func (o *OrganicTaskPostData) SetBrowserScreenWidth(browserScreenWidth int) *OrganicTaskPostData {
+func (o *TaskPostData) SetBrowserScreenWidth(browserScreenWidth int) *TaskPostData {
     o.BrowserScreenWidth = browserScreenWidth
     return o
 }
@@ -199,7 +199,7 @@ func (o *OrganicTaskPostData) SetBrowserScreenWidth(browserScreenWidth int) *Org
 //////////////////////////////////////////////////////////////////////
 // Set "browser_screen_height".
 //////////////////////////////////////////////////////////////////////
-func (o *OrganicTaskPostData) SetBrowserScreenHeight(browserScreenHeight int) *OrganicTaskPostData {
+func (o *TaskPostData) SetBrowserScreenHeight(browserScreenHeight int) *TaskPostData {
     o.BrowserScreenHeight = browserScreenHeight
     return o
 }
@@ -208,7 +208,7 @@ func (o *OrganicTaskPostData) SetBrowserScreenHeight(browserScreenHeight int) *O
 //////////////////////////////////////////////////////////////////////
 // Set "browser_screen_resolution_ratio".
 //////////////////////////////////////////////////////////////////////
-func (o *OrganicTaskPostData) SetBrowserScreenResolutionRatio(browserScreenResolutionRatio int) *OrganicTaskPostData {
+func (o *TaskPostData) SetBrowserScreenResolutionRatio(browserScreenResolutionRatio int) *TaskPostData {
     o.BrowserScreenResolutionRatio = browserScreenResolutionRatio
     return o
 }
@@ -217,7 +217,7 @@ func (o *OrganicTaskPostData) SetBrowserScreenResolutionRatio(browserScreenResol
 //////////////////////////////////////////////////////////////////////
 // Set "search_param".
 //////////////////////////////////////////////////////////////////////
-func (o *OrganicTaskPostData) SetSearchParam(searchParam string) *OrganicTaskPostData {
+func (o *TaskPostData) SetSearchParam(searchParam string) *TaskPostData {
     o.SearchParam = searchParam
     return o
 }
@@ -226,7 +226,7 @@ func (o *OrganicTaskPostData) SetSearchParam(searchParam string) *OrganicTaskPos
 //////////////////////////////////////////////////////////////////////
 // Set "tag".
 //////////////////////////////////////////////////////////////////////
-func (o *OrganicTaskPostData) SetTag(tag string) *OrganicTaskPostData {
+func (o *TaskPostData) SetTag(tag string) *TaskPostData {
     o.Tag = tag
     return o
 }
@@ -235,7 +235,7 @@ func (o *OrganicTaskPostData) SetTag(tag string) *OrganicTaskPostData {
 //////////////////////////////////////////////////////////////////////
 // Set "postback_url".
 //////////////////////////////////////////////////////////////////////
-func (o *OrganicTaskPostData) SetPostbackUrl(postbackUrl string) *OrganicTaskPostData {
+func (o *TaskPostData) SetPostbackUrl(postbackUrl string) *TaskPostData {
     o.PostbackUrl = postbackUrl
     return o
 }
@@ -244,7 +244,7 @@ func (o *OrganicTaskPostData) SetPostbackUrl(postbackUrl string) *OrganicTaskPos
 //////////////////////////////////////////////////////////////////////
 // Set "pingback_url".
 //////////////////////////////////////////////////////////////////////
-func (o *OrganicTaskPostData) SetPingbackUrl(pingbackUrl string) *OrganicTaskPostData {
+func (o *TaskPostData) SetPingbackUrl(pingbackUrl string) *TaskPostData {
     o.PingbackUrl = pingbackUrl
     return o
 }

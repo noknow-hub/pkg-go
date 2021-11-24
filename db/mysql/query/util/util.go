@@ -6,8 +6,10 @@ package util
 import (
     "context"
     "database/sql"
+    "math/rand"
     "strconv"
     "strings"
+    "time"
     _ "github.com/go-sql-driver/mysql"
 )
 
@@ -69,6 +71,33 @@ type Row struct {
 type Column struct {
     Name string
     Value interface{}
+}
+
+
+//////////////////////////////////////////////////////////////////////
+// Generate an id for the specific table.
+//////////////////////////////////////////////////////////////////////
+func GenerateId(tableName, idColName string, db *sql.DB, tx *sql.Tx, ctx context.Context) string {
+    id := time.Now().UnixNano()
+    r := rand.New(rand.NewSource(id))
+    var cnt int64
+    for {
+        tmpId := strconv.FormatInt(id + r.Int63n(100), 10)
+        query := "SELECT COUNT(*) FROM " + tableName + " WHERE " + idColName + "=" + tmpId + " LIMIT 1"
+        row, err := QueryRow(db, tx, ctx, query, nil)
+        if err != nil {
+            return tmpId
+        }
+        if err := row.Scan(&cnt); err != nil {
+            return tmpId
+        }
+        if cnt == 0 {
+            break
+        } else {
+            id = id + 1
+        }
+    }
+    return strconv.FormatInt(id, 10)
 }
 
 

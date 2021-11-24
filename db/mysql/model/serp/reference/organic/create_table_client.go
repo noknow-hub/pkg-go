@@ -22,7 +22,7 @@ type CreateTableClient struct {
 //////////////////////////////////////////////////////////////////////
 func NewCreateTableClientWithDb(tableName, refTableName string, db *sql.DB) *CreateTableClient {
     return &CreateTableClient{
-        Client: myQuery.NewCreateTableClientWithDb(tableName, db),
+        CreateTableClient: myQuery.NewCreateTableClientWithDb(tableName, db),
         RefTableName: refTableName,
     }
 }
@@ -33,7 +33,7 @@ func NewCreateTableClientWithDb(tableName, refTableName string, db *sql.DB) *Cre
 //////////////////////////////////////////////////////////////////////
 func NewCreateTableClientWithDbContext(tableName, refTableName string, db *sql.DB, ctx context.Context) *CreateTableClient {
     return &CreateTableClient{
-        Client: myQuery.NewCreateTableClientWithDbContext(tableName, db, ctx),
+        CreateTableClient: myQuery.NewCreateTableClientWithDbContext(tableName, db, ctx),
         RefTableName: refTableName,
     }
 }
@@ -44,7 +44,7 @@ func NewCreateTableClientWithDbContext(tableName, refTableName string, db *sql.D
 //////////////////////////////////////////////////////////////////////
 func NewCreateTableClientWithTx(tableName, refTableName string, tx *sql.Tx) *CreateTableClient {
     return &CreateTableClient{
-        Client: myQuery.NewCreateTableClientWithTx(tableName, tx),
+        CreateTableClient: myQuery.NewCreateTableClientWithTx(tableName, tx),
         RefTableName: refTableName,
     }
 }
@@ -55,7 +55,7 @@ func NewCreateTableClientWithTx(tableName, refTableName string, tx *sql.Tx) *Cre
 //////////////////////////////////////////////////////////////////////
 func NewCreateTableClientWithTxContext(tableName, refTableName string, tx *sql.Tx, ctx context.Context) *CreateTableClient {
     return &CreateTableClient{
-        Client: myQuery.NewCreateTableClientWithTxContext(tableName, tx, ctx),
+        CreateTableClient: myQuery.NewCreateTableClientWithTxContext(tableName, tx, ctx),
         RefTableName: refTableName,
     }
 }

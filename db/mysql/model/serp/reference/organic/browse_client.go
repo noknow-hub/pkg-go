@@ -133,7 +133,7 @@ func (c *BrowseClientWithSerp) RunInJoin() ([]*SerpOrganic, *myQuery.SelectResul
     for _, row := range result.Rows {
         serp := &mySerp.Serp{}
         organic := &Organic{}
-        if err := scanSerpOrganic(row, c.BaseClient.TableName, c.RefTable, organicItem, serp); err != nil {
+        if err := scanSerpOrganic(row, c.BaseClient.TableName, c.RefTable, organic, serp); err != nil {
             return serpOrganics, result, err
         }
         isSerp := false
@@ -147,7 +147,7 @@ func (c *BrowseClientWithSerp) RunInJoin() ([]*SerpOrganic, *myQuery.SelectResul
         if !isSerp {
             serpOrganic := &SerpOrganic{
                 Serp: serp,
-                Organics: []*OrganicItem{organic},
+                Organics: []*Organic{organic},
             }
             serpOrganics = append(serpOrganics, serpOrganic)
         }

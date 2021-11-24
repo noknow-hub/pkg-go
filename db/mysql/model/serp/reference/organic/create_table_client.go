@@ -131,5 +131,5 @@ func (c *CreateTableClient) Run() (*myQuery.CreateTableResult, error) {
         SetPrimaryKeys([]string{COL_ID}).
         SetIndexKeys([]string{COL_RANKING, COL_DOMAIN}).
         SetComment(c.TableName + " table.")
-    return c.Client.Run()
+    return c.CreateTableClient.Run()
 }

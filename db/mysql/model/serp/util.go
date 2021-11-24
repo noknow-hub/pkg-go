@@ -7,14 +7,14 @@ import (
     "errors"
     "strings"
     myModelUtil "github.com/noknow-hub/pkg-go/db/mysql/model/util"
-    myQueryUtil "github.com/noknow-hub/pkg-go/db/mysql/query/util"
+    myQuery "github.com/noknow-hub/pkg-go/db/mysql/query"
 )
 
 
 //////////////////////////////////////////////////////////////////////
 // Scan serp object.
 //////////////////////////////////////////////////////////////////////
-func scanSerp(row *myQueryUtil.Row, serp *Serp) error {
+func scanSerp(row *myQuery.Row, serp *Serp) error {
     for _, col := range row.Columns {
         s := strings.Split(col.Name, ".")
         col.Name = s[len(s)-1]

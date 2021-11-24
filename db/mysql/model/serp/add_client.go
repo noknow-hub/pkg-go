@@ -7,7 +7,6 @@ import (
     "context"
     "database/sql"
     _ "github.com/go-sql-driver/mysql"
-    myUtil "github.com/noknow-hub/pkg-go/db/mysql/query/util"
     myQuery "github.com/noknow-hub/pkg-go/db/mysql/query"
 )
 
@@ -60,7 +59,7 @@ func NewAddClientWithTxContext(tableName string, tx *sql.Tx, ctx context.Context
 // Generate an ID.
 //////////////////////////////////////////////////////////////////////
 func (c *AddClient) GenerateId() string {
-    return myUtil.GenerateId(c.BaseClient.TableName, COL_ID, c.BaseClient.Db, c.BaseClient.Tx, c.BaseClient.Ctx)
+    return myQuery.GenerateId(c.BaseClient.TableName, COL_ID, c.BaseClient.Db, c.BaseClient.Tx, c.BaseClient.Ctx)
 }
 
 

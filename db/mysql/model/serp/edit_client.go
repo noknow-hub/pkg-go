@@ -7,11 +7,11 @@ import (
     "context"
     "database/sql"
     _ "github.com/go-sql-driver/mysql"
-    myUpdateStatement "github.com/noknow-hub/pkg-go/db/mysql/query/update_statement"
+    myQuery "github.com/noknow-hub/pkg-go/db/mysql/query"
 )
 
 type EditClient struct {
-    BaseClient *myUpdateStatement.Client
+    BaseClient *myQuery.UpdateClient
 }
 
 
@@ -20,7 +20,7 @@ type EditClient struct {
 //////////////////////////////////////////////////////////////////////
 func NewEditClientWithDb(tableName string, db *sql.DB) *EditClient {
     return &EditClient{
-        BaseClient: myUpdateStatement.NewClientWithDb(tableName, db),
+        BaseClient: myQuery.NewUpdateClientWithDb(tableName, db),
     }
 }
 
@@ -30,7 +30,7 @@ func NewEditClientWithDb(tableName string, db *sql.DB) *EditClient {
 //////////////////////////////////////////////////////////////////////
 func NewEditClientWithDbContext(tableName string, db *sql.DB, ctx context.Context) *EditClient {
     return &EditClient{
-        BaseClient: myUpdateStatement.NewClientWithDbContext(tableName, db, ctx),
+        BaseClient: myQuery.NewUpdateClientWithDbContext(tableName, db, ctx),
     }
 }
 
@@ -40,7 +40,7 @@ func NewEditClientWithDbContext(tableName string, db *sql.DB, ctx context.Contex
 //////////////////////////////////////////////////////////////////////
 func NewEditClientWithTx(tableName string, tx *sql.Tx) *EditClient {
     return &EditClient{
-        BaseClient: myUpdateStatement.NewClientWithTx(tableName, tx),
+        BaseClient: myQuery.NewUpdateClientWithTx(tableName, tx),
     }
 }
 
@@ -50,7 +50,7 @@ func NewEditClientWithTx(tableName string, tx *sql.Tx) *EditClient {
 //////////////////////////////////////////////////////////////////////
 func NewEditClientWithTxContext(tableName string, tx *sql.Tx, ctx context.Context) *EditClient {
     return &EditClient{
-        BaseClient: myUpdateStatement.NewClientWithTxContext(tableName, tx, ctx),
+        BaseClient: myQuery.NewUpdateClientWithTxContext(tableName, tx, ctx),
     }
 }
 
@@ -58,7 +58,7 @@ func NewEditClientWithTxContext(tableName string, tx *sql.Tx, ctx context.Contex
 //////////////////////////////////////////////////////////////////////
 // Run.
 //////////////////////////////////////////////////////////////////////
-func (c *EditClient) Run() (*myUpdateStatement.Result, error) {
+func (c *EditClient) Run() (*myQuery.UpdateResult, error) {
     return c.BaseClient.Run()
 }
 
@@ -66,7 +66,7 @@ func (c *EditClient) Run() (*myUpdateStatement.Result, error) {
 //////////////////////////////////////////////////////////////////////
 // Run by "id".
 //////////////////////////////////////////////////////////////////////
-func (c *EditClient) RunById(id string) (*myUpdateStatement.Result, error) {
+func (c *EditClient) RunById(id string) (*myQuery.UpdateResult, error) {
     c.BaseClient.WhereCondition.SetWhere(COL_ID, id)
     return c.BaseClient.Run()
 }
@@ -75,7 +75,7 @@ func (c *EditClient) RunById(id string) (*myUpdateStatement.Result, error) {
 //////////////////////////////////////////////////////////////////////
 // Run with all by "id".
 //////////////////////////////////////////////////////////////////////
-func (c *EditClient) RunWithAllById(currentId string, id, keyword, countryCode, langCode, device, totalResults, searchEngine, searchEngineType, numOfSearchesForKeyword *string) (*myUpdateStatement.Result, error) {
+func (c *EditClient) RunWithAllById(currentId string, id, keyword, countryCode, langCode, device, totalResults, searchEngine, searchEngineType, numOfSearchesForKeyword *string) (*myQuery.UpdateResult, error) {
     if id != nil {
         c.BaseClient.AssignmentList.Append(COL_ID, *id)
     }

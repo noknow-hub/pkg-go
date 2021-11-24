@@ -140,5 +140,5 @@ func (o *CreateTableClient) Run() (*myQuery.CreateTableResult, error) {
         SetUniqueKeys([]string{COL_EMAIL}).
         SetIndexKeys([]string{COL_NICKNAME}).
         SetComment(o.TableName + " table.")
-    return o.Client.Run()
+    return o.CreateTableClient.Run()
 }

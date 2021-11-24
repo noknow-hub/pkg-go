@@ -127,5 +127,9 @@ func (c *ReadClientWithSerp) RunInJoin() (*SerpOrganicItem, *mySelectStatement.R
     if err := scanSerpOrganicItem(result.Rows[0], c.BaseClient.TableName, c.RefTable, organicItem, serp); err != nil {
         return serpOrganicItem, result, err
     }
+    serpOrganicItem = &SerpOrganicItem{
+        Serp: serp,
+        OrganicItems: []*OrganicItem{organicItem},
+    }
     return serpOrganicItem, result, nil
 }

@@ -75,21 +75,18 @@ func (o *ReadClient) QueryRow() (*mySelectStatement.ResultQueryRow, error) {
 //////////////////////////////////////////////////////////////////////
 // Run.
 //////////////////////////////////////////////////////////////////////
-func (o *ReadClient) Run() ([]*Account, *mySelectStatement.Result, error) {
-    var accounts []*Account
+func (o *ReadClient) Run() (*Account, *mySelectStatement.Result, error) {
+    var account *Account
     o.BaseClient.SetLimit(1)
     result, err := o.BaseClient.Run()
-    if err != nil { 
-        return accounts, result, err
+    if err != nil {
+        return account, result, err
     }
-
-    for _, row := range result.Rows {
-        account := &Account{}
-        if err := scanAccount(row, account); err != nil {
-            return accounts, result, err
-        }
-        accounts = append(accounts, account)
+    if result != nil && len(result.Rows) != 1 {
+        return account, result, err
     }
-
-    return accounts, result, nil
+    if err := scanAccount(result.Rows[0], account); err != nil {
+        return account, result, err
+    }
+    return account, result, nil
 }

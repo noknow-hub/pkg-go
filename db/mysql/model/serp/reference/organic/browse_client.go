@@ -1,22 +1,22 @@
 //////////////////////////////////////////////////////////////////////
 // browse_client.go
 //////////////////////////////////////////////////////////////////////
-package organic_item
+package organic
 
 import (
     "context"
     "database/sql"
     _ "github.com/go-sql-driver/mysql"
-    mySelectStatement "github.com/noknow-hub/pkg-go/db/mysql/query/select_statement"
+    myQuery "github.com/noknow-hub/pkg-go/db/mysql/query"
     mySerp "github.com/noknow-hub/pkg-go/db/mysql/model/serp"
 )
 
 type BrowseClient struct {
-    BaseClient *mySelectStatement.Client
+    BaseClient *myQuery.SelectClient
 }
 
 type BrowseClientWithSerp struct {
-    BaseClient *mySelectStatement.Client
+    BaseClient *myQuery.SelectClient
     RefTable string
 }
 
@@ -26,7 +26,7 @@ type BrowseClientWithSerp struct {
 //////////////////////////////////////////////////////////////////////
 func NewBrowseClientWithDb(tableName string, db *sql.DB) *BrowseClient {
     return &BrowseClient{
-        BaseClient: mySelectStatement.NewClientWithDb(tableName, db),
+        BaseClient: myQuery.NewSelectClientWithDb(tableName, db),
     }
 }
 
@@ -36,7 +36,7 @@ func NewBrowseClientWithDb(tableName string, db *sql.DB) *BrowseClient {
 //////////////////////////////////////////////////////////////////////
 func NewBrowseClientWithDbContext(tableName string, db *sql.DB, ctx context.Context) *BrowseClient {
     return &BrowseClient{
-        BaseClient: mySelectStatement.NewClientWithDbContext(tableName, db, ctx),
+        BaseClient: myQuery.NewSelectClientWithDbContext(tableName, db, ctx),
     }
 }
 
@@ -46,7 +46,7 @@ func NewBrowseClientWithDbContext(tableName string, db *sql.DB, ctx context.Cont
 //////////////////////////////////////////////////////////////////////
 func NewBrowseClientWithTx(tableName string, tx *sql.Tx) *BrowseClient {
     return &BrowseClient{
-        BaseClient: mySelectStatement.NewClientWithTx(tableName, tx),
+        BaseClient: myQuery.NewSelectClientWithTx(tableName, tx),
     }
 }
 
@@ -56,7 +56,7 @@ func NewBrowseClientWithTx(tableName string, tx *sql.Tx) *BrowseClient {
 //////////////////////////////////////////////////////////////////////
 func NewBrowseClientWithTxContext(tableName string, tx *sql.Tx, ctx context.Context) *BrowseClient {
     return &BrowseClient{
-        BaseClient: mySelectStatement.NewClientWithTxContext(tableName, tx, ctx),
+        BaseClient: myQuery.NewSelectClientWithTxContext(tableName, tx, ctx),
     }
 }
 
@@ -75,7 +75,7 @@ func (c *BrowseClient) NewBrowseClientWithSerp(refTable string) *BrowseClientWit
 //////////////////////////////////////////////////////////////////////
 // Count.
 //////////////////////////////////////////////////////////////////////
-func (c *BrowseClient) Count() (int64, *mySelectStatement.ResultCount, error) {
+func (c *BrowseClient) Count() (int64, *myQuery.SelectResultCount, error) {
     resultCount, err := c.BaseClient.Count()
     return resultCount.Count, resultCount, err
 }
@@ -84,7 +84,7 @@ func (c *BrowseClient) Count() (int64, *mySelectStatement.ResultCount, error) {
 //////////////////////////////////////////////////////////////////////
 // Query.
 //////////////////////////////////////////////////////////////////////
-func (c *BrowseClient) Query() (*mySelectStatement.ResultQuery, error) {
+func (c *BrowseClient) Query() (*myQuery.SelectResultQuery, error) {
     return c.BaseClient.Query()
 }
 
@@ -92,7 +92,7 @@ func (c *BrowseClient) Query() (*mySelectStatement.ResultQuery, error) {
 //////////////////////////////////////////////////////////////////////
 // QueryRow.
 //////////////////////////////////////////////////////////////////////
-func (c *BrowseClient) QueryRow() (*mySelectStatement.ResultQueryRow, error) {
+func (c *BrowseClient) QueryRow() (*myQuery.SelectResultQueryRow, error) {
     return c.BaseClient.QueryRow()
 }
 
@@ -100,58 +100,58 @@ func (c *BrowseClient) QueryRow() (*mySelectStatement.ResultQueryRow, error) {
 //////////////////////////////////////////////////////////////////////
 // Run.
 //////////////////////////////////////////////////////////////////////
-func (c *BrowseClient) Run() ([]*OrganicItem, *mySelectStatement.Result, error) {
-    var organicItems []*OrganicItem
+func (c *BrowseClient) Run() ([]*Organic, *myQuery.SelectResult, error) {
+    var organics []*Organic
     result, err := c.BaseClient.Run()
     if err != nil {
-        return organicItems, result, err
+        return organics, result, err
     }
 
     for _, row := range result.Rows {
-        organicItem := &OrganicItem{}
-        if err := scanOrganicItem(row, organicItem); err != nil {
-            return organicItems, result, err
+        organic := &Organic{}
+        if err := scanOrganic(row, organic); err != nil {
+            return organics, result, err
         }
-        organicItems = append(organicItems, organicItem)
+        organics = append(organics, organic)
     }
 
-    return organicItems, result, nil
+    return organics, result, nil
 }
 
 
 //////////////////////////////////////////////////////////////////////
 // Run with INNER JOIN.
 //////////////////////////////////////////////////////////////////////
-func (c *BrowseClientWithSerp) RunInJoin() ([]*SerpOrganicItem, *mySelectStatement.Result, error) {
-    var serpOrganicItems []*SerpOrganicItem
+func (c *BrowseClientWithSerp) RunInJoin() ([]*SerpOrganic, *myQuery.SelectResult, error) {
+    var serpOrganics []*SerpOrganic
     c.BaseClient.AppendInnerJoinTables(c.BaseClient.TableName, COL_SERP_ID, c.RefTable, mySerp.COL_ID)
     result, err := c.BaseClient.Run()
     if err != nil {
-        return serpOrganicItems, result, err
+        return serpOrganics, result, err
     }
 
     for _, row := range result.Rows {
         serp := &mySerp.Serp{}
-        organicItem := &OrganicItem{}
-        if err := scanSerpOrganicItem(row, c.BaseClient.TableName, c.RefTable, organicItem, serp); err != nil {
-            return serpOrganicItems, result, err
+        organic := &Organic{}
+        if err := scanSerpOrganic(row, c.BaseClient.TableName, c.RefTable, organicItem, serp); err != nil {
+            return serpOrganics, result, err
         }
         isSerp := false
-        for i, o := range serpOrganicItems {
+        for i, o := range serpOrganics {
             if o.Serp.Id == serp.Id {
                 isSerp = true
-                serpOrganicItems[i].OrganicItems = append(serpOrganicItems[i].OrganicItems, organicItem)
+                serpOrganics[i].Organics = append(serpOrganics[i].Organics, organic)
                 break
             }
         }
         if !isSerp {
-            serpOrganicItem := &SerpOrganicItem{
+            serpOrganic := &SerpOrganic{
                 Serp: serp,
-                OrganicItems: []*OrganicItem{organicItem},
+                Organics: []*OrganicItem{organic},
             }
-            serpOrganicItems = append(serpOrganicItems, serpOrganicItem)
+            serpOrganics = append(serpOrganics, serpOrganic)
         }
     }
 
-    return serpOrganicItems, result, nil
+    return serpOrganics, result, nil
 }

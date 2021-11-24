@@ -1,7 +1,7 @@
 //////////////////////////////////////////////////////////////////////
-// client.go
+// create_table_client.go
 //////////////////////////////////////////////////////////////////////
-package create_table_statement
+package query
 
 import (
     "context"
@@ -19,7 +19,7 @@ const (
     DEFAULT_ENGINE_INNODB = "InnoDB"
 )
 
-type Client struct {
+type CreateTableClient struct {
     Charset string
     ColumnDefinitions []*ColumnDefinition
     Comment string
@@ -54,17 +54,17 @@ type Constraint struct {
     OnUpdate bool
 }
 
-type Result struct {
+type CreateTableResult struct {
     RawQuery string
     SqlResult sql.Result
 }
 
 
 //////////////////////////////////////////////////////////////////////
-// New Client with db object.
+// New CreateTableClient with db object.
 //////////////////////////////////////////////////////////////////////
-func NewClientWithDb(tableName string, db *sql.DB) *Client {
-    return &Client{
+func NewCreateTableClientWithDb(tableName string, db *sql.DB) *CreateTableClient {
+    return &CreateTableClient{
         Charset: DEFAULT_CHARSET,
         Db: db,
         Engine: DEFAULT_ENGINE_INNODB,
@@ -74,10 +74,10 @@ func NewClientWithDb(tableName string, db *sql.DB) *Client {
 
 
 //////////////////////////////////////////////////////////////////////
-// New Client with db object and context.
+// New CreateTableClient with db object and context.
 //////////////////////////////////////////////////////////////////////
-func NewClientWithDbContext(tableName string, db *sql.DB, ctx context.Context) *Client {
-    return &Client{
+func NewCreateTableClientWithDbContext(tableName string, db *sql.DB, ctx context.Context) *CreateTableClient {
+    return &CreateTableClient{
         Charset: DEFAULT_CHARSET,
         Ctx: ctx,
         Db: db,
@@ -88,10 +88,10 @@ func NewClientWithDbContext(tableName string, db *sql.DB, ctx context.Context) *
 
 
 //////////////////////////////////////////////////////////////////////
-// New Client with tx object.
+// New CreateTableClient with tx object.
 //////////////////////////////////////////////////////////////////////
-func NewClientWithTx(tableName string, tx *sql.Tx) *Client {
-    return &Client{
+func NewCreateTableClientWithTx(tableName string, tx *sql.Tx) *CreateTableClient {
+    return &CreateTableClient{
         Charset: DEFAULT_CHARSET,
         Engine: DEFAULT_ENGINE_INNODB,
         TableName: tableName,
@@ -101,10 +101,10 @@ func NewClientWithTx(tableName string, tx *sql.Tx) *Client {
 
 
 //////////////////////////////////////////////////////////////////////
-// New Client with tx object and context.
+// New CreateTableClient with tx object and context.
 //////////////////////////////////////////////////////////////////////
-func NewClientWithTxContext(tableName string, tx *sql.Tx, ctx context.Context) *Client {
-    return &Client{
+func NewCreateTableClientWithTxContext(tableName string, tx *sql.Tx, ctx context.Context) *CreateTableClient {
+    return &CreateTableClient{
         Charset: DEFAULT_CHARSET,
         Ctx: ctx,
         Engine: DEFAULT_ENGINE_INNODB,
@@ -128,7 +128,7 @@ func NewColumnDefinition(colName, dataType string) *ColumnDefinition {
 //////////////////////////////////////////////////////////////////////
 // Append constraint.
 //////////////////////////////////////////////////////////////////////
-func (c *Client) AppendConstraint(symbol, foreignKey, refTableName, refTableColName string, onDelete, onUpdate bool) *Client {
+func (c *CreateTableClient) AppendConstraint(symbol, foreignKey, refTableName, refTableColName string, onDelete, onUpdate bool) *CreateTableClient {
     c.Constraints = append(c.Constraints, &Constraint{
         Symbol: symbol,
         ForeignKey: foreignKey,
@@ -144,7 +144,7 @@ func (c *Client) AppendConstraint(symbol, foreignKey, refTableName, refTableColN
 //////////////////////////////////////////////////////////////////////
 // Append column definition.
 //////////////////////////////////////////////////////////////////////
-func (c *Client) AppendColumnDefinition(cd *ColumnDefinition) *Client {
+func (c *CreateTableClient) AppendColumnDefinition(cd *ColumnDefinition) *CreateTableClient {
     c.ColumnDefinitions = append(c.ColumnDefinitions, cd)
     return c
 }
@@ -179,8 +179,8 @@ func (c *ColumnDefinition) SetComment(val string) *ColumnDefinition {
 //////////////////////////////////////////////////////////////////////
 // Run.
 //////////////////////////////////////////////////////////////////////
-func (c *Client) Run() (*Result, error) {
-    result := &Result{}
+func (c *CreateTableClient) Run() (*CreateTableResult, error) {
+    result := &CreateTableResult{}
     result.RawQuery = c.generateQuery()
     var err error
     result.SqlResult, err = myUtil.Exec(c.Db, c.Tx, c.Ctx, result.RawQuery, nil)
@@ -191,7 +191,7 @@ func (c *Client) Run() (*Result, error) {
 //////////////////////////////////////////////////////////////////////
 // Set charset.
 //////////////////////////////////////////////////////////////////////
-func (c *Client) SetCharset(charset string) *Client {
+func (c *CreateTableClient) SetCharset(charset string) *CreateTableClient {
     c.Charset = charset
     return c
 }
@@ -200,7 +200,7 @@ func (c *Client) SetCharset(charset string) *Client {
 //////////////////////////////////////////////////////////////////////
 // Set comment.
 //////////////////////////////////////////////////////////////////////
-func (c *Client) SetComment(comment string) *Client {
+func (c *CreateTableClient) SetComment(comment string) *CreateTableClient {
     c.Comment = comment
     return c
 }
@@ -209,7 +209,7 @@ func (c *Client) SetComment(comment string) *Client {
 //////////////////////////////////////////////////////////////////////
 // Set engine.
 //////////////////////////////////////////////////////////////////////
-func (c *Client) SetEngine(engine string) *Client {
+func (c *CreateTableClient) SetEngine(engine string) *CreateTableClient {
     c.Engine = engine
     return c
 }
@@ -218,7 +218,7 @@ func (c *Client) SetEngine(engine string) *Client {
 //////////////////////////////////////////////////////////////////////
 // Set index keys.
 //////////////////////////////////////////////////////////////////////
-func (c *Client) SetIndexKeys(indexKeys []string) *Client {
+func (c *CreateTableClient) SetIndexKeys(indexKeys []string) *CreateTableClient {
     c.IndexKeys = indexKeys
     return c
 }
@@ -227,7 +227,7 @@ func (c *Client) SetIndexKeys(indexKeys []string) *Client {
 //////////////////////////////////////////////////////////////////////
 // Set primary keys.
 //////////////////////////////////////////////////////////////////////
-func (c *Client) SetPrimaryKeys(primaryKeys []string) *Client {
+func (c *CreateTableClient) SetPrimaryKeys(primaryKeys []string) *CreateTableClient {
     c.PrimaryKeys = primaryKeys
     return c
 }
@@ -236,7 +236,7 @@ func (c *Client) SetPrimaryKeys(primaryKeys []string) *Client {
 //////////////////////////////////////////////////////////////////////
 // Set unique keys.
 //////////////////////////////////////////////////////////////////////
-func (c *Client) SetUniqueKeys(uniqueKeys []string) *Client {
+func (c *CreateTableClient) SetUniqueKeys(uniqueKeys []string) *CreateTableClient {
     c.UniqueKeys = uniqueKeys
     return c
 }
@@ -245,7 +245,7 @@ func (c *Client) SetUniqueKeys(uniqueKeys []string) *Client {
 //////////////////////////////////////////////////////////////////////
 // Generate query.
 //////////////////////////////////////////////////////////////////////
-func (c *Client) generateQuery() string {
+func (c *CreateTableClient) generateQuery() string {
     buf := make([]byte, 0)
 
     buf = append(buf, "CREATE TABLE IF NOT EXISTS " + c.TableName + " ("...)

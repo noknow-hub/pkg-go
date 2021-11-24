@@ -1,17 +1,17 @@
 //////////////////////////////////////////////////////////////////////
 // delete_client.go
 //////////////////////////////////////////////////////////////////////
-package organic_item
+package organic
 
 import (
     "context"
     "database/sql"
     _ "github.com/go-sql-driver/mysql"
-    myDeleteStatement "github.com/noknow-hub/pkg-go/db/mysql/query/delete_statement"
+    myQuery "github.com/noknow-hub/pkg-go/db/mysql/query"
 )
 
 type DeleteClient struct {
-    BaseClient *myDeleteStatement.Client
+    BaseClient *myQuery.DeleteClient
 }
 
 
@@ -20,7 +20,7 @@ type DeleteClient struct {
 //////////////////////////////////////////////////////////////////////
 func NewDeleteClientWithDb(tableName string, db *sql.DB) *DeleteClient {
     return &DeleteClient{
-        BaseClient: myDeleteStatement.NewClientWithDb(tableName, db),
+        BaseClient: myQuery.NewDeleteClientWithDb(tableName, db),
     }
 }
 
@@ -30,7 +30,7 @@ func NewDeleteClientWithDb(tableName string, db *sql.DB) *DeleteClient {
 //////////////////////////////////////////////////////////////////////
 func NewDeleteClientWithDbContext(tableName string, db *sql.DB, ctx context.Context) *DeleteClient {
     return &DeleteClient{
-        BaseClient: myDeleteStatement.NewClientWithDbContext(tableName, db, ctx),
+        BaseClient: myQuery.NewDeleteClientWithDbContext(tableName, db, ctx),
     }
 }
 
@@ -40,7 +40,7 @@ func NewDeleteClientWithDbContext(tableName string, db *sql.DB, ctx context.Cont
 //////////////////////////////////////////////////////////////////////
 func NewDeleteClientWithTx(tableName string, tx *sql.Tx) *DeleteClient {
     return &DeleteClient{
-        BaseClient: myDeleteStatement.NewClientWithTx(tableName, tx),
+        BaseClient: myQuery.NewDeleteClientWithTx(tableName, tx),
     }
 }
 
@@ -50,7 +50,7 @@ func NewDeleteClientWithTx(tableName string, tx *sql.Tx) *DeleteClient {
 //////////////////////////////////////////////////////////////////////
 func NewDeleteClientWithTxContext(tableName string, tx *sql.Tx, ctx context.Context) *DeleteClient {
     return &DeleteClient{
-        BaseClient: myDeleteStatement.NewClientWithTxContext(tableName, tx, ctx),
+        BaseClient: myQuery.NewDeleteClientWithTxContext(tableName, tx, ctx),
     }
 }
 
@@ -58,7 +58,7 @@ func NewDeleteClientWithTxContext(tableName string, tx *sql.Tx, ctx context.Cont
 //////////////////////////////////////////////////////////////////////
 // Run.
 //////////////////////////////////////////////////////////////////////
-func (c *DeleteClient) Run() (*myDeleteStatement.Result, error) {
+func (c *DeleteClient) Run() (*myQuery.DeleteResult, error) {
     return c.BaseClient.Run()
 }
 
@@ -66,7 +66,7 @@ func (c *DeleteClient) Run() (*myDeleteStatement.Result, error) {
 //////////////////////////////////////////////////////////////////////
 // Run by "id".
 //////////////////////////////////////////////////////////////////////
-func (c *DeleteClient) RunById(id string) (*myDeleteStatement.Result, error) {
+func (c *DeleteClient) RunById(id string) (*myQuery.DeleteResult, error) {
     c.BaseClient.WhereCondition.SetWhere(COL_ID, id)
     return c.BaseClient.Run()
 }

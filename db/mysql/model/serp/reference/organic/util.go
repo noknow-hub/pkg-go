@@ -14,9 +14,9 @@ import (
 
 
 //////////////////////////////////////////////////////////////////////
-// Scan OrganicItem object.
+// Scan Organic object.
 //////////////////////////////////////////////////////////////////////
-func scanOrganicItem(row *myQueryUtil.Row, organicItem *OrganicItem) error {
+func scanOrganic(row *myQueryUtil.Row, organic *Organic) error {
     for _, col := range row.Columns {
         s := strings.Split(col.Name, ".")
         col.Name = s[len(s)-1]
@@ -25,79 +25,79 @@ func scanOrganicItem(row *myQueryUtil.Row, organicItem *OrganicItem) error {
             if val, err := myModelUtil.ConvertInterfaceToString(col.Value); err != nil {
                 return err
             } else {
-                organicItem.Id = val
+                organic.Id = val
             }
         } else if col.Name == COL_SERP_ID {
             if val, err := myModelUtil.ConvertInterfaceToString(col.Value); err != nil {
                 return err
             } else {
-                organicItem.SerpId = val
+                organic.SerpId = val
             }
         } else if col.Name == COL_RANKING {
             if val, err := myModelUtil.ConvertInterfaceToString(col.Value); err != nil {
                 return err
             } else {
-                organicItem.Ranking = val
+                organic.Ranking = val
             }
         } else if col.Name == COL_GROUP_RANKING {
             if val, err := myModelUtil.ConvertInterfaceToString(col.Value); err != nil {
                 return err
             } else {
-                organicItem.GroupRanking = val
+                organic.GroupRanking = val
             }
         } else if col.Name == COL_DOMAIN {
             if val, err := myModelUtil.ConvertInterfaceToString(col.Value); err != nil {
                 return err
             } else {
-                organicItem.Domain = val
+                organic.Domain = val
             }
         } else if col.Name == COL_URL {
             if val, err := myModelUtil.ConvertInterfaceToString(col.Value); err != nil {
                 return err
             } else {
-                organicItem.Url = val
+                organic.Url = val
             }
         } else if col.Name == COL_TITLE {
             if val, err := myModelUtil.ConvertInterfaceToString(col.Value); err != nil {
                 return err
             } else {
-                organicItem.Title = val
+                organic.Title = val
             }
         } else if col.Name == COL_TIMESTAMP {
             if val, err := myModelUtil.ConvertInterfaceToTime(col.Value); err != nil {
                 return err
             } else {
-                organicItem.Timestamp = val
+                organic.Timestamp = val
             }
         } else if col.Name == COL_SNIPPET {
             if val, err := myModelUtil.ConvertInterfaceToString(col.Value); err != nil {
                 return err
             } else {
-                organicItem.Snippet = val
+                organic.Snippet = val
             }
         } else if col.Name == COL_RELATED_URL {
             if val, err := myModelUtil.ConvertInterfaceToString(col.Value); err != nil {
                 return err
             } else {
-                organicItem.RelatedUrl = val
+                organic.RelatedUrl = val
             }
         } else if col.Name == COL_CACHE_URL {
             if val, err := myModelUtil.ConvertInterfaceToString(col.Value); err != nil {
                 return err
             } else {
-                organicItem.CacheUrl = val
+                organic.CacheUrl = val
             }
         } else if col.Name == COL_CREATED_AT {
             if val, err := myModelUtil.ConvertInterfaceToTime(col.Value); err != nil {
                 return err
             } else {
-                organicItem.CreatedAt = val
+                organic.CreatedAt = val
             }
         } else if col.Name == COL_UPDATED_AT {
             if val, err := myModelUtil.ConvertInterfaceToTime(col.Value); err != nil {
                 return err
             } else {
-                organicItem.UpdatedAt = val
+                organic.UpdatedAt = val
             }
         } else {
             return errors.New("Unknown column. Name: " + col.Name)
@@ -108,9 +108,9 @@ func scanOrganicItem(row *myQueryUtil.Row, organicItem *OrganicItem) error {
 
 
 //////////////////////////////////////////////////////////////////////
-// Scan Serp and OrganicItem object.
+// Scan Serp and Organic object.
 //////////////////////////////////////////////////////////////////////
-func scanSerpOrganicItem(row *myQueryUtil.Row, organicItemTable, refTable string, organicItem *OrganicItem, serp *mySerp.Serp) error {
+func scanSerpOrganic(row *myQueryUtil.Row, organicTable, refTable string, organic *Organic, serp *mySerp.Serp) error {
     var specifiedTblName string
     for index, col := range row.Columns {
         s := strings.Split(col.Name, ".")
@@ -125,8 +125,8 @@ func scanSerpOrganicItem(row *myQueryUtil.Row, organicItemTable, refTable string
                 return err
             }
             if specifiedTblName != "" {
-                if specifiedTblName == organicItemTable {
-                    organicItem.Id = val
+                if specifiedTblName == organicTable {
+                    organic.Id = val
                 } else if specifiedTblName == refTable {
                     serp.Id = val
                 } else {
@@ -134,7 +134,7 @@ func scanSerpOrganicItem(row *myQueryUtil.Row, organicItemTable, refTable string
                 }
             } else {
                 if index < NUM_COLS {
-                    organicItem.Id = val
+                    organic.Id = val
                 } else if index >= NUM_COLS && index < mySerp.NUM_COLS {
                     serp.Id = val
                 } else {
@@ -145,61 +145,61 @@ func scanSerpOrganicItem(row *myQueryUtil.Row, organicItemTable, refTable string
             if val, err := myModelUtil.ConvertInterfaceToString(col.Value); err != nil {
                 return err
             } else {
-                organicItem.SerpId = val
+                organic.SerpId = val
             }
         } else if col.Name == COL_RANKING {
             if val, err := myModelUtil.ConvertInterfaceToString(col.Value); err != nil {
                 return err
             } else {
-                organicItem.Ranking = val
+                organic.Ranking = val
             }
         } else if col.Name == COL_GROUP_RANKING {
             if val, err := myModelUtil.ConvertInterfaceToString(col.Value); err != nil {
                 return err
             } else {
-                organicItem.GroupRanking = val
+                organic.GroupRanking = val
             }
         } else if col.Name == COL_DOMAIN {
             if val, err := myModelUtil.ConvertInterfaceToString(col.Value); err != nil {
                 return err
             } else {
-                organicItem.Domain = val
+                organic.Domain = val
             }
         } else if col.Name == COL_URL {
             if val, err := myModelUtil.ConvertInterfaceToString(col.Value); err != nil {
                 return err
             } else {
-                organicItem.Url = val
+                organic.Url = val
             }
         } else if col.Name == COL_TITLE {
             if val, err := myModelUtil.ConvertInterfaceToString(col.Value); err != nil {
                 return err
             } else {
-                organicItem.Title = val
+                organic.Title = val
             }
         } else if col.Name == COL_TIMESTAMP {
             if val, err := myModelUtil.ConvertInterfaceToTime(col.Value); err != nil {
                 return err
             } else {
-                organicItem.Timestamp = val
+                organic.Timestamp = val
             }
         } else if col.Name == COL_SNIPPET {
             if val, err := myModelUtil.ConvertInterfaceToString(col.Value); err != nil {
                 return err
             } else {
-                organicItem.Snippet = val
+                organic.Snippet = val
             }
         } else if col.Name == COL_RELATED_URL {
             if val, err := myModelUtil.ConvertInterfaceToString(col.Value); err != nil {
                 return err
             } else {
-                organicItem.RelatedUrl = val
+                organic.RelatedUrl = val
             }
         } else if col.Name == COL_CACHE_URL {
             if val, err := myModelUtil.ConvertInterfaceToString(col.Value); err != nil {
                 return err
             } else {
-                organicItem.CacheUrl = val
+                organic.CacheUrl = val
             }
         } else if col.Name == COL_CREATED_AT {
             val, err := myModelUtil.ConvertInterfaceToTime(col.Value)
@@ -207,8 +207,8 @@ func scanSerpOrganicItem(row *myQueryUtil.Row, organicItemTable, refTable string
                 return err
             }
             if specifiedTblName != "" {
-                if specifiedTblName == organicItemTable {
-                    organicItem.CreatedAt = val
+                if specifiedTblName == organicTable {
+                    organic.CreatedAt = val
                 } else if specifiedTblName == refTable {
                     serp.CreatedAt = val
                 } else {
@@ -216,7 +216,7 @@ func scanSerpOrganicItem(row *myQueryUtil.Row, organicItemTable, refTable string
                 }
             } else {
                 if index < NUM_COLS {
-                    organicItem.CreatedAt = val
+                    organic.CreatedAt = val
                 } else if index >= NUM_COLS && index < mySerp.NUM_COLS {
                     serp.CreatedAt = val
                 } else {
@@ -229,8 +229,8 @@ func scanSerpOrganicItem(row *myQueryUtil.Row, organicItemTable, refTable string
                 return err
             }
             if specifiedTblName != "" {
-                if specifiedTblName == organicItemTable {
-                    organicItem.UpdatedAt = val
+                if specifiedTblName == organicTable {
+                    organic.UpdatedAt = val
                 } else if specifiedTblName == refTable {
                     serp.UpdatedAt = val
                 } else {
@@ -238,7 +238,7 @@ func scanSerpOrganicItem(row *myQueryUtil.Row, organicItemTable, refTable string
                 }
             } else {
                 if index < NUM_COLS {
-                    organicItem.UpdatedAt = val
+                    organic.UpdatedAt = val
                 } else if index >= NUM_COLS && index < mySerp.NUM_COLS {
                     serp.UpdatedAt = val
                 } else {

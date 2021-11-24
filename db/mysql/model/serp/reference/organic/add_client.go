@@ -1,18 +1,18 @@
 //////////////////////////////////////////////////////////////////////
 // add_client.go
 //////////////////////////////////////////////////////////////////////
-package organic_item
+package organic
 
 import (
     "context"
     "database/sql"
     _ "github.com/go-sql-driver/mysql"
     myUtil "github.com/noknow-hub/pkg-go/db/mysql/model/util"
-    myInsertStatement "github.com/noknow-hub/pkg-go/db/mysql/query/insert_statement"
+    myQuery "github.com/noknow-hub/pkg-go/db/mysql/query"
 )
 
 type AddClient struct {
-    BaseClient *myInsertStatement.Client
+    BaseClient *myQuery.InsertClient
 }
 
 
@@ -21,7 +21,7 @@ type AddClient struct {
 //////////////////////////////////////////////////////////////////////
 func NewAddClientWithDb(tableName string, db *sql.DB) *AddClient {
     return &AddClient{
-        BaseClient: myInsertStatement.NewClientWithDb(tableName, db),
+        BaseClient: myQuery.NewInsertClientWithDb(tableName, db),
     }
 }
 
@@ -31,7 +31,7 @@ func NewAddClientWithDb(tableName string, db *sql.DB) *AddClient {
 //////////////////////////////////////////////////////////////////////
 func NewAddClientWithDbContext(tableName string, db *sql.DB, ctx context.Context) *AddClient {
     return &AddClient{
-        BaseClient: myInsertStatement.NewClientWithDbContext(tableName, db, ctx),
+        BaseClient: myQuery.NewInsertClientWithDbContext(tableName, db, ctx),
     }
 }
 
@@ -41,7 +41,7 @@ func NewAddClientWithDbContext(tableName string, db *sql.DB, ctx context.Context
 //////////////////////////////////////////////////////////////////////
 func NewAddClientWithTx(tableName string, tx *sql.Tx) *AddClient {
     return &AddClient{
-        BaseClient: myInsertStatement.NewClientWithTx(tableName, tx),
+        BaseClient: myQuery.NewInsertClientWithTx(tableName, tx),
     }
 }
 
@@ -51,7 +51,7 @@ func NewAddClientWithTx(tableName string, tx *sql.Tx) *AddClient {
 //////////////////////////////////////////////////////////////////////
 func NewAddClientWithTxContext(tableName string, tx *sql.Tx, ctx context.Context) *AddClient {
     return &AddClient{
-        BaseClient: myInsertStatement.NewClientWithTxContext(tableName, tx, ctx),
+        BaseClient: myQuery.NewInsertClientWithTxContext(tableName, tx, ctx),
     }
 }
 
@@ -67,7 +67,7 @@ func (c *AddClient) GenerateId() string {
 //////////////////////////////////////////////////////////////////////
 // Run.
 //////////////////////////////////////////////////////////////////////
-func (c *AddClient) Run() (*myInsertStatement.Result, error) {
+func (c *AddClient) Run() (*myQuery.InsertResult, error) {
     return c.BaseClient.Run()
 }
 
@@ -75,7 +75,7 @@ func (c *AddClient) Run() (*myInsertStatement.Result, error) {
 //////////////////////////////////////////////////////////////////////
 // Run with all.
 //////////////////////////////////////////////////////////////////////
-func (c *AddClient) RunWithAll(id, serpId, ranking, domain, url, title string, groupRanking, timestamp, snippet, relatedUrl, cacheUrl *string) (*myInsertStatement.Result, error) {
+func (c *AddClient) RunWithAll(id, serpId, ranking, domain, url, title string, groupRanking, timestamp, snippet, relatedUrl, cacheUrl *string) (*myQuery.InsertResult, error) {
     var cols []string
     var vals []interface{}
 
@@ -112,7 +112,7 @@ func (c *AddClient) RunWithAll(id, serpId, ranking, domain, url, title string, g
 //////////////////////////////////////////////////////////////////////
 // Run with required.
 //////////////////////////////////////////////////////////////////////
-func (c *AddClient) RunWithRequired(id, serpId, ranking, domain, url, title string) (*myInsertStatement.Result, error) {
+func (c *AddClient) RunWithRequired(id, serpId, ranking, domain, url, title string) (*myQuery.InsertResult, error) {
     c.BaseClient.
         SetColNames([]string{COL_ID, COL_SERP_ID, COL_RANKING, COL_DOMAIN, COL_URL, COL_TITLE}).
         AppendValues([]interface{}{id, serpId, ranking, domain, url, title})

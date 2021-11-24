@@ -1,7 +1,7 @@
 //////////////////////////////////////////////////////////////////////
-// client.go
+// select_client.go
 //////////////////////////////////////////////////////////////////////
-package select_statement
+package query
 
 import (
     "context"
@@ -11,7 +11,7 @@ import (
    myUtil "github.com/noknow-hub/pkg-go/db/mysql/query/util"
 )
 
-type Client struct {
+type SelectClient struct {
     Columns []string
     Ctx context.Context
     Db *sql.DB
@@ -29,25 +29,25 @@ type Client struct {
     WhereCondition *myUtil.WhereCondition
 }
 
-type Result struct {
+type SelectResult struct {
     RawArgs []interface{}
     RawQuery string
     Rows []*myUtil.Row
 }
 
-type ResultCount struct {
+type SelectResultCount struct {
     Count int64
     RawArgs []interface{}
     RawQuery string
 }
 
-type ResultQuery struct {
+type SelectResultQuery struct {
     RawArgs []interface{}
     RawQuery string
     Rows *sql.Rows
 }
 
-type ResultQueryRow struct {
+type SelectResultQueryRow struct {
     RawArgs []interface{}
     RawQuery string
     Row *sql.Row
@@ -55,10 +55,10 @@ type ResultQueryRow struct {
 
 
 //////////////////////////////////////////////////////////////////////
-// New Client with db object.
+// New SelectClient with db object.
 //////////////////////////////////////////////////////////////////////
-func NewClientWithDb(tableName string, db *sql.DB) *Client {
-    return &Client{
+func NewSelectClientWithDb(tableName string, db *sql.DB) *SelectClient {
+    return &SelectClient{
         Db: db,
         JoinCondition: &myUtil.JoinCondition{},
         TableName: tableName,
@@ -68,10 +68,10 @@ func NewClientWithDb(tableName string, db *sql.DB) *Client {
 
 
 //////////////////////////////////////////////////////////////////////
-// New Client with db object and context.
+// New SelectClient with db object and context.
 //////////////////////////////////////////////////////////////////////
-func NewClientWithDbContext(tableName string, db *sql.DB, ctx context.Context) *Client {
-    return &Client{
+func NewSelectClientWithDbContext(tableName string, db *sql.DB, ctx context.Context) *SelectClient {
+    return &SelectClient{
         Ctx: ctx,
         Db: db,
         JoinCondition: &myUtil.JoinCondition{},
@@ -81,10 +81,10 @@ func NewClientWithDbContext(tableName string, db *sql.DB, ctx context.Context) *
 }
 
 //////////////////////////////////////////////////////////////////////
-// New Client with tx object.
+// New SelectClient with tx object.
 //////////////////////////////////////////////////////////////////////
-func NewClientWithTx(tableName string, tx *sql.Tx) *Client {
-    return &Client{
+func NewSelectClientWithTx(tableName string, tx *sql.Tx) *SelectClient {
+    return &SelectClient{
         JoinCondition: &myUtil.JoinCondition{},
         TableName: tableName,
         Tx: tx,
@@ -94,10 +94,10 @@ func NewClientWithTx(tableName string, tx *sql.Tx) *Client {
 
 
 //////////////////////////////////////////////////////////////////////
-// New Client with tx object and context.
+// New SelectClient with tx object and context.
 //////////////////////////////////////////////////////////////////////
-func NewClientWithTxContext(tableName string, tx *sql.Tx, ctx context.Context) *Client {
-    return &Client{
+func NewSelectClientWithTxContext(tableName string, tx *sql.Tx, ctx context.Context) *SelectClient {
+    return &SelectClient{
         Ctx: ctx,
         JoinCondition: &myUtil.JoinCondition{},
         TableName: tableName,
@@ -110,7 +110,7 @@ func NewClientWithTxContext(tableName string, tx *sql.Tx, ctx context.Context) *
 //////////////////////////////////////////////////////////////////////
 // Append column.
 //////////////////////////////////////////////////////////////////////
-func (c *Client) AppendColumn(column string) *Client {
+func (c *SelectClient) AppendColumn(column string) *SelectClient {
     c.Columns = append(c.Columns, column)
     return c
 }
@@ -119,7 +119,7 @@ func (c *Client) AppendColumn(column string) *Client {
 //////////////////////////////////////////////////////////////////////
 // Append INNER JOIN clause.
 //////////////////////////////////////////////////////////////////////
-func (c *Client) AppendInnerJoinTables(sourceTableName, sourceCoulmn, toTableName, toCoulmn string) *Client {
+func (c *SelectClient) AppendInnerJoinTables(sourceTableName, sourceCoulmn, toTableName, toCoulmn string) *SelectClient {
     c.InnerJoinTables = append(c.InnerJoinTables, &myUtil.InnerJoinTable{
         SourceTableName: sourceTableName,
         SourceCoulmn: sourceCoulmn,
@@ -133,7 +133,7 @@ func (c *Client) AppendInnerJoinTables(sourceTableName, sourceCoulmn, toTableNam
 //////////////////////////////////////////////////////////////////////
 // Append OUTER JOIN clause.
 //////////////////////////////////////////////////////////////////////
-func (c *Client) AppendOuterJoinTables(sourceTableName, sourceCoulmn, toTableName, toCoulmn string, isLeft bool) *Client {
+func (c *SelectClient) AppendOuterJoinTables(sourceTableName, sourceCoulmn, toTableName, toCoulmn string, isLeft bool) *SelectClient {
     c.OuterJoinTables = append(c.OuterJoinTables, &myUtil.OuterJoinTable{
         SourceTableName: sourceTableName,
         SourceCoulmn: sourceCoulmn,
@@ -148,8 +148,8 @@ func (c *Client) AppendOuterJoinTables(sourceTableName, sourceCoulmn, toTableNam
 //////////////////////////////////////////////////////////////////////
 // Count.
 //////////////////////////////////////////////////////////////////////
-func (c *Client) Count() (*ResultCount, error) {
-    result := &ResultCount{}
+func (c *SelectClient) Count() (*SelectResultCount, error) {
+    result := &SelectResultCount{}
     result.RawQuery, result.RawArgs = c.generateQueryForCount()
     row, err := myUtil.QueryRow(c.Db, c.Tx, c.Ctx, result.RawQuery, result.RawArgs)
     if err != nil {
@@ -166,8 +166,8 @@ func (c *Client) Count() (*ResultCount, error) {
 //////////////////////////////////////////////////////////////////////
 // Query.
 //////////////////////////////////////////////////////////////////////
-func (c *Client) Query() (*ResultQuery, error) {
-    result := &ResultQuery{}
+func (c *SelectClient) Query() (*SelectResultQuery, error) {
+    result := &SelectResultQuery{}
     result.RawQuery, result.RawArgs = c.generateQuery()
     var err error
     result.Rows, err = myUtil.Query(c.Db, c.Tx, c.Ctx, result.RawQuery, result.RawArgs)
@@ -178,8 +178,8 @@ func (c *Client) Query() (*ResultQuery, error) {
 //////////////////////////////////////////////////////////////////////
 // QueryRow.
 //////////////////////////////////////////////////////////////////////
-func (c *Client) QueryRow() (*ResultQueryRow, error) {
-    result := &ResultQueryRow{}
+func (c *SelectClient) QueryRow() (*SelectResultQueryRow, error) {
+    result := &SelectResultQueryRow{}
     result.RawQuery, result.RawArgs = c.generateQuery()
     var err error
     result.Row, err = myUtil.QueryRow(c.Db, c.Tx, c.Ctx, result.RawQuery, result.RawArgs)
@@ -190,8 +190,8 @@ func (c *Client) QueryRow() (*ResultQueryRow, error) {
 //////////////////////////////////////////////////////////////////////
 // Run.
 //////////////////////////////////////////////////////////////////////
-func (c *Client) Run() (*Result, error) {
-    result := &Result{}
+func (c *SelectClient) Run() (*SelectResult, error) {
+    result := &SelectResult{}
     result.RawQuery, result.RawArgs = c.generateQuery()
     rows, err := myUtil.Query(c.Db, c.Tx, c.Ctx, result.RawQuery, result.RawArgs)
     defer rows.Close()
@@ -232,7 +232,7 @@ func (c *Client) Run() (*Result, error) {
 //////////////////////////////////////////////////////////////////////
 // Set LIMIT clause.
 //////////////////////////////////////////////////////////////////////
-func (c *Client) SetLimit(limit int) *Client {
+func (c *SelectClient) SetLimit(limit int) *SelectClient {
     c.Limit = limit
     return c
 }
@@ -241,7 +241,7 @@ func (c *Client) SetLimit(limit int) *Client {
 //////////////////////////////////////////////////////////////////////
 // Set OFFSET clause.
 //////////////////////////////////////////////////////////////////////
-func (c *Client) SetOffset(offset int) *Client {
+func (c *SelectClient) SetOffset(offset int) *SelectClient {
     c.Offset = offset
     return c
 }
@@ -250,7 +250,7 @@ func (c *Client) SetOffset(offset int) *Client {
 //////////////////////////////////////////////////////////////////////
 // Set ORDER BY clause.
 //////////////////////////////////////////////////////////////////////
-func (c *Client) SetOrderBy(orderBy string) *Client {
+func (c *SelectClient) SetOrderBy(orderBy string) *SelectClient {
     c.OrderBy = orderBy
     return c
 }
@@ -259,7 +259,7 @@ func (c *Client) SetOrderBy(orderBy string) *Client {
 //////////////////////////////////////////////////////////////////////
 // Set ORDER DESC.
 //////////////////////////////////////////////////////////////////////
-func (c *Client) SetOrderDesc(isDesc bool) *Client {
+func (c *SelectClient) SetOrderDesc(isDesc bool) *SelectClient {
     c.OrderDesc = isDesc
     return c
 }
@@ -268,7 +268,7 @@ func (c *Client) SetOrderDesc(isDesc bool) *Client {
 //////////////////////////////////////////////////////////////////////
 // Set ORDER RAND.
 //////////////////////////////////////////////////////////////////////
-func (c *Client) SetOrderRand() *Client {
+func (c *SelectClient) SetOrderRand() *SelectClient {
     c.OrderRand = true
     return c
 }
@@ -277,7 +277,7 @@ func (c *Client) SetOrderRand() *Client {
 //////////////////////////////////////////////////////////////////////
 // Generate query.
 //////////////////////////////////////////////////////////////////////
-func (c *Client) generateQuery() (string, []interface{}) {
+func (c *SelectClient) generateQuery() (string, []interface{}) {
     args := make([]interface{}, 0)
     buf := make([]byte, 0)
 
@@ -327,7 +327,7 @@ func (c *Client) generateQuery() (string, []interface{}) {
 //////////////////////////////////////////////////////////////////////
 // Generate query for count.
 //////////////////////////////////////////////////////////////////////
-func (c *Client) generateQueryForCount() (string, []interface{}) {
+func (c *SelectClient) generateQueryForCount() (string, []interface{}) {
     args := make([]interface{}, 0)
     buf := make([]byte, 0)
 

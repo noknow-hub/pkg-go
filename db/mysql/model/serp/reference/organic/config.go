@@ -1,7 +1,7 @@
 //////////////////////////////////////////////////////////////////////
 // config.go
 //////////////////////////////////////////////////////////////////////
-package organic_item
+package organic
 
 import (
     "time"
@@ -23,10 +23,10 @@ const (
     COL_UPDATED_AT = "updated_at"
     COL_URL = "url"
     NUM_COLS = 13
-    TABLE_NAME = "serp_organic_items"
+    TABLE_NAME = "serp_organics"
 )
 
-type OrganicItem struct {
+type Organic struct {
     Id string
     SerpId string
     Ranking string
@@ -42,7 +42,7 @@ type OrganicItem struct {
     UpdatedAt time.Time
 }
 
-type SerpOrganicItem struct {
+type SerpOrganic struct {
     *mySerp.Serp
-    OrganicItems []*OrganicItem
+    Organics []*Organic
 }

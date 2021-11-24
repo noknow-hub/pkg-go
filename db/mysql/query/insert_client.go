@@ -1,7 +1,7 @@
 //////////////////////////////////////////////////////////////////////
-// client.go
+// insert_client.go
 //////////////////////////////////////////////////////////////////////
-package insert_statement
+package query
 
 import (
     "context"
@@ -11,7 +11,7 @@ import (
     myUtil "github.com/noknow-hub/pkg-go/db/mysql/query/util"
 )
 
-type Client struct {
+type InsertClient struct {
     ColNames []string
     Ctx context.Context
     Db *sql.DB
@@ -21,7 +21,7 @@ type Client struct {
     Values [][]interface{}
 }
 
-type Result struct {
+type InsertResult struct {
     RawQuery string
     RawArgs []interface{}
     SqlResult sql.Result
@@ -29,10 +29,10 @@ type Result struct {
 
 
 //////////////////////////////////////////////////////////////////////
-// New Client with db object.
+// New InsertClient with db object.
 //////////////////////////////////////////////////////////////////////
-func NewClientWithDb(tableName string, db *sql.DB) *Client {
-    return &Client{
+func NewInsertClientWithDb(tableName string, db *sql.DB) *InsertClient {
+    return &InsertClient{
         Db: db,
         TableName: tableName,
     }
@@ -40,10 +40,10 @@ func NewClientWithDb(tableName string, db *sql.DB) *Client {
 
 
 //////////////////////////////////////////////////////////////////////
-// New Client with db object and context.
+// New InsertClient with db object and context.
 //////////////////////////////////////////////////////////////////////
-func NewClientWithDbContext(tableName string, db *sql.DB, ctx context.Context) *Client {
-    return &Client{
+func NewInsertClientWithDbContext(tableName string, db *sql.DB, ctx context.Context) *InsertClient {
+    return &InsertClient{
         Ctx: ctx,
         Db: db,
         TableName: tableName,
@@ -52,10 +52,10 @@ func NewClientWithDbContext(tableName string, db *sql.DB, ctx context.Context) *
 
 
 //////////////////////////////////////////////////////////////////////
-// New Client with tx object.
+// New InsertClient with tx object.
 //////////////////////////////////////////////////////////////////////
-func NewClientWithTx(tableName string, tx *sql.Tx) *Client {
-    return &Client{
+func NewInsertClientWithTx(tableName string, tx *sql.Tx) *InsertClient {
+    return &InsertClient{
         TableName: tableName,
         Tx: tx,
     }
@@ -63,10 +63,10 @@ func NewClientWithTx(tableName string, tx *sql.Tx) *Client {
 
 
 //////////////////////////////////////////////////////////////////////
-// New Client with tx object and context.
+// New InsertClient with tx object and context.
 //////////////////////////////////////////////////////////////////////
-func NewClientWithTxContext(tableName string, tx *sql.Tx, ctx context.Context) *Client {
-    return &Client{
+func NewInsertClientWithTxContext(tableName string, tx *sql.Tx, ctx context.Context) *InsertClient {
+    return &InsertClient{
         Ctx: ctx,
         TableName: tableName,
         Tx: tx,
@@ -77,7 +77,7 @@ func NewClientWithTxContext(tableName string, tx *sql.Tx, ctx context.Context) *
 //////////////////////////////////////////////////////////////////////
 // Append VALUES clause.
 //////////////////////////////////////////////////////////////////////
-func (c *Client) AppendValues(valueList []interface{}) *Client {
+func (c *InsertClient) AppendValues(valueList []interface{}) *InsertClient {
     c.Values = append(c.Values, valueList)
     return c
 }
@@ -86,8 +86,8 @@ func (c *Client) AppendValues(valueList []interface{}) *Client {
 //////////////////////////////////////////////////////////////////////
 // Run.
 //////////////////////////////////////////////////////////////////////
-func (c *Client) Run() (*Result, error) {
-    result := &Result{}
+func (c *InsertClient) Run() (*InsertResult, error) {
+    result := &InsertResult{}
     result.RawQuery, result.RawArgs = c.generateQuery()
     var err error
     result.SqlResult, err = myUtil.Exec(c.Db, c.Tx, c.Ctx, result.RawQuery, result.RawArgs)
@@ -98,7 +98,7 @@ func (c *Client) Run() (*Result, error) {
 //////////////////////////////////////////////////////////////////////
 // Set column names.
 //////////////////////////////////////////////////////////////////////
-func (c *Client) SetColNames(colNames []string) *Client {
+func (c *InsertClient) SetColNames(colNames []string) *InsertClient {
     c.ColNames = colNames
     return c
 }
@@ -107,7 +107,7 @@ func (c *Client) SetColNames(colNames []string) *Client {
 //////////////////////////////////////////////////////////////////////
 // Set IGNORE clause.
 //////////////////////////////////////////////////////////////////////
-func (c *Client) SetIgnore() *Client {
+func (c *InsertClient) SetIgnore() *InsertClient {
     c.Ignore = true
     return c
 }
@@ -116,7 +116,7 @@ func (c *Client) SetIgnore() *Client {
 //////////////////////////////////////////////////////////////////////
 // Set table name.
 //////////////////////////////////////////////////////////////////////
-func (c *Client) SetTableName(tableName string) *Client {
+func (c *InsertClient) SetTableName(tableName string) *InsertClient {
     c.TableName = tableName
     return c
 }
@@ -125,7 +125,7 @@ func (c *Client) SetTableName(tableName string) *Client {
 //////////////////////////////////////////////////////////////////////
 // Generate query.
 //////////////////////////////////////////////////////////////////////
-func (c *Client) generateQuery() (string, []interface{}) {
+func (c *InsertClient) generateQuery() (string, []interface{}) {
     buf := make([]byte, 0)
     args := make([]interface{}, 0)
 

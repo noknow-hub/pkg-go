@@ -1,7 +1,7 @@
 //////////////////////////////////////////////////////////////////////
-// client.go
+// delete_client.go
 //////////////////////////////////////////////////////////////////////
-package delete_statement
+package query
 
 import (
     "context"
@@ -10,7 +10,7 @@ import (
    myUtil "github.com/noknow-hub/pkg-go/db/mysql/query/util"
 )
 
-type Client struct {
+type DeleteClient struct {
     Ctx context.Context
     Db *sql.DB
     Tx *sql.Tx
@@ -20,7 +20,7 @@ type Client struct {
     WhereCondition *myUtil.WhereCondition
 }
 
-type Result struct {
+type DeleteResult struct {
     RawQuery string
     RawArgs []interface{}
     SqlResult sql.Result
@@ -28,10 +28,10 @@ type Result struct {
 
 
 //////////////////////////////////////////////////////////////////////
-// New Client with db object.
+// New DeleteClient with db object.
 //////////////////////////////////////////////////////////////////////
-func NewClientWithDb(tableName string, db *sql.DB) *Client {
-    return &Client{
+func NewDeleteClientWithDb(tableName string, db *sql.DB) *DeleteClient {
+    return &DeleteClient{
         Db: db,
         TableName: tableName,
         WhereCondition: &myUtil.WhereCondition{},
@@ -40,10 +40,10 @@ func NewClientWithDb(tableName string, db *sql.DB) *Client {
 
 
 //////////////////////////////////////////////////////////////////////
-// New Client with db object and context.
+// New DeleteClient with db object and context.
 //////////////////////////////////////////////////////////////////////
-func NewClientWithDbContext(tableName string, db *sql.DB, ctx context.Context) *Client {
-    return &Client{
+func NewDeleteClientWithDbContext(tableName string, db *sql.DB, ctx context.Context) *DeleteClient {
+    return &DeleteClient{
         Ctx: ctx,
         Db: db,
         TableName: tableName,
@@ -53,10 +53,10 @@ func NewClientWithDbContext(tableName string, db *sql.DB, ctx context.Context) *
 
 
 //////////////////////////////////////////////////////////////////////
-// New Client with tx object.
+// New DeleteClient with tx object.
 //////////////////////////////////////////////////////////////////////
-func NewClientWithTx(tableName string, tx *sql.Tx) *Client {
-    return &Client{
+func NewDeleteClientWithTx(tableName string, tx *sql.Tx) *DeleteClient {
+    return &DeleteClient{
         TableName: tableName,
         Tx: tx,
         WhereCondition: &myUtil.WhereCondition{},
@@ -65,10 +65,10 @@ func NewClientWithTx(tableName string, tx *sql.Tx) *Client {
 
 
 //////////////////////////////////////////////////////////////////////
-// New Client with tx object and context.
+// New DeleteClient with tx object and context.
 //////////////////////////////////////////////////////////////////////
-func NewClientWithTxContext(tableName string, tx *sql.Tx, ctx context.Context) *Client {
-    return &Client{
+func NewDeleteClientWithTxContext(tableName string, tx *sql.Tx, ctx context.Context) *DeleteClient {
+    return &DeleteClient{
         Ctx: ctx,
         TableName: tableName,
         Tx: tx,
@@ -80,8 +80,8 @@ func NewClientWithTxContext(tableName string, tx *sql.Tx, ctx context.Context) *
 //////////////////////////////////////////////////////////////////////
 // Run.
 //////////////////////////////////////////////////////////////////////
-func (c *Client) Run() (*Result, error) {
-    result := &Result{}
+func (c *DeleteClient) Run() (*DeleteResult, error) {
+    result := &DeleteResult{}
     result.RawQuery, result.RawArgs = c.generateQuery()
     var err error
     result.SqlResult, err = myUtil.Exec(c.Db, c.Tx, c.Ctx, result.RawQuery, result.RawArgs)
@@ -92,7 +92,7 @@ func (c *Client) Run() (*Result, error) {
 //////////////////////////////////////////////////////////////////////
 // Set IGNORE clause.
 //////////////////////////////////////////////////////////////////////
-func (c *Client) SetIgnore() *Client {
+func (c *DeleteClient) SetIgnore() *DeleteClient {
     c.Ignore = true
     return c
 }
@@ -101,7 +101,7 @@ func (c *Client) SetIgnore() *Client {
 //////////////////////////////////////////////////////////////////////
 // Generate query.
 //////////////////////////////////////////////////////////////////////
-func (c *Client) generateQuery() (string, []interface{}) {
+func (c *DeleteClient) generateQuery() (string, []interface{}) {
     args := make([]interface{}, 0)
     buf := make([]byte, 0)
 

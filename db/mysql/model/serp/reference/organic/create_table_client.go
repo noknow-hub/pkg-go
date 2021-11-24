@@ -1,18 +1,18 @@
 //////////////////////////////////////////////////////////////////////
 // create_table_client.go
 //////////////////////////////////////////////////////////////////////
-package organic_item
+package organic
 
 import (
     "context"
     "database/sql"
     _ "github.com/go-sql-driver/mysql"
     mySerp "github.com/noknow-hub/pkg-go/db/mysql/model/serp"
-    myCreateTableStatement "github.com/noknow-hub/pkg-go/db/mysql/query/create_table_statement"
+    myQuery "github.com/noknow-hub/pkg-go/db/mysql/query"
 )
 
 type CreateTableClient struct {
-    *myCreateTableStatement.Client
+    *myQuery.CreateTableClient
     RefTableName string
 }
 
@@ -22,7 +22,7 @@ type CreateTableClient struct {
 //////////////////////////////////////////////////////////////////////
 func NewCreateTableClientWithDb(tableName, refTableName string, db *sql.DB) *CreateTableClient {
     return &CreateTableClient{
-        Client: myCreateTableStatement.NewClientWithDb(tableName, db),
+        Client: myQuery.NewCreateTableClientWithDb(tableName, db),
         RefTableName: refTableName,
     }
 }
@@ -33,7 +33,7 @@ func NewCreateTableClientWithDb(tableName, refTableName string, db *sql.DB) *Cre
 //////////////////////////////////////////////////////////////////////
 func NewCreateTableClientWithDbContext(tableName, refTableName string, db *sql.DB, ctx context.Context) *CreateTableClient {
     return &CreateTableClient{
-        Client: myCreateTableStatement.NewClientWithDbContext(tableName, db, ctx),
+        Client: myQuery.NewCreateTableClientWithDbContext(tableName, db, ctx),
         RefTableName: refTableName,
     }
 }
@@ -44,7 +44,7 @@ func NewCreateTableClientWithDbContext(tableName, refTableName string, db *sql.D
 //////////////////////////////////////////////////////////////////////
 func NewCreateTableClientWithTx(tableName, refTableName string, tx *sql.Tx) *CreateTableClient {
     return &CreateTableClient{
-        Client: myCreateTableStatement.NewClientWithTx(tableName, tx),
+        Client: myQuery.NewCreateTableClientWithTx(tableName, tx),
         RefTableName: refTableName,
     }
 }
@@ -55,7 +55,7 @@ func NewCreateTableClientWithTx(tableName, refTableName string, tx *sql.Tx) *Cre
 //////////////////////////////////////////////////////////////////////
 func NewCreateTableClientWithTxContext(tableName, refTableName string, tx *sql.Tx, ctx context.Context) *CreateTableClient {
     return &CreateTableClient{
-        Client: myCreateTableStatement.NewClientWithTxContext(tableName, tx, ctx),
+        Client: myQuery.NewCreateTableClientWithTxContext(tableName, tx, ctx),
         RefTableName: refTableName,
     }
 }
@@ -64,66 +64,66 @@ func NewCreateTableClientWithTxContext(tableName, refTableName string, tx *sql.T
 //////////////////////////////////////////////////////////////////////
 // Run.
 //////////////////////////////////////////////////////////////////////
-func (c *CreateTableClient) Run() (*myCreateTableStatement.Result, error) {
+func (c *CreateTableClient) Run() (*myQuery.CreateTableResult, error) {
     c.
         AppendColumnDefinition(
-            myCreateTableStatement.NewColumnDefinition(COL_ID, "VARCHAR(50)").
+            myQuery.NewColumnDefinition(COL_ID, "VARCHAR(50)").
                 SetNotNull().
                 SetComment("SERP organic item ID."),
         ).
         AppendColumnDefinition(
-            myCreateTableStatement.NewColumnDefinition(COL_SERP_ID, "VARCHAR(50)").
+            myQuery.NewColumnDefinition(COL_SERP_ID, "VARCHAR(50)").
                 SetNotNull().
                 SetComment("SERP ID."),
         ).
         AppendColumnDefinition(
-            myCreateTableStatement.NewColumnDefinition(COL_RANKING, "INT UNSIGNED").
+            myQuery.NewColumnDefinition(COL_RANKING, "INT UNSIGNED").
                 SetNotNull().
                 SetComment("Ranking."),
         ).
         AppendColumnDefinition(
-            myCreateTableStatement.NewColumnDefinition(COL_GROUP_RANKING, "INT UNSIGNED").
+            myQuery.NewColumnDefinition(COL_GROUP_RANKING, "INT UNSIGNED").
                 SetComment("Group ranking."),
         ).
         AppendColumnDefinition(
-            myCreateTableStatement.NewColumnDefinition(COL_DOMAIN, "VARCHAR(150)").
+            myQuery.NewColumnDefinition(COL_DOMAIN, "VARCHAR(150)").
                 SetNotNull().
                 SetComment("Domain."),
         ).
         AppendColumnDefinition(
-            myCreateTableStatement.NewColumnDefinition(COL_URL, "TEXT").
+            myQuery.NewColumnDefinition(COL_URL, "TEXT").
                 SetNotNull().
                 SetComment("URL."),
         ).
         AppendColumnDefinition(
-            myCreateTableStatement.NewColumnDefinition(COL_TITLE, "TEXT").
+            myQuery.NewColumnDefinition(COL_TITLE, "TEXT").
                 SetNotNull().
                 SetComment("Title."),
         ).
         AppendColumnDefinition(
-            myCreateTableStatement.NewColumnDefinition(COL_TIMESTAMP, "DATETIME").
+            myQuery.NewColumnDefinition(COL_TIMESTAMP, "DATETIME").
                 SetComment("Timestamp."),
         ).
         AppendColumnDefinition(
-            myCreateTableStatement.NewColumnDefinition(COL_SNIPPET, "TEXT").
+            myQuery.NewColumnDefinition(COL_SNIPPET, "TEXT").
                 SetComment("Snippet."),
         ).
         AppendColumnDefinition(
-            myCreateTableStatement.NewColumnDefinition(COL_RELATED_URL, "TEXT").
+            myQuery.NewColumnDefinition(COL_RELATED_URL, "TEXT").
                 SetComment("Related search URL."),
         ).
         AppendColumnDefinition(
-            myCreateTableStatement.NewColumnDefinition(COL_CACHE_URL, "TEXT").
+            myQuery.NewColumnDefinition(COL_CACHE_URL, "TEXT").
                 SetComment("Cached URL."),
         ).
         AppendColumnDefinition(
-            myCreateTableStatement.NewColumnDefinition(COL_CREATED_AT, "DATETIME").
+            myQuery.NewColumnDefinition(COL_CREATED_AT, "DATETIME").
                 SetNotNull().
                 SetDefault("CURRENT_TIMESTAMP").
                 SetComment("Created at."),
         ).
         AppendColumnDefinition(
-            myCreateTableStatement.NewColumnDefinition(COL_UPDATED_AT, "DATETIME").
+            myQuery.NewColumnDefinition(COL_UPDATED_AT, "DATETIME").
                 SetDefault("CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP").
                 SetComment("Updated at."),
         ).

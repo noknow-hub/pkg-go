@@ -1,7 +1,7 @@
 //////////////////////////////////////////////////////////////////////
-// client.go
+// update_client.go
 //////////////////////////////////////////////////////////////////////
-package update_statement
+package query
 
 import (
     "context"
@@ -10,7 +10,7 @@ import (
    myUtil "github.com/noknow-hub/pkg-go/db/mysql/query/util"
 )
 
-type Client struct {
+type UpdateClient struct {
     AssignmentList *myUtil.AssignmentList
     Ctx context.Context
     Db *sql.DB
@@ -25,7 +25,7 @@ type Client struct {
     WhereCondition *myUtil.WhereCondition
 }
 
-type Result struct {
+type UpdateResult struct {
     HasMore bool
     RawQuery string
     RawArgs []interface{}
@@ -34,10 +34,10 @@ type Result struct {
 
 
 //////////////////////////////////////////////////////////////////////
-// New Client with db object.
+// New UpdateClient with db object.
 //////////////////////////////////////////////////////////////////////
-func NewClientWithDb(tableName string, db *sql.DB) *Client {
-    return &Client{
+func NewUpdateClientWithDb(tableName string, db *sql.DB) *UpdateClient {
+    return &UpdateClient{
         AssignmentList: &myUtil.AssignmentList{},
         Db: db,
         TableName: tableName,
@@ -47,10 +47,10 @@ func NewClientWithDb(tableName string, db *sql.DB) *Client {
 
 
 //////////////////////////////////////////////////////////////////////
-// New Client with db object and context.
+// New UpdateClient with db object and context.
 //////////////////////////////////////////////////////////////////////
-func NewClientWithDbContext(tableName string, db *sql.DB, ctx context.Context) *Client {
-    return &Client{
+func NewUpdateClientWithDbContext(tableName string, db *sql.DB, ctx context.Context) *UpdateClient {
+    return &UpdateClient{
         AssignmentList: &myUtil.AssignmentList{},
         Ctx: ctx,
         Db: db,
@@ -61,10 +61,10 @@ func NewClientWithDbContext(tableName string, db *sql.DB, ctx context.Context) *
 
 
 //////////////////////////////////////////////////////////////////////
-// New Client with tx object.
+// New UpdateClient with tx object.
 //////////////////////////////////////////////////////////////////////
-func NewClientWithTx(tableName string, tx *sql.Tx) *Client {
-    return &Client{
+func NewUpdateClientWithTx(tableName string, tx *sql.Tx) *UpdateClient {
+    return &UpdateClient{
         AssignmentList: &myUtil.AssignmentList{},
         TableName: tableName,
         Tx: tx,
@@ -74,10 +74,10 @@ func NewClientWithTx(tableName string, tx *sql.Tx) *Client {
 
 
 //////////////////////////////////////////////////////////////////////
-// New Client with tx object and context.
+// New UpdateClient with tx object and context.
 //////////////////////////////////////////////////////////////////////
-func NewClientWithTxContext(tableName string, tx *sql.Tx, ctx context.Context) *Client {
-    return &Client{
+func NewUpdateClientWithTxContext(tableName string, tx *sql.Tx, ctx context.Context) *UpdateClient {
+    return &UpdateClient{
         AssignmentList: &myUtil.AssignmentList{},
         Ctx: ctx,
         TableName: tableName,
@@ -90,8 +90,8 @@ func NewClientWithTxContext(tableName string, tx *sql.Tx, ctx context.Context) *
 //////////////////////////////////////////////////////////////////////
 // Run.
 //////////////////////////////////////////////////////////////////////
-func (c *Client) Run() (*Result, error) {
-    result := &Result{}
+func (c *UpdateClient) Run() (*UpdateResult, error) {
+    result := &UpdateResult{}
     result.RawQuery, result.RawArgs = c.generateQuery()
     var err error
     result.SqlResult, err = myUtil.Exec(c.Db, c.Tx, c.Ctx, result.RawQuery, result.RawArgs)
@@ -102,7 +102,7 @@ func (c *Client) Run() (*Result, error) {
 //////////////////////////////////////////////////////////////////////
 // Set IGNORE clause.
 //////////////////////////////////////////////////////////////////////
-func (c *Client) SetIgnore() *Client {
+func (c *UpdateClient) SetIgnore() *UpdateClient {
     c.Ignore = true
     return c
 }
@@ -111,7 +111,7 @@ func (c *Client) SetIgnore() *Client {
 //////////////////////////////////////////////////////////////////////
 // Set LIMIT clause.
 //////////////////////////////////////////////////////////////////////
-func (c *Client) SetLimit(limit int) *Client {
+func (c *UpdateClient) SetLimit(limit int) *UpdateClient {
     c.Limit = limit
     return c
 }
@@ -120,7 +120,7 @@ func (c *Client) SetLimit(limit int) *Client {
 //////////////////////////////////////////////////////////////////////
 // Set OFFSET clause.
 //////////////////////////////////////////////////////////////////////
-func (c *Client) SetOffset(offset int) *Client {
+func (c *UpdateClient) SetOffset(offset int) *UpdateClient {
     c.Offset = offset
     return c
 }
@@ -129,7 +129,7 @@ func (c *Client) SetOffset(offset int) *Client {
 //////////////////////////////////////////////////////////////////////
 // Set ORDER BY clause.
 //////////////////////////////////////////////////////////////////////
-func (c *Client) SetOrderBy(orderBy string) *Client {
+func (c *UpdateClient) SetOrderBy(orderBy string) *UpdateClient {
     c.OrderBy = orderBy
     return c
 }
@@ -138,7 +138,7 @@ func (c *Client) SetOrderBy(orderBy string) *Client {
 //////////////////////////////////////////////////////////////////////
 // Set ORDER DESC.
 //////////////////////////////////////////////////////////////////////
-func (c *Client) SetOrderDesc(isDesc bool) *Client {
+func (c *UpdateClient) SetOrderDesc(isDesc bool) *UpdateClient {
     c.OrderDesc = isDesc
     return c
 }
@@ -147,7 +147,7 @@ func (c *Client) SetOrderDesc(isDesc bool) *Client {
 //////////////////////////////////////////////////////////////////////
 // Set ORDER RAND.
 //////////////////////////////////////////////////////////////////////
-func (c *Client) SetOrderRand() *Client {
+func (c *UpdateClient) SetOrderRand() *UpdateClient {
     c.OrderRand = true
     return c
 }
@@ -156,7 +156,7 @@ func (c *Client) SetOrderRand() *Client {
 //////////////////////////////////////////////////////////////////////
 // Generate query.
 //////////////////////////////////////////////////////////////////////
-func (c *Client) generateQuery() (string, []interface{}) {
+func (c *UpdateClient) generateQuery() (string, []interface{}) {
     args := make([]interface{}, 0)
     buf := make([]byte, 0)
 

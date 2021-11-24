@@ -9,7 +9,7 @@ import (
     "strings"
     myModelUtil "github.com/noknow-hub/pkg-go/db/mysql/model/util"
     mySerp "github.com/noknow-hub/pkg-go/db/mysql/model/serp"
-    myQueryUtil "github.com/noknow-hub/pkg-go/db/mysql/query/util"
+    myQueryUtil "github.com/noknow-hub/pkg-go/db/mysql/query"
 )
 
 

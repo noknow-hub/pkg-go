@@ -8,7 +8,6 @@ import (
     "database/sql"
     "strings"
     _ "github.com/go-sql-driver/mysql"
-   myUtil "github.com/noknow-hub/pkg-go/db/mysql/query/util"
 )
 
 type SelectClient struct {
@@ -16,23 +15,23 @@ type SelectClient struct {
     Ctx context.Context
     Db *sql.DB
     Ignore bool
-    InnerJoinTables []*myUtil.InnerJoinTable
-    JoinCondition *myUtil.JoinCondition
+    InnerJoinTables []*InnerJoinTable
+    JoinCondition *JoinCondition
     Limit int
     Offset int
     OrderBy string
     OrderDesc bool
     OrderRand bool
-    OuterJoinTables []*myUtil.OuterJoinTable
+    OuterJoinTables []*OuterJoinTable
     TableName string
     Tx *sql.Tx
-    WhereCondition *myUtil.WhereCondition
+    WhereCondition *WhereCondition
 }
 
 type SelectResult struct {
     RawArgs []interface{}
     RawQuery string
-    Rows []*myUtil.Row
+    Rows []*Row
 }
 
 type SelectResultCount struct {
@@ -60,9 +59,9 @@ type SelectResultQueryRow struct {
 func NewSelectClientWithDb(tableName string, db *sql.DB) *SelectClient {
     return &SelectClient{
         Db: db,
-        JoinCondition: &myUtil.JoinCondition{},
+        JoinCondition: &JoinCondition{},
         TableName: tableName,
-        WhereCondition: &myUtil.WhereCondition{},
+        WhereCondition: &WhereCondition{},
     }
 }
 
@@ -74,9 +73,9 @@ func NewSelectClientWithDbContext(tableName string, db *sql.DB, ctx context.Cont
     return &SelectClient{
         Ctx: ctx,
         Db: db,
-        JoinCondition: &myUtil.JoinCondition{},
+        JoinCondition: &JoinCondition{},
         TableName: tableName,
-        WhereCondition: &myUtil.WhereCondition{},
+        WhereCondition: &WhereCondition{},
     }
 }
 
@@ -85,10 +84,10 @@ func NewSelectClientWithDbContext(tableName string, db *sql.DB, ctx context.Cont
 //////////////////////////////////////////////////////////////////////
 func NewSelectClientWithTx(tableName string, tx *sql.Tx) *SelectClient {
     return &SelectClient{
-        JoinCondition: &myUtil.JoinCondition{},
+        JoinCondition: &JoinCondition{},
         TableName: tableName,
         Tx: tx,
-        WhereCondition: &myUtil.WhereCondition{},
+        WhereCondition: &WhereCondition{},
     }
 }
 
@@ -99,10 +98,10 @@ func NewSelectClientWithTx(tableName string, tx *sql.Tx) *SelectClient {
 func NewSelectClientWithTxContext(tableName string, tx *sql.Tx, ctx context.Context) *SelectClient {
     return &SelectClient{
         Ctx: ctx,
-        JoinCondition: &myUtil.JoinCondition{},
+        JoinCondition: &JoinCondition{},
         TableName: tableName,
         Tx: tx,
-        WhereCondition: &myUtil.WhereCondition{},
+        WhereCondition: &WhereCondition{},
     }
 }
 
@@ -120,7 +119,7 @@ func (c *SelectClient) AppendColumn(column string) *SelectClient {
 // Append INNER JOIN clause.
 //////////////////////////////////////////////////////////////////////
 func (c *SelectClient) AppendInnerJoinTables(sourceTableName, sourceCoulmn, toTableName, toCoulmn string) *SelectClient {
-    c.InnerJoinTables = append(c.InnerJoinTables, &myUtil.InnerJoinTable{
+    c.InnerJoinTables = append(c.InnerJoinTables, &InnerJoinTable{
         SourceTableName: sourceTableName,
         SourceCoulmn: sourceCoulmn,
         ToTableName: toTableName,
@@ -134,7 +133,7 @@ func (c *SelectClient) AppendInnerJoinTables(sourceTableName, sourceCoulmn, toTa
 // Append OUTER JOIN clause.
 //////////////////////////////////////////////////////////////////////
 func (c *SelectClient) AppendOuterJoinTables(sourceTableName, sourceCoulmn, toTableName, toCoulmn string, isLeft bool) *SelectClient {
-    c.OuterJoinTables = append(c.OuterJoinTables, &myUtil.OuterJoinTable{
+    c.OuterJoinTables = append(c.OuterJoinTables, &OuterJoinTable{
         SourceTableName: sourceTableName,
         SourceCoulmn: sourceCoulmn,
         ToTableName: toTableName,
@@ -151,7 +150,7 @@ func (c *SelectClient) AppendOuterJoinTables(sourceTableName, sourceCoulmn, toTa
 func (c *SelectClient) Count() (*SelectResultCount, error) {
     result := &SelectResultCount{}
     result.RawQuery, result.RawArgs = c.generateQueryForCount()
-    row, err := myUtil.QueryRow(c.Db, c.Tx, c.Ctx, result.RawQuery, result.RawArgs)
+    row, err := QueryRow(c.Db, c.Tx, c.Ctx, result.RawQuery, result.RawArgs)
     if err != nil {
         return result, err
     }
@@ -170,7 +169,7 @@ func (c *SelectClient) Query() (*SelectResultQuery, error) {
     result := &SelectResultQuery{}
     result.RawQuery, result.RawArgs = c.generateQuery()
     var err error
-    result.Rows, err = myUtil.Query(c.Db, c.Tx, c.Ctx, result.RawQuery, result.RawArgs)
+    result.Rows, err = Query(c.Db, c.Tx, c.Ctx, result.RawQuery, result.RawArgs)
     return result, err
 }
 
@@ -182,7 +181,7 @@ func (c *SelectClient) QueryRow() (*SelectResultQueryRow, error) {
     result := &SelectResultQueryRow{}
     result.RawQuery, result.RawArgs = c.generateQuery()
     var err error
-    result.Row, err = myUtil.QueryRow(c.Db, c.Tx, c.Ctx, result.RawQuery, result.RawArgs)
+    result.Row, err = QueryRow(c.Db, c.Tx, c.Ctx, result.RawQuery, result.RawArgs)
     return result, err
 }
 
@@ -193,7 +192,7 @@ func (c *SelectClient) QueryRow() (*SelectResultQueryRow, error) {
 func (c *SelectClient) Run() (*SelectResult, error) {
     result := &SelectResult{}
     result.RawQuery, result.RawArgs = c.generateQuery()
-    rows, err := myUtil.Query(c.Db, c.Tx, c.Ctx, result.RawQuery, result.RawArgs)
+    rows, err := Query(c.Db, c.Tx, c.Ctx, result.RawQuery, result.RawArgs)
     defer rows.Close()
     if err != nil {
         return result, err
@@ -210,14 +209,14 @@ func (c *SelectClient) Run() (*SelectResult, error) {
         dests[i] = &vals[i]
     }
     for rows.Next() {
-        row := &myUtil.Row{}
+        row := &Row{}
 
         if err := rows.Scan(dests...); err != nil {
             return result, err
         }
 
         for i, col := range cols {
-            row.Columns = append(row.Columns, &myUtil.Column{
+            row.Columns = append(row.Columns, &Column{
                 Name: col,
                 Value: vals[i],
             })
@@ -289,34 +288,34 @@ func (c *SelectClient) generateQuery() (string, []interface{}) {
     }
 
     // INNER JOIN
-    if tmpBuf, tmpArgs := myUtil.GenerateQueryForInnerJoin(c.InnerJoinTables, c.JoinCondition); tmpBuf != "" && len(tmpArgs) > 0 {
+    if tmpBuf, tmpArgs := GenerateQueryForInnerJoin(c.InnerJoinTables, c.JoinCondition); tmpBuf != "" && len(tmpArgs) > 0 {
         buf = append(buf, tmpBuf...)
         args = append(args, tmpArgs...)
     }
 
     // OUTER JOIN
-    if tmpBuf, tmpArgs := myUtil.GenerateQueryForOuterJoin(c.OuterJoinTables, c.JoinCondition); tmpBuf != "" && len(tmpArgs) > 0 {
+    if tmpBuf, tmpArgs := GenerateQueryForOuterJoin(c.OuterJoinTables, c.JoinCondition); tmpBuf != "" && len(tmpArgs) > 0 {
         buf = append(buf, tmpBuf...)
         args = append(args, tmpArgs...)
     }
 
     // WHERE
-    if tmpBuf, tmpArgs := myUtil.GenerateQueryForWhere(c.WhereCondition); tmpBuf != "" && len(tmpArgs) > 0 {
+    if tmpBuf, tmpArgs := GenerateQueryForWhere(c.WhereCondition); tmpBuf != "" && len(tmpArgs) > 0 {
         buf = append(buf, tmpBuf...)
         args = append(args, tmpArgs...)
     }
 
     // ORDER BY
     if c.OrderRand {
-        buf = append(buf, myUtil.GenerateQueryForOrderByRand()...)
+        buf = append(buf, GenerateQueryForOrderByRand()...)
     } else {
-        if tmpBuf := myUtil.GenerateQueryForOrderBy(c.OrderBy, c.OrderDesc); tmpBuf != "" {
+        if tmpBuf := GenerateQueryForOrderBy(c.OrderBy, c.OrderDesc); tmpBuf != "" {
             buf = append(buf, tmpBuf...)
         }
     }
 
     // LIMIT
-    if tmpBuf := myUtil.GenerateQueryForLimit(c.Limit, c.Offset); tmpBuf != "" {
+    if tmpBuf := GenerateQueryForLimit(c.Limit, c.Offset); tmpBuf != "" {
         buf = append(buf, tmpBuf...)
     }
 
@@ -335,25 +334,25 @@ func (c *SelectClient) generateQueryForCount() (string, []interface{}) {
     buf = append(buf, "SELECT COUNT(*) FROM " + c.TableName...)
 
     // INNER JOIN
-    if tmpBuf, tmpArgs := myUtil.GenerateQueryForInnerJoin(c.InnerJoinTables, c.JoinCondition); tmpBuf != "" && len(tmpArgs) > 0 {
+    if tmpBuf, tmpArgs := GenerateQueryForInnerJoin(c.InnerJoinTables, c.JoinCondition); tmpBuf != "" && len(tmpArgs) > 0 {
         buf = append(buf, tmpBuf...)
         args = append(args, tmpArgs...)
     }
 
     // OUTER JOIN
-    if tmpBuf, tmpArgs := myUtil.GenerateQueryForOuterJoin(c.OuterJoinTables, c.JoinCondition); tmpBuf != "" && len(tmpArgs) > 0 {
+    if tmpBuf, tmpArgs := GenerateQueryForOuterJoin(c.OuterJoinTables, c.JoinCondition); tmpBuf != "" && len(tmpArgs) > 0 {
         buf = append(buf, tmpBuf...)
         args = append(args, tmpArgs...)
     }
 
     // WHERE
-    if tmpBuf, tmpArgs := myUtil.GenerateQueryForWhere(c.WhereCondition); tmpBuf != "" && len(tmpArgs) > 0 {
+    if tmpBuf, tmpArgs := GenerateQueryForWhere(c.WhereCondition); tmpBuf != "" && len(tmpArgs) > 0 {
         buf = append(buf, tmpBuf...)
         args = append(args, tmpArgs...)
     }
 
     // LIMIT
-    if tmpBuf := myUtil.GenerateQueryForLimit(c.Limit, c.Offset); tmpBuf != "" {
+    if tmpBuf := GenerateQueryForLimit(c.Limit, c.Offset); tmpBuf != "" {
         buf = append(buf, tmpBuf...)
     }
 

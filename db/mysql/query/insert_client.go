@@ -8,7 +8,6 @@ import (
     "database/sql"
     "strings"
     _ "github.com/go-sql-driver/mysql"
-    myUtil "github.com/noknow-hub/pkg-go/db/mysql/query/util"
 )
 
 type InsertClient struct {
@@ -90,7 +89,7 @@ func (c *InsertClient) Run() (*InsertResult, error) {
     result := &InsertResult{}
     result.RawQuery, result.RawArgs = c.generateQuery()
     var err error
-    result.SqlResult, err = myUtil.Exec(c.Db, c.Tx, c.Ctx, result.RawQuery, result.RawArgs)
+    result.SqlResult, err = Exec(c.Db, c.Tx, c.Ctx, result.RawQuery, result.RawArgs)
     return result, err
 }
 

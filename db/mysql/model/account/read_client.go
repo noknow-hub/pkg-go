@@ -7,11 +7,11 @@ import (
     "context"
     "database/sql"
     _ "github.com/go-sql-driver/mysql"
-    mySelectStatement "github.com/noknow-hub/pkg-go/db/mysql/query/select_statement"
+    myQuery "github.com/noknow-hub/pkg-go/db/mysql/query"
 )
 
 type ReadClient struct {
-    BaseClient *mySelectStatement.Client
+    BaseClient *myQuery.SelectClient
 }
 
 
@@ -20,7 +20,7 @@ type ReadClient struct {
 //////////////////////////////////////////////////////////////////////
 func NewReadClientWithDb(tableName string, db *sql.DB) *ReadClient {
     return &ReadClient{
-        BaseClient: mySelectStatement.NewClientWithDb(tableName, db),
+        BaseClient: myQuery.NewSelectClientWithDb(tableName, db),
     }
 }
 
@@ -30,7 +30,7 @@ func NewReadClientWithDb(tableName string, db *sql.DB) *ReadClient {
 //////////////////////////////////////////////////////////////////////
 func NewReadClientWithDbContext(tableName string, db *sql.DB, ctx context.Context) *ReadClient {
     return &ReadClient{
-        BaseClient: mySelectStatement.NewClientWithDbContext(tableName, db, ctx),
+        BaseClient: myQuery.NewSelectClientWithDbContext(tableName, db, ctx),
     }
 }
 
@@ -40,7 +40,7 @@ func NewReadClientWithDbContext(tableName string, db *sql.DB, ctx context.Contex
 //////////////////////////////////////////////////////////////////////
 func NewReadClientWithTx(tableName string, tx *sql.Tx) *ReadClient {
     return &ReadClient{
-        BaseClient: mySelectStatement.NewClientWithTx(tableName, tx),
+        BaseClient: myQuery.NewSelectClientWithTx(tableName, tx),
     }
 }
 
@@ -50,7 +50,7 @@ func NewReadClientWithTx(tableName string, tx *sql.Tx) *ReadClient {
 //////////////////////////////////////////////////////////////////////
 func NewReadClientWithTxContext(tableName string, tx *sql.Tx, ctx context.Context) *ReadClient {
     return &ReadClient{
-        BaseClient: mySelectStatement.NewClientWithTxContext(tableName, tx, ctx),
+        BaseClient: myQuery.NewSelectClientWithTxContext(tableName, tx, ctx),
     }
 }
 
@@ -58,7 +58,7 @@ func NewReadClientWithTxContext(tableName string, tx *sql.Tx, ctx context.Contex
 //////////////////////////////////////////////////////////////////////
 // Query.
 //////////////////////////////////////////////////////////////////////
-func (o *ReadClient) Query() (*mySelectStatement.ResultQuery, error) {
+func (o *ReadClient) Query() (*myQuery.SelectResultQuery, error) {
     o.BaseClient.SetLimit(1)
     return o.BaseClient.Query()
 }
@@ -67,7 +67,7 @@ func (o *ReadClient) Query() (*mySelectStatement.ResultQuery, error) {
 //////////////////////////////////////////////////////////////////////
 // QueryRow.
 //////////////////////////////////////////////////////////////////////
-func (o *ReadClient) QueryRow() (*mySelectStatement.ResultQueryRow, error) {
+func (o *ReadClient) QueryRow() (*myQuery.SelectResultQueryRow, error) {
     return o.BaseClient.QueryRow()
 }
 
@@ -75,7 +75,7 @@ func (o *ReadClient) QueryRow() (*mySelectStatement.ResultQueryRow, error) {
 //////////////////////////////////////////////////////////////////////
 // Run.
 //////////////////////////////////////////////////////////////////////
-func (o *ReadClient) Run() (*Account, *mySelectStatement.Result, error) {
+func (o *ReadClient) Run() (*Account, *myQuery.SelectResult, error) {
     var account *Account
     o.BaseClient.SetLimit(1)
     result, err := o.BaseClient.Run()

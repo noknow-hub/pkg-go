@@ -7,11 +7,10 @@ import (
     "context"
     "database/sql"
     _ "github.com/go-sql-driver/mysql"
-   myUtil "github.com/noknow-hub/pkg-go/db/mysql/query/util"
 )
 
 type UpdateClient struct {
-    AssignmentList *myUtil.AssignmentList
+    AssignmentList *AssignmentList
     Ctx context.Context
     Db *sql.DB
     Ignore bool
@@ -22,7 +21,7 @@ type UpdateClient struct {
     OrderRand bool
     TableName string
     Tx *sql.Tx
-    WhereCondition *myUtil.WhereCondition
+    WhereCondition *WhereCondition
 }
 
 type UpdateResult struct {
@@ -38,10 +37,10 @@ type UpdateResult struct {
 //////////////////////////////////////////////////////////////////////
 func NewUpdateClientWithDb(tableName string, db *sql.DB) *UpdateClient {
     return &UpdateClient{
-        AssignmentList: &myUtil.AssignmentList{},
+        AssignmentList: &AssignmentList{},
         Db: db,
         TableName: tableName,
-        WhereCondition: &myUtil.WhereCondition{},
+        WhereCondition: &WhereCondition{},
     }
 }
 
@@ -51,11 +50,11 @@ func NewUpdateClientWithDb(tableName string, db *sql.DB) *UpdateClient {
 //////////////////////////////////////////////////////////////////////
 func NewUpdateClientWithDbContext(tableName string, db *sql.DB, ctx context.Context) *UpdateClient {
     return &UpdateClient{
-        AssignmentList: &myUtil.AssignmentList{},
+        AssignmentList: &AssignmentList{},
         Ctx: ctx,
         Db: db,
         TableName: tableName,
-        WhereCondition: &myUtil.WhereCondition{},
+        WhereCondition: &WhereCondition{},
     }
 }
 
@@ -65,10 +64,10 @@ func NewUpdateClientWithDbContext(tableName string, db *sql.DB, ctx context.Cont
 //////////////////////////////////////////////////////////////////////
 func NewUpdateClientWithTx(tableName string, tx *sql.Tx) *UpdateClient {
     return &UpdateClient{
-        AssignmentList: &myUtil.AssignmentList{},
+        AssignmentList: &AssignmentList{},
         TableName: tableName,
         Tx: tx,
-        WhereCondition: &myUtil.WhereCondition{},
+        WhereCondition: &WhereCondition{},
     }
 }
 
@@ -78,11 +77,11 @@ func NewUpdateClientWithTx(tableName string, tx *sql.Tx) *UpdateClient {
 //////////////////////////////////////////////////////////////////////
 func NewUpdateClientWithTxContext(tableName string, tx *sql.Tx, ctx context.Context) *UpdateClient {
     return &UpdateClient{
-        AssignmentList: &myUtil.AssignmentList{},
+        AssignmentList: &AssignmentList{},
         Ctx: ctx,
         TableName: tableName,
         Tx: tx,
-        WhereCondition: &myUtil.WhereCondition{},
+        WhereCondition: &WhereCondition{},
     }
 }
 
@@ -94,7 +93,7 @@ func (c *UpdateClient) Run() (*UpdateResult, error) {
     result := &UpdateResult{}
     result.RawQuery, result.RawArgs = c.generateQuery()
     var err error
-    result.SqlResult, err = myUtil.Exec(c.Db, c.Tx, c.Ctx, result.RawQuery, result.RawArgs)
+    result.SqlResult, err = Exec(c.Db, c.Tx, c.Ctx, result.RawQuery, result.RawArgs)
     return result, err
 }
 
@@ -168,28 +167,28 @@ func (c *UpdateClient) generateQuery() (string, []interface{}) {
     }
 
     // Assignment list.
-    if tmpBuf, tmpArgs := myUtil.GenerateQueryForSet(c.AssignmentList); tmpBuf != "" && len(tmpArgs) > 0 {
+    if tmpBuf, tmpArgs := GenerateQueryForSet(c.AssignmentList); tmpBuf != "" && len(tmpArgs) > 0 {
         buf = append(buf, tmpBuf...)
         args = append(args, tmpArgs...)
     }
 
     // WHERE
-    if tmpBuf, tmpArgs := myUtil.GenerateQueryForWhere(c.WhereCondition); tmpBuf != "" && len(tmpArgs) > 0 {
+    if tmpBuf, tmpArgs := GenerateQueryForWhere(c.WhereCondition); tmpBuf != "" && len(tmpArgs) > 0 {
         buf = append(buf, tmpBuf...)
         args = append(args, tmpArgs...)
     }
 
     // ORDER BY
     if c.OrderRand {
-        buf = append(buf, myUtil.GenerateQueryForOrderByRand()...)
+        buf = append(buf, GenerateQueryForOrderByRand()...)
     } else {
-        if tmpBuf := myUtil.GenerateQueryForOrderBy(c.OrderBy, c.OrderDesc); tmpBuf != "" {
+        if tmpBuf := GenerateQueryForOrderBy(c.OrderBy, c.OrderDesc); tmpBuf != "" {
             buf = append(buf, tmpBuf...)
         }
     }
 
     // LIMIT
-    if tmpBuf := myUtil.GenerateQueryForLimit(c.Limit, c.Offset); tmpBuf != "" {
+    if tmpBuf := GenerateQueryForLimit(c.Limit, c.Offset); tmpBuf != "" {
         buf = append(buf, tmpBuf...)
     }
 

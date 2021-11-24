@@ -8,7 +8,6 @@ import (
     "database/sql"
     "strings"
     _ "github.com/go-sql-driver/mysql"
-    myUtil "github.com/noknow-hub/pkg-go/db/mysql/query/util"
 )
 
 const (
@@ -183,7 +182,7 @@ func (c *CreateTableClient) Run() (*CreateTableResult, error) {
     result := &CreateTableResult{}
     result.RawQuery = c.generateQuery()
     var err error
-    result.SqlResult, err = myUtil.Exec(c.Db, c.Tx, c.Ctx, result.RawQuery, nil)
+    result.SqlResult, err = Exec(c.Db, c.Tx, c.Ctx, result.RawQuery, nil)
     return result, err
 }
 

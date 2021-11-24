@@ -7,11 +7,11 @@ import (
     "context"
     "database/sql"
     _ "github.com/go-sql-driver/mysql"
-    mySelectStatement "github.com/noknow-hub/pkg-go/db/mysql/query/select_statement"
+    myQuery "github.com/noknow-hub/pkg-go/db/mysql/query"
 )
 
 type BrowseClient struct {
-    BaseClient *mySelectStatement.Client
+    BaseClient *myQuery.SelectClient
 }
 
 
@@ -20,7 +20,7 @@ type BrowseClient struct {
 //////////////////////////////////////////////////////////////////////
 func NewBrowseClientWithDb(tableName string, db *sql.DB) *BrowseClient {
     return &BrowseClient{
-        BaseClient: mySelectStatement.NewClientWithDb(tableName, db),
+        BaseClient: myQuery.NewSelectClientWithDb(tableName, db),
     }
 }
 
@@ -30,7 +30,7 @@ func NewBrowseClientWithDb(tableName string, db *sql.DB) *BrowseClient {
 //////////////////////////////////////////////////////////////////////
 func NewBrowseClientWithDbContext(tableName string, db *sql.DB, ctx context.Context) *BrowseClient {
     return &BrowseClient{
-        BaseClient: mySelectStatement.NewClientWithDbContext(tableName, db, ctx),
+        BaseClient: myQuery.NewSelectClientWithDbContext(tableName, db, ctx),
     }
 }
 
@@ -40,7 +40,7 @@ func NewBrowseClientWithDbContext(tableName string, db *sql.DB, ctx context.Cont
 //////////////////////////////////////////////////////////////////////
 func NewBrowseClientWithTx(tableName string, tx *sql.Tx) *BrowseClient {
     return &BrowseClient{
-        BaseClient: mySelectStatement.NewClientWithTx(tableName, tx),
+        BaseClient: myQuery.NewSelectClientWithTx(tableName, tx),
     }
 }
 
@@ -50,7 +50,7 @@ func NewBrowseClientWithTx(tableName string, tx *sql.Tx) *BrowseClient {
 //////////////////////////////////////////////////////////////////////
 func NewBrowseClientWithTxContext(tableName string, tx *sql.Tx, ctx context.Context) *BrowseClient {
     return &BrowseClient{
-        BaseClient: mySelectStatement.NewClientWithTxContext(tableName, tx, ctx),
+        BaseClient: myQuery.NewSelectClientWithTxContext(tableName, tx, ctx),
     }
 }
 
@@ -58,7 +58,7 @@ func NewBrowseClientWithTxContext(tableName string, tx *sql.Tx, ctx context.Cont
 //////////////////////////////////////////////////////////////////////
 // Count.
 //////////////////////////////////////////////////////////////////////
-func (o *BrowseClient) Count() (int64, *mySelectStatement.ResultCount, error) {
+func (o *BrowseClient) Count() (int64, *myQuery.SelectResultCount, error) {
     resultCount, err := o.BaseClient.Count()
     return resultCount.Count, resultCount, err
 }
@@ -67,7 +67,7 @@ func (o *BrowseClient) Count() (int64, *mySelectStatement.ResultCount, error) {
 //////////////////////////////////////////////////////////////////////
 // Query.
 //////////////////////////////////////////////////////////////////////
-func (o *BrowseClient) Query() (*mySelectStatement.ResultQuery, error) {
+func (o *BrowseClient) Query() (*myQuery.SelectResultQuery, error) {
     return o.BaseClient.Query()
 }
 
@@ -75,7 +75,7 @@ func (o *BrowseClient) Query() (*mySelectStatement.ResultQuery, error) {
 //////////////////////////////////////////////////////////////////////
 // QueryRow.
 //////////////////////////////////////////////////////////////////////
-func (o *BrowseClient) QueryRow() (*mySelectStatement.ResultQueryRow, error) {
+func (o *BrowseClient) QueryRow() (*myQuery.SelectResultQueryRow, error) {
     return o.BaseClient.QueryRow()
 }
 
@@ -83,7 +83,7 @@ func (o *BrowseClient) QueryRow() (*mySelectStatement.ResultQueryRow, error) {
 //////////////////////////////////////////////////////////////////////
 // Run.
 //////////////////////////////////////////////////////////////////////
-func (o *BrowseClient) Run() ([]*Account, *mySelectStatement.Result, error) {
+func (o *BrowseClient) Run() ([]*Account, *myQuery.SelectResult, error) {
     var accounts []*Account
     result, err := o.BaseClient.Run()
     if err != nil { 

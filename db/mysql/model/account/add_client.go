@@ -7,12 +7,11 @@ import (
     "context"
     "database/sql"
     _ "github.com/go-sql-driver/mysql"
-    myUtil "github.com/noknow-hub/pkg-go/db/mysql/model/util"
-    myInsertStatement "github.com/noknow-hub/pkg-go/db/mysql/query/insert_statement"
+    myQuery "github.com/noknow-hub/pkg-go/db/mysql/query"
 )
 
 type AddClient struct {
-    BaseClient *myInsertStatement.Client
+    BaseClient *myQuery.InsertClient
 }
 
 
@@ -21,7 +20,7 @@ type AddClient struct {
 //////////////////////////////////////////////////////////////////////
 func NewAddClientWithDb(tableName string, db *sql.DB) *AddClient {
     return &AddClient{
-        BaseClient: myInsertStatement.NewClientWithDb(tableName, db),
+        BaseClient: myQuery.NewInsertClientWithDb(tableName, db),
     }
 }
 
@@ -31,7 +30,7 @@ func NewAddClientWithDb(tableName string, db *sql.DB) *AddClient {
 //////////////////////////////////////////////////////////////////////
 func NewAddClientWithDbContext(tableName string, db *sql.DB, ctx context.Context) *AddClient {
     return &AddClient{
-        BaseClient: myInsertStatement.NewClientWithDbContext(tableName, db, ctx),
+        BaseClient: myQuery.NewInsertClientWithDbContext(tableName, db, ctx),
     }
 }
 
@@ -41,7 +40,7 @@ func NewAddClientWithDbContext(tableName string, db *sql.DB, ctx context.Context
 //////////////////////////////////////////////////////////////////////
 func NewAddClientWithTx(tableName string, tx *sql.Tx) *AddClient {
     return &AddClient{
-        BaseClient: myInsertStatement.NewClientWithTx(tableName, tx),
+        BaseClient: myQuery.NewInsertClientWithTx(tableName, tx),
     }
 }
 
@@ -51,7 +50,7 @@ func NewAddClientWithTx(tableName string, tx *sql.Tx) *AddClient {
 //////////////////////////////////////////////////////////////////////
 func NewAddClientWithTxContext(tableName string, tx *sql.Tx, ctx context.Context) *AddClient {
     return &AddClient{
-        BaseClient: myInsertStatement.NewClientWithTxContext(tableName, tx, ctx),
+        BaseClient: myQuery.NewInsertClientWithTxContext(tableName, tx, ctx),
     }
 }
 
@@ -60,14 +59,14 @@ func NewAddClientWithTxContext(tableName string, tx *sql.Tx, ctx context.Context
 // Generate an ID.
 //////////////////////////////////////////////////////////////////////
 func (o *AddClient) GenerateId() string {
-    return myUtil.GenerateId(o.BaseClient.TableName, COL_ID, o.BaseClient.Db, o.BaseClient.Tx, o.BaseClient.Ctx)
+    return myQuery.GenerateId(o.BaseClient.TableName, COL_ID, o.BaseClient.Db, o.BaseClient.Tx, o.BaseClient.Ctx)
 }
 
 
 //////////////////////////////////////////////////////////////////////
 // Run.
 //////////////////////////////////////////////////////////////////////
-func (o *AddClient) Run() (*myInsertStatement.Result, error) {
+func (o *AddClient) Run() (*myQuery.InsertResult, error) {
     return o.BaseClient.Run()
 }
 
@@ -75,7 +74,7 @@ func (o *AddClient) Run() (*myInsertStatement.Result, error) {
 //////////////////////////////////////////////////////////////////////
 // Run with all.
 //////////////////////////////////////////////////////////////////////
-func (o *AddClient) RunWithAll(id, email string, status, nickName, firstName, lastName, middleName, nationalityCode, phoneNumber, age, gender, birthday, biography, password, publishableToken, secretToken, addressCountryCode, addressPostalCode, addressCity, address, addressOption, lastLoggedIn *string) (*myInsertStatement.Result, error) {
+func (o *AddClient) RunWithAll(id, email string, status, nickName, firstName, lastName, middleName, nationalityCode, phoneNumber, age, gender, birthday, biography, password, publishableToken, secretToken, addressCountryCode, addressPostalCode, addressCity, address, addressOption, lastLoggedIn *string) (*myQuery.InsertResult, error) {
     var cols []string
     var vals []interface{}
 
@@ -217,7 +216,7 @@ func (o *AddClient) RunWithAll(id, email string, status, nickName, firstName, la
 //////////////////////////////////////////////////////////////////////
 // Run with required.
 //////////////////////////////////////////////////////////////////////
-func (o *AddClient) RunWithRequired(id, email string) (*myInsertStatement.Result, error) {
+func (o *AddClient) RunWithRequired(id, email string) (*myQuery.InsertResult, error) {
     o.BaseClient.
         SetColNames([]string{COL_ID, COL_EMAIL}).
         AppendValues([]interface{}{id, email})

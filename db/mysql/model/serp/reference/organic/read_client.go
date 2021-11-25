@@ -102,6 +102,7 @@ func (c *ReadClient) Run() (*Organic, *myQuery.SelectResult, error) {
     if result != nil && len(result.Rows) != 1 {
         return organic, result, err
     }
+    organic = &Organic{}
     if err := scanOrganic(result.Rows[0], organic); err != nil {
         return organic, result, err
     }

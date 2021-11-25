@@ -85,6 +85,7 @@ func (c *ReadClient) Run() (*Serp, *myQuery.SelectResult, error) {
     if result != nil && len(result.Rows) != 1 {
         return serp, result, err
     }
+    serp = &Serp{}
     if err := scanSerp(result.Rows[0], serp); err != nil {
         return serp, result, err
     }

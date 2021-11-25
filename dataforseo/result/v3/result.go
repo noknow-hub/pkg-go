@@ -87,15 +87,15 @@ func (t *Task) GetLanguageCodeFromData() string {
 //////////////////////////////////////////////////////////////////////
 func (t *Task) GetLocationCodeFromData() int {
     if t.Data == nil {
-        return ""
+        return 0
     }
     v, exist := t.Data["location_code"]
     if !exist {
-        return ""
+        return 0
     }
     vv, ok := v.(int)
     if !ok {
-        return ""
+        return 0
     }
     return vv
 }

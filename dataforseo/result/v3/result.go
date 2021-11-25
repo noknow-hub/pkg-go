@@ -85,7 +85,7 @@ func (t *Task) GetLanguageCodeFromData() string {
 //////////////////////////////////////////////////////////////////////
 // Get "location_code" from "Task.Data".
 //////////////////////////////////////////////////////////////////////
-func (t *Task) GetLocationCodeFromData() int {
+func (t *Task) GetLocationCodeFromData() int64 {
     if t.Data == nil {
         return 0
     }
@@ -93,7 +93,7 @@ func (t *Task) GetLocationCodeFromData() int {
     if !exist {
         return 0
     }
-    vv, ok := v.(int)
+    vv, ok := v.(int64)
     if !ok {
         return 0
     }

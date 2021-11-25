@@ -47,7 +47,8 @@ type Item struct {
     Domain string                      `json:"domain"`
     Title string                       `json:"title"`
     Url string                         `json:"url"`
-    Cache_url string                   `json:"cache_url"`
+    CacheUrl string                    `json:"cache_url"`
+    RelatedSearchUrl string            `json:"related_search_url"`
     Breadcrumb string                  `json:"breadcrumb"`
     IsImage bool                       `json:"is_image"`
     IsVideo bool                       `json:"is_video"`

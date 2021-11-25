@@ -85,6 +85,7 @@ func (o *ReadClient) Run() (*Account, *myQuery.SelectResult, error) {
     if result != nil && len(result.Rows) != 1 {
         return account, result, err
     }
+    account = &Account{}
     if err := scanAccount(result.Rows[0], account); err != nil {
         return account, result, err
     }

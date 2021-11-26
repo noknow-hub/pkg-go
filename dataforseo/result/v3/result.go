@@ -95,8 +95,9 @@ func (t *Task) GetLocationCodeFromData() int {
     if !exist {
         return 0
     }
+log.Printf("[TEST KAKERU] %T\n", v)
     vv, ok := v.(int)
-log.Printf("[TEST KAKERU] %v, %v", vv, ok)
+log.Printf("[TEST KAKERU] %v, %v\n", vv, ok)
     if !ok {
         return 0
     }

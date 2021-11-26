@@ -3,6 +3,8 @@
 //////////////////////////////////////////////////////////////////////
 package v3
 
+import "log"
+
 type General struct {
     Version string        `json:"version"`
     StatusCode int        `json:"status_code"`
@@ -90,6 +92,7 @@ func (t *Task) GetLocationCodeFromData() int {
         return 0
     }
     v, exist := t.Data["location_code"]
+log.Printf("[TEST KAKERU] %v, %v", v, exist)
     if !exist {
         return 0
     }

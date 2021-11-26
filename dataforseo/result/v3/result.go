@@ -3,8 +3,6 @@
 //////////////////////////////////////////////////////////////////////
 package v3
 
-import "log"
-
 type General struct {
     Version string        `json:"version"`
     StatusCode int        `json:"status_code"`
@@ -95,13 +93,11 @@ func (t *Task) GetLocationCodeFromData() int {
     if !exist {
         return 0
     }
-log.Printf("[TEST KAKERU] %T\n", v)
-    vv, ok := v.(int)
-log.Printf("[TEST KAKERU] %v, %v\n", vv, ok)
+    vv, ok := v.(float64)
     if !ok {
         return 0
     }
-    return vv
+    return int(vv)
 }
 
 

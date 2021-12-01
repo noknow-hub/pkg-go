@@ -6,6 +6,7 @@ package server
 import (
     "net"
     "net/http"
+    "net/http/fcgi"
     "os"
     "os/signal"
     "syscall"
@@ -18,6 +19,7 @@ const (
 
 type UnixServer struct {
     GroupId int
+    IsFcgi bool
     ServerMux *http.ServeMux
     SocketPath string
     UserId int
@@ -26,6 +28,7 @@ type UnixServer struct {
 type TcpServer struct {
     Address string
     CertFile string
+    IsFcgi bool
     KeyFile string
     Port string
     ServerMux *http.ServeMux
@@ -58,45 +61,60 @@ func NewTcpServer(address, port string, serverMux *http.ServeMux) *TcpServer {
 //////////////////////////////////////////////////////////////////////
 // Run with UNIX socket.
 //////////////////////////////////////////////////////////////////////
-func (o *UnixServer) Run() error {
-    listener, err := net.Listen("unix", o.SocketPath)
+func (s *UnixServer) Run() error {
+    listener, err := net.Listen("unix", s.SocketPath)
     if err != nil {
         return err
     }
     defer listener.Close()
-    if o.UserId != 0 && o.GroupId != 0 {
-        if err := os.Chown(o.SocketPath, o.UserId, o.GroupId); err != nil {
+    if s.UserId != 0 && s.GroupId != 0 {
+        if err := os.Chown(s.SocketPath, s.UserId, s.GroupId); err != nil {
             return err
         }
-        if err := os.Chmod(o.SocketPath, SOCKET_FILE_MODE); err != nil {
+        if err := os.Chmod(s.SocketPath, SOCKET_FILE_MODE); err != nil {
             return err
         }
     }
     go func() {
         shutdown(listener)
     }()
-    if err := http.Serve(listener, o.ServerMux); err != nil {
-        return err
+    if s.IsFcgi {
+        if err := fcgi.Serve(listener, s.ServerMux); err != nil {
+            return err 
+        }   
+    } else {
+        if err := http.Serve(listener, s.ServerMux); err != nil {
+            return err
+        }
     }
     return nil
 }
 
 
 //////////////////////////////////////////////////////////////////////
+// Set FCGI.
+//////////////////////////////////////////////////////////////////////
+func (s *UnixServer) SetFcgi() *UnixServer {
+    s.IsFcgi = true
+    return s
+}
+
+
+//////////////////////////////////////////////////////////////////////
 // Set owner.
 //////////////////////////////////////////////////////////////////////
-func (o *UnixServer) SetOwner(userId, groupId int) *UnixServer {
-    o.UserId = userId
-    o.GroupId = groupId
-    return o
+func (s *UnixServer) SetOwner(userId, groupId int) *UnixServer {
+    s.UserId = userId
+    s.GroupId = groupId
+    return s
 }
 
 
 //////////////////////////////////////////////////////////////////////
 // Run with TCP.
 //////////////////////////////////////////////////////////////////////
-func (o *TcpServer) Run() error {
-    listener, err := net.Listen("tcp", o.Address + ":" + o.Port)
+func (s *TcpServer) Run() error {
+    listener, err := net.Listen("tcp", s.Address + ":" + s.Port)
     if err != nil {
        return err
     }
@@ -104,13 +122,19 @@ func (o *TcpServer) Run() error {
     go func(){
         shutdown(listener)
     }()
-    if o.CertFile != "" && o.KeyFile != "" {
-        if err := http.ServeTLS(listener, o.ServerMux, o.CertFile, o.KeyFile); err != nil {
+    if s.IsFcgi {
+        if err := fcgi.Serve(listener, s.ServerMux); err != nil {
             return err
         }
     } else {
-        if err := http.Serve(listener, o.ServerMux); err != nil {
-            return err
+        if s.CertFile != "" && s.KeyFile != "" {
+            if err := http.ServeTLS(listener, s.ServerMux, s.CertFile, s.KeyFile); err != nil {
+                return err
+            }
+        } else {
+            if err := http.Serve(listener, s.ServerMux); err != nil {
+                return err
+            }
         }
     }
     return nil
@@ -118,12 +142,21 @@ func (o *TcpServer) Run() error {
 
 
 //////////////////////////////////////////////////////////////////////
+// Set FCGI.
+//////////////////////////////////////////////////////////////////////
+func (s *TcpServer) SetFcgi() *TcpServer {
+    s.IsFcgi = true
+    return s
+}
+
+
+//////////////////////////////////////////////////////////////////////
 // Set TLS configuration.
 //////////////////////////////////////////////////////////////////////
-func (o *TcpServer) SetTls(certFile, keyFile string) *TcpServer {
-    o.CertFile = certFile
-    o.KeyFile = keyFile
-    return o
+func (s *TcpServer) SetTls(certFile, keyFile string) *TcpServer {
+    s.CertFile = certFile
+    s.KeyFile = keyFile
+    return s
 }
 
 

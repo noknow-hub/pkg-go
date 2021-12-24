@@ -75,12 +75,15 @@ func (c *EditClient) RunById(id string) (*myQuery.UpdateResult, error) {
 //////////////////////////////////////////////////////////////////////
 // Run with all by "id".
 //////////////////////////////////////////////////////////////////////
-func (c *EditClient) RunWithAllById(currentId string, id, keyword, countryCode, langCode, device, totalResults, searchEngine, searchEngineType, numOfSearchesForKeyword *string) (*myQuery.UpdateResult, error) {
+func (c *EditClient) RunWithAllById(currentId string, id, keyword, objectId, countryCode, langCode, device, totalResults, searchEngine, searchType, numOfSearchesForKeyword *string) (*myQuery.UpdateResult, error) {
     if id != nil {
         c.BaseClient.AssignmentList.Append(COL_ID, *id)
     }
     if keyword != nil {
         c.BaseClient.AssignmentList.Append(COL_KEYWORD, *keyword)
+    }
+    if objectId != nil {
+        c.BaseClient.AssignmentList.Append(COL_OBJECT_ID, *objectId)
     }
     if countryCode != nil {
         c.BaseClient.AssignmentList.Append(COL_COUNTRY_CODE, *countryCode)
@@ -98,7 +101,7 @@ func (c *EditClient) RunWithAllById(currentId string, id, keyword, countryCode, 
         c.BaseClient.AssignmentList.Append(COL_SEARCH_ENGINE, *searchEngine)
     }
     if searchEngineType != nil {
-        c.BaseClient.AssignmentList.Append(COL_SEARCH_ENGINE_TYPE, *searchEngineType)
+        c.BaseClient.AssignmentList.Append(COL_SEARCH_TYPE, *searchType)
     }
     if numOfSearchesForKeyword != nil {
         c.BaseClient.AssignmentList.Append(COL_NUM_OF_SEARCHES_FOR_KEYWORD, *numOfSearchesForKeyword)

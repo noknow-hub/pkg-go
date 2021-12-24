@@ -53,7 +53,7 @@ func NewCreateTableClientWithTxContext(tableName string, tx *sql.Tx, ctx context
 func (c *CreateTableClient) Run() (*myQuery.CreateTableResult, error) {
     c.
         AppendColumnDefinition(
-            myQuery.NewColumnDefinition(COL_ID, "VARCHAR(50)").
+            myQuery.NewColumnDefinition(COL_ID, "BIGINT UNSIGNED").
                 SetNotNull().
                 SetComment("SERP ID."),
         ).
@@ -61,6 +61,10 @@ func (c *CreateTableClient) Run() (*myQuery.CreateTableResult, error) {
             myQuery.NewColumnDefinition(COL_KEYWORD, "VARCHAR(200)").
                 SetNotNull().
                 SetComment("Keyword."),
+        ).
+        AppendColumnDefinition(
+            myQuery.NewColumnDefinition(COL_OBJECT_ID, "VARCHAR(200)").
+                SetComment("Object ID for referencing an external app."),
         ).
         AppendColumnDefinition(
             myQuery.NewColumnDefinition(COL_COUNTRY_CODE, "VARCHAR(2)").
@@ -83,7 +87,7 @@ func (c *CreateTableClient) Run() (*myQuery.CreateTableResult, error) {
                 SetComment("Search engine. (ex. google, bing. yahoo or baidu.)"),
         ).
         AppendColumnDefinition(
-            myQuery.NewColumnDefinition(COL_SEARCH_ENGINE_TYPE, "VARCHAR(10)").
+            myQuery.NewColumnDefinition(COL_SEARCH_TYPE, "VARCHAR(10)").
                 SetComment("Search engine type. (ex. organic, images or map.)"),
         ).
         AppendColumnDefinition(
@@ -102,7 +106,7 @@ func (c *CreateTableClient) Run() (*myQuery.CreateTableResult, error) {
                 SetComment("Updated at."),
         ).
         SetPrimaryKeys([]string{COL_ID}).
-        SetIndexKeys([]string{COL_KEYWORD, COL_COUNTRY_CODE, COL_DEVICE, COL_SEARCH_ENGINE, COL_SEARCH_ENGINE_TYPE}).
+        SetIndexKeys([]string{COL_KEYWORD, COL_OBJECT_ID, COL_COUNTRY_CODE, COL_DEVICE, COL_SEARCH_ENGINE, COL_SEARCH_TYPE}).
         SetComment(c.TableName + " table.")
     return c.CreateTableClient.Run()
 }

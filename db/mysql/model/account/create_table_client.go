@@ -58,7 +58,7 @@ func (o *CreateTableClient) Run() (*myQuery.CreateTableResult, error) {
 
     o.
         AppendColumnDefinition(
-            myQuery.NewColumnDefinition(COL_ID, "VARCHAR(50)").
+            myQuery.NewColumnDefinition(COL_ID, "BIGINT UNSIGNED").
                 SetNotNull().
                 SetComment("Account ID.")).
         AppendColumnDefinition(

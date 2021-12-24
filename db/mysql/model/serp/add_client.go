@@ -74,7 +74,7 @@ func (c *AddClient) Run() (*myQuery.InsertResult, error) {
 //////////////////////////////////////////////////////////////////////
 // Run with all.
 //////////////////////////////////////////////////////////////////////
-func (c *AddClient) RunWithAll(id, keyword string, countryCode, langCode, device, totalResults, searchEngine, searchEngineType, numOfSearchesForKeyword *string) (*myQuery.InsertResult, error) {
+func (c *AddClient) RunWithAll(id, keyword string, objectId, countryCode, langCode, device, totalResults, searchEngine, searchEngineType, numOfSearchesForKeyword *string) (*myQuery.InsertResult, error) {
     var cols []string
     var vals []interface{}
 
@@ -82,6 +82,10 @@ func (c *AddClient) RunWithAll(id, keyword string, countryCode, langCode, device
     vals = append(vals, id)
     cols = append(cols, COL_KEYWORD)
     vals = append(vals, keyword)
+    if objectId != nil {
+        cols = append(cols, COL_OBJECT_ID)
+        vals = append(vals, *objectId)
+    }
     if countryCode != nil {
         cols = append(cols, COL_COUNTRY_CODE)
         vals = append(vals, *countryCode)

@@ -31,6 +31,12 @@ func scanSerp(row *myQuery.Row, serp *Serp) error {
             } else {
                 serp.Keyword = val
             }
+        } else if col.Name == COL_OBJECT_ID {
+            if val, err := myModelUtil.ConvertInterfaceToString(col.Value); err != nil {
+                return err
+            } else {
+                serp.ObjectId = val
+            }
         } else if col.Name == COL_COUNTRY_CODE {
             if val, err := myModelUtil.ConvertInterfaceToString(col.Value); err != nil {
                 return err
@@ -61,11 +67,11 @@ func scanSerp(row *myQuery.Row, serp *Serp) error {
             } else {
                 serp.SearchEngine = val
             }
-        } else if col.Name == COL_SEARCH_ENGINE_TYPE {
+        } else if col.Name == COL_SEARCH_TYPE {
             if val, err := myModelUtil.ConvertInterfaceToString(col.Value); err != nil {
                 return err
             } else {
-                serp.SearchEngineType = val
+                serp.SearchType = val
             }
         } else if col.Name == COL_NUM_OF_SEARCHES_FOR_KEYWORD {
             if val, err := myModelUtil.ConvertInterfaceToString(col.Value); err != nil {

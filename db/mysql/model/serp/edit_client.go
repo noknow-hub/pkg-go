@@ -100,7 +100,7 @@ func (c *EditClient) RunWithAllById(currentId string, id, keyword, objectId, cou
     if searchEngine != nil {
         c.BaseClient.AssignmentList.Append(COL_SEARCH_ENGINE, *searchEngine)
     }
-    if searchEngineType != nil {
+    if searchType != nil {
         c.BaseClient.AssignmentList.Append(COL_SEARCH_TYPE, *searchType)
     }
     if numOfSearchesForKeyword != nil {

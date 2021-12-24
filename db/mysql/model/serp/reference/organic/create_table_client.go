@@ -72,7 +72,7 @@ func (c *CreateTableClient) Run() (*myQuery.CreateTableResult, error) {
                 SetComment("SERP organic item ID."),
         ).
         AppendColumnDefinition(
-            myQuery.NewColumnDefinition(COL_SERP_ID, "VARCHAR(50)").
+            myQuery.NewColumnDefinition(COL_SERP_ID, "BIGINT UNSIGNED").
                 SetNotNull().
                 SetComment("SERP ID."),
         ).

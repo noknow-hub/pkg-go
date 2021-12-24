@@ -74,7 +74,7 @@ func (c *AddClient) Run() (*myQuery.InsertResult, error) {
 //////////////////////////////////////////////////////////////////////
 // Run with all.
 //////////////////////////////////////////////////////////////////////
-func (c *AddClient) RunWithAll(id, keyword string, objectId, countryCode, langCode, device, totalResults, searchEngine, searchEngineType, numOfSearchesForKeyword *string) (*myQuery.InsertResult, error) {
+func (c *AddClient) RunWithAll(id, keyword string, objectId, countryCode, langCode, device, totalResults, searchEngine, searchType, numOfSearchesForKeyword *string) (*myQuery.InsertResult, error) {
     var cols []string
     var vals []interface{}
 

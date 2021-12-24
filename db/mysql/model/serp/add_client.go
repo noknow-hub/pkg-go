@@ -107,8 +107,8 @@ func (c *AddClient) RunWithAll(id, keyword string, objectId, countryCode, langCo
         vals = append(vals, *searchEngine)
     }
     if searchEngineType != nil {
-        cols = append(cols, COL_SEARCH_ENGINE_TYPE)
-        vals = append(vals, *searchEngineType)
+        cols = append(cols, COL_SEARCH_TYPE)
+        vals = append(vals, *searcType)
     }
     if numOfSearchesForKeyword != nil {
         cols = append(cols, COL_NUM_OF_SEARCHES_FOR_KEYWORD)

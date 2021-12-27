@@ -52,9 +52,3 @@ func InitWithDataSourceName(dataSourceName string) error {
     myDb = db
     return nil
 }
-
-
-
-
-
-

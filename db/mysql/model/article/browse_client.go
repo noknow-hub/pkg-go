@@ -58,8 +58,8 @@ func NewBrowseClientWithTxContext(tableName string, tx *sql.Tx, ctx context.Cont
 //////////////////////////////////////////////////////////////////////
 // Count.
 //////////////////////////////////////////////////////////////////////
-func (o *BrowseClient) Count() (int64, *myQuery.SelectResultCount, error) {
-    resultCount, err := o.BaseClient.Count()
+func (c *BrowseClient) Count() (int64, *myQuery.SelectResultCount, error) {
+    resultCount, err := c.BaseClient.Count()
     return resultCount.Count, resultCount, err
 }
 
@@ -67,25 +67,25 @@ func (o *BrowseClient) Count() (int64, *myQuery.SelectResultCount, error) {
 //////////////////////////////////////////////////////////////////////
 // Query.
 //////////////////////////////////////////////////////////////////////
-func (o *BrowseClient) Query() (*myQuery.SelectResultQuery, error) {
-    return o.BaseClient.Query()
+func (c *BrowseClient) Query() (*myQuery.SelectResultQuery, error) {
+    return c.BaseClient.Query()
 }
 
 
 //////////////////////////////////////////////////////////////////////
 // QueryRow.
 //////////////////////////////////////////////////////////////////////
-func (o *BrowseClient) QueryRow() (*myQuery.SelectResultQueryRow, error) {
-    return o.BaseClient.QueryRow()
+func (c *BrowseClient) QueryRow() (*myQuery.SelectResultQueryRow, error) {
+    return c.BaseClient.QueryRow()
 }
 
 
 //////////////////////////////////////////////////////////////////////
 // Run.
 //////////////////////////////////////////////////////////////////////
-func (o *BrowseClient) Run() ([]*Article, *myQuery.SelectResult, error) {
+func (c *BrowseClient) Run() ([]*Article, *myQuery.SelectResult, error) {
     var articles []*Article
-    result, err := o.BaseClient.Run()
+    result, err := c.BaseClient.Run()
     if err != nil { 
         return articles, result, err
     }

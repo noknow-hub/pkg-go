@@ -1,17 +1,24 @@
 //////////////////////////////////////////////////////////////////////
 // browse_client.go
 //////////////////////////////////////////////////////////////////////
-package article
+package article_tag_map
 
 import (
     "context"
     "database/sql"
     _ "github.com/go-sql-driver/mysql"
     myQuery "github.com/noknow-hub/pkg-go/db/mysql/query"
+    nkwMysqlModelArticle "github.com/noknow-hub/pkg-go/db/mysql/model/article"
+    nkwMysqlModelTag "github.com/noknow-hub/pkg-go/db/mysql/model/tag"
 )
 
 type BrowseClient struct {
     BaseClient *myQuery.SelectClient
+}
+type BrowseClientWithArticleAndTag struct {
+    BaseClient *myQuery.SelectClient
+    RefArticlesTable string
+    RefTagsTable string
 }
 
 
@@ -56,10 +63,22 @@ func NewBrowseClientWithTxContext(tableName string, tx *sql.Tx, ctx context.Cont
 
 
 //////////////////////////////////////////////////////////////////////
+// New BrowseClient with reference article and tag table.
+//////////////////////////////////////////////////////////////////////
+func (c *BrowseClient) NewBrowseClientWithArticleAndTag(refArticlesTable, refTagsTable string) *BrowseClientWithArticleAndTag {
+    return &BrowseClientWithArticleAndTag{
+        BaseClient: c.BaseClient,
+        RefArticlesTable: refArticlesTable,
+        RefTagsTable: refTagsTable,
+    }
+}
+
+
+//////////////////////////////////////////////////////////////////////
 // Count.
 //////////////////////////////////////////////////////////////////////
-func (o *BrowseClient) Count() (int64, *myQuery.SelectResultCount, error) {
-    resultCount, err := o.BaseClient.Count()
+func (c *BrowseClient) Count() (int64, *myQuery.SelectResultCount, error) {
+    resultCount, err := c.BaseClient.Count()
     return resultCount.Count, resultCount, err
 }
 
@@ -67,36 +86,64 @@ func (o *BrowseClient) Count() (int64, *myQuery.SelectResultCount, error) {
 //////////////////////////////////////////////////////////////////////
 // Query.
 //////////////////////////////////////////////////////////////////////
-func (o *BrowseClient) Query() (*myQuery.SelectResultQuery, error) {
-    return o.BaseClient.Query()
+func (c *BrowseClient) Query() (*myQuery.SelectResultQuery, error) {
+    return c.BaseClient.Query()
 }
 
 
 //////////////////////////////////////////////////////////////////////
 // QueryRow.
 //////////////////////////////////////////////////////////////////////
-func (o *BrowseClient) QueryRow() (*myQuery.SelectResultQueryRow, error) {
-    return o.BaseClient.QueryRow()
+func (c *BrowseClient) QueryRow() (*myQuery.SelectResultQueryRow, error) {
+    return c.BaseClient.QueryRow()
 }
 
 
 //////////////////////////////////////////////////////////////////////
 // Run.
 //////////////////////////////////////////////////////////////////////
-func (o *BrowseClient) Run() ([]*Article, *myQuery.SelectResult, error) {
-    var articles []*Article
-    result, err := o.BaseClient.Run()
+func (c *BrowseClient) Run() ([]*ArticleTagMap, *myQuery.SelectResult, error) {
+    var articleTagMaps []*ArticleTagMap
+    result, err := c.BaseClient.Run()
     if err != nil { 
-        return articles, result, err
+        return articleTagMaps, result, err
     }
 
     for _, row := range result.Rows {
-        article := &Article{}
-        if err := scanArticle(row, article); err != nil {
-            return articles, result, err
+        articleTagMap := &ArticleTagMap{}
+        if err := scanArticleTagMap(row, articleTagMap); err != nil {
+            return articleTagMaps, result, err
         }
-        articles = append(articles, article)
+        articleTagMaps = append(articleTagMaps, articleTagMap)
     }
 
-    return articles, result, nil
+    return articleTagMaps, result, nil
+}
+
+
+//////////////////////////////////////////////////////////////////////
+// Run with INNER JOIN.
+//////////////////////////////////////////////////////////////////////
+func (c *BrowseClientWithArticleAndTag) Run() ([]*ArticleTagMap, *myQuery.SelectResult, error) {
+    var articleTagMaps []*ArticleTagMap
+    c.BaseClient.
+        AppendInnerJoinTables(c.BaseClient.TableName, COL_ARTICLE_ID, c.RefArticlesTable, nkwMysqlModelArticle.COL_ID).
+        AppendInnerJoinTables(c.BaseClient.TableName, COL_TAG_SLUG, c.RefTagsTable, nkwMysqlModelTag.COL_SLUG)
+    result, err := c.BaseClient.Run()
+    if err != nil {
+        return articleTagMaps, result, err
+    }
+
+    for _, row := range result.Rows {
+        articleTagMap := &ArticleTagMap{
+            Article: &nkwMysqlModelArticle.Article{},
+            Tag: &nkwMysqlModelTag.Tag{},
+        }
+        if err := scanArticleTagMapWithArticleAndTag(row, c.BaseClient.TableName, c.RefArticlesTable, c.RefTagsTable, articleTagMap); err != nil {
+            return articleTagMaps, result, err
+        }
+        articleTagMaps = append(articleTagMaps, articleTagMap)
+    }
+
+    return articleTagMaps, result, nil
 }

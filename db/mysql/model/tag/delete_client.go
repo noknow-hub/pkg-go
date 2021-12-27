@@ -58,15 +58,15 @@ func NewDeleteClientWithTxContext(tableName string, tx *sql.Tx, ctx context.Cont
 //////////////////////////////////////////////////////////////////////
 // Run.
 //////////////////////////////////////////////////////////////////////
-func (o *DeleteClient) Run() (*myQuery.DeleteResult, error) {
-    return o.BaseClient.Run()
+func (c *DeleteClient) Run() (*myQuery.DeleteResult, error) {
+    return c.BaseClient.Run()
 }
 
 
 //////////////////////////////////////////////////////////////////////
 // Run by COL_SLUG.
 //////////////////////////////////////////////////////////////////////
-func (o *DeleteClient) RunBySlug(slug string) (*myQuery.DeleteResult, error) {
-    o.BaseClient.WhereCondition.SetWhere(COL_SLUG, slug)
-    return o.BaseClient.Run()
+func (c *DeleteClient) RunBySlug(slug string) (*myQuery.DeleteResult, error) {
+    c.BaseClient.WhereCondition.SetWhere(COL_SLUG, slug)
+    return c.BaseClient.Run()
 }

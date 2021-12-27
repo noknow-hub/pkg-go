@@ -58,27 +58,27 @@ func NewReadClientWithTxContext(tableName string, tx *sql.Tx, ctx context.Contex
 //////////////////////////////////////////////////////////////////////
 // Query.
 //////////////////////////////////////////////////////////////////////
-func (o *ReadClient) Query() (*myQuery.SelectResultQuery, error) {
-    o.BaseClient.SetLimit(1)
-    return o.BaseClient.Query()
+func (c *ReadClient) Query() (*myQuery.SelectResultQuery, error) {
+    c.BaseClient.SetLimit(1)
+    return c.BaseClient.Query()
 }
 
 
 //////////////////////////////////////////////////////////////////////
 // QueryRow.
 //////////////////////////////////////////////////////////////////////
-func (o *ReadClient) QueryRow() (*myQuery.SelectResultQueryRow, error) {
-    return o.BaseClient.QueryRow()
+func (c *ReadClient) QueryRow() (*myQuery.SelectResultQueryRow, error) {
+    return c.BaseClient.QueryRow()
 }
 
 
 //////////////////////////////////////////////////////////////////////
 // Run.
 //////////////////////////////////////////////////////////////////////
-func (o *ReadClient) Run() (*Article, *myQuery.SelectResult, error) {
+func (c *ReadClient) Run() (*Article, *myQuery.SelectResult, error) {
     var article *Article
-    o.BaseClient.SetLimit(1)
-    result, err := o.BaseClient.Run()
+    c.BaseClient.SetLimit(1)
+    result, err := c.BaseClient.Run()
     if err != nil {
         return article, result, err
     }

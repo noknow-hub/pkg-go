@@ -1,0 +1,6 @@
+github.com/go-sql-driver/mysql v1.6.0 h1:BCTh4TKNUYmOmMUcQ3IipzF5prigylS7XXjEkfCHuOE=
+github.com/go-sql-driver/mysql v1.6.0/go.mod h1:DCzpHaOWr8IXmIStZouvnhqoel9Qv2LBy8hT2VhHyBg=
+github.com/noknow-hub/pkg-go/db/mysql/model/util v0.0.0-20211227101953-d7157dfb8067 h1:LU8hvnMGweXFQG0Fmjnz9MFgrP73/ZYEv5DDfvju+Zo=
+github.com/noknow-hub/pkg-go/db/mysql/model/util v0.0.0-20211227101953-d7157dfb8067/go.mod h1:5s4lj4Z3fQWuT3rm8MiZiKzuKvX5ngdDRT5JrgOeAqQ=
+github.com/noknow-hub/pkg-go/db/mysql/query v0.0.0-20211227101953-d7157dfb8067 h1:W6emZ8XSWczl3s1KQPbktgXuwupiG5iH8+S3q2iGxMI=
+github.com/noknow-hub/pkg-go/db/mysql/query v0.0.0-20211227101953-d7157dfb8067/go.mod h1:DbpY3fdptQR8gYUFizhuFwdF/P+8/IVmOU1uVBiQiu0=

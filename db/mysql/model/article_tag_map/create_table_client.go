@@ -1,49 +1,69 @@
 //////////////////////////////////////////////////////////////////////
 // create_table_client.go
 //////////////////////////////////////////////////////////////////////
-package article
+package article_tag_map
 
 import (
     "context"
     "database/sql"
     _ "github.com/go-sql-driver/mysql"
     myQuery "github.com/noknow-hub/pkg-go/db/mysql/query"
+    nkwMysqlModelArticle "github.com/noknow-hub/pkg-go/db/mysql/model/article"
+    nkwMysqlModelTag "github.com/noknow-hub/pkg-go/db/mysql/model/tag"
 )
 
 type CreateTableClient struct {
     *myQuery.CreateTableClient
+    RefArticleTableName string
+    RefTagTableName string
 }
 
 
 //////////////////////////////////////////////////////////////////////
 // New Client with db object.
 //////////////////////////////////////////////////////////////////////
-func NewCreateTableClientWithDb(tableName string, db *sql.DB) *CreateTableClient {
-    return &CreateTableClient{ myQuery.NewCreateTableClientWithDb(tableName, db) }
+func NewCreateTableClientWithDb(tableName, refArticleTableName, refTagTableName string, db *sql.DB) *CreateTableClient {
+    return &CreateTableClient{
+        CreateTableClient: myQuery.NewCreateTableClientWithDb(tableName, db),
+        RefArticleTableName: refArticleTableName,
+        RefTagTableName: refTagTableName,
+    }
 }
 
 
 //////////////////////////////////////////////////////////////////////
 // New Client with db object and context.
 //////////////////////////////////////////////////////////////////////
-func NewCreateTableClientWithDbContext(tableName string, db *sql.DB, ctx context.Context) *CreateTableClient {
-    return &CreateTableClient{ myQuery.NewCreateTableClientWithDbContext(tableName, db, ctx) }
+func NewCreateTableClientWithDbContext(tableName, refArticleTableName, refTagTableName string, db *sql.DB, ctx context.Context) *CreateTableClient {
+    return &CreateTableClient{
+        CreateTableClient: myQuery.NewCreateTableClientWithDbContext(tableName, db, ctx),
+        RefArticleTableName: refArticleTableName,
+        RefTagTableName: refTagTableName,
+    }
 }
 
 
 //////////////////////////////////////////////////////////////////////
 // New Client with tx object.
 //////////////////////////////////////////////////////////////////////
-func NewCreateTableClientWithTx(tableName string, tx *sql.Tx) *CreateTableClient {
-    return &CreateTableClient{ myQuery.NewCreateTableClientWithTx(tableName, tx) }
+func NewCreateTableClientWithTx(tableName, refArticleTableName, refTagTableName string, tx *sql.Tx) *CreateTableClient {
+    return &CreateTableClient{
+        CreateTableClient: myQuery.NewCreateTableClientWithTx(tableName, tx),
+        RefArticleTableName: refArticleTableName,
+        RefTagTableName: refTagTableName,
+    }
 }
 
 
 //////////////////////////////////////////////////////////////////////
 // New Client with tx object and context.
 //////////////////////////////////////////////////////////////////////
-func NewCreateTableClientWithTxContext(tableName string, tx *sql.Tx, ctx context.Context) *CreateTableClient {
-    return &CreateTableClient{ myQuery.NewCreateTableClientWithTxContext(tableName, tx, ctx) }
+func NewCreateTableClientWithTxContext(tableName, refArticleTableName, refTagTableName string, tx *sql.Tx, ctx context.Context) *CreateTableClient {
+    return &CreateTableClient{
+        CreateTableClient: myQuery.NewCreateTableClientWithTxContext(tableName, tx, ctx),
+        RefArticleTableName: refArticleTableName,
+        RefTagTableName: refTagTableName,
+    }
 }
 
 
@@ -53,53 +73,16 @@ func NewCreateTableClientWithTxContext(tableName string, tx *sql.Tx, ctx context
 func (c *CreateTableClient) Run() (*myQuery.CreateTableResult, error) {
     c.
         AppendColumnDefinition(
-            myQuery.NewColumnDefinition(COL_ID, "BIGINT UNSIGNED").
+            myQuery.NewColumnDefinition(COL_ARTICLE_ID, "BIGINT UNSIGNED").
                 SetNotNull().
-                SetComment("Article ID.")).
+                SetComment("Article ID")).
         AppendColumnDefinition(
-            myQuery.NewColumnDefinition(COL_STATUS, "VARCHAR(10)").
+            myQuery.NewColumnDefinition(COL_TAG_SLUG, "VARCHAR(255)").
                 SetNotNull().
-                SetDefault("'" + VAL_STATUS_PUBLIC + "'").
-                SetComment("Status.")).
-        AppendColumnDefinition(
-            myQuery.NewColumnDefinition(COL_TITLE, "VARCHAR(255)").
-                SetNotNull().
-                SetComment("Title.")).
-        AppendColumnDefinition(
-            myQuery.NewColumnDefinition(COL_URL, "VARCHAR(255)").
-                SetNotNull().
-                SetComment("URL.")).
-        AppendColumnDefinition(
-            myQuery.NewColumnDefinition(COL_TEXT, "LONGTEXT").
-                SetNotNull().
-                SetComment("Text.")).
-        AppendColumnDefinition(
-            myQuery.NewColumnDefinition(COL_LANG_CODE, "VARCHAR(2)").
-                SetComment("Language code with 2 digits.")).
-        AppendColumnDefinition(
-            myQuery.NewColumnDefinition(COL_EXCERPT, "VARCHAR(255)").
-                SetComment("Excerpt.")).
-        AppendColumnDefinition(
-            myQuery.NewColumnDefinition(COL_THUMBNAIL_URL, "VARCHAR(255)").
-                SetComment("Thumbnail image URL.")).
-        AppendColumnDefinition(
-            myQuery.NewColumnDefinition(COL_PASSWORD, "VARCHAR(255)").
-                SetComment("Password to access it.")).
-        AppendColumnDefinition(
-            myQuery.NewColumnDefinition(COL_TYPE, "VARCHAR(10)").
-                SetComment("Type.")).
-        AppendColumnDefinition(  
-            myQuery.NewColumnDefinition(COL_CREATED_AT, "DATETIME").
-                SetNotNull().
-                SetDefault("CURRENT_TIMESTAMP").
-                SetComment("Created at.")).
-        AppendColumnDefinition(
-            myQuery.NewColumnDefinition(COL_UPDATED_AT, "DATETIME").
-                SetDefault("CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP").
-                SetComment("Updated at.")).
-        SetPrimaryKeys([]string{COL_ID}).
-        SetUniqueKeys([]string{COL_URL, COL_LANG_CODE}).
-        SetIndexKeys([]string{COL_STATUS, COL_TITLE, COL_URL, COL_LANG_CODE}).
+                SetComment("Tag slug")).
+        SetPrimaryKeys([]string{COL_ARTICLE_ID, COL_TAG_SLUG}).
+        AppendConstraint("", COL_ARTICLE_ID, c.RefArticleTableName, nkwMysqlModelArticle.COL_ID, true, true).
+        AppendConstraint("", COL_TAG_SLUG, c.RefTagTableName, nkwMysqlModelTag.COL_SLUG, true, true).
         SetComment(c.TableName + " table.")
     return c.CreateTableClient.Run()
 }

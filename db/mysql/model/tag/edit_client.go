@@ -58,33 +58,33 @@ func NewEditClientWithTxContext(tableName string, tx *sql.Tx, ctx context.Contex
 //////////////////////////////////////////////////////////////////////
 // Run.
 //////////////////////////////////////////////////////////////////////
-func (o *EditClient) Run() (*myQuery.UpdateResult, error) {
-    return o.BaseClient.Run()
+func (c *EditClient) Run() (*myQuery.UpdateResult, error) {
+    return c.BaseClient.Run()
 }
 
 
 //////////////////////////////////////////////////////////////////////
 // Run by COL_SLUG.
 //////////////////////////////////////////////////////////////////////
-func (o *EditClient) RunBySlug(slug string) (*myQuery.UpdateResult, error) {
-    o.BaseClient.WhereCondition.SetWhere(COL_SLUG, slug)
-    return o.BaseClient.Run()
+func (c *EditClient) RunBySlug(slug string) (*myQuery.UpdateResult, error) {
+    c.BaseClient.WhereCondition.SetWhere(COL_SLUG, slug)
+    return c.BaseClient.Run()
 }
 
 
 //////////////////////////////////////////////////////////////////////
 // Run with all by COL_SLUG.
 //////////////////////////////////////////////////////////////////////
-func (o *EditClient) RunWithAllBySlug(currentSlug string, slug, name, parentSlug *string) (*myQuery.UpdateResult, error) {
+func (c *EditClient) RunWithAllBySlug(currentSlug string, slug, name, parentSlug *string) (*myQuery.UpdateResult, error) {
     if slug != nil {
-        o.BaseClient.AssignmentList.Append(COL_SLUG, *slug)
+        c.BaseClient.AssignmentList.Append(COL_SLUG, *slug)
     }
     if name != nil {
-        o.BaseClient.AssignmentList.Append(COL_NAME, *name)
+        c.BaseClient.AssignmentList.Append(COL_NAME, *name)
     }
     if parentSlug != nil {
-        o.BaseClient.AssignmentList.Append(COL_PARENT_SLUG, *parentSlug)
+        c.BaseClient.AssignmentList.Append(COL_PARENT_SLUG, *parentSlug)
     }
-    o.BaseClient.WhereCondition.SetWhere(COL_SLUG, currentSlug)
-    return o.BaseClient.Run()
+    c.BaseClient.WhereCondition.SetWhere(COL_SLUG, currentSlug)
+    return c.BaseClient.Run()
 }

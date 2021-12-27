@@ -1,7 +1,7 @@
 //////////////////////////////////////////////////////////////////////
 // delete_client.go
 //////////////////////////////////////////////////////////////////////
-package article
+package article_tag_map
 
 import (
     "context"
@@ -58,15 +58,35 @@ func NewDeleteClientWithTxContext(tableName string, tx *sql.Tx, ctx context.Cont
 //////////////////////////////////////////////////////////////////////
 // Run.
 //////////////////////////////////////////////////////////////////////
-func (o *DeleteClient) Run() (*myQuery.DeleteResult, error) {
-    return o.BaseClient.Run()
+func (c *DeleteClient) Run() (*myQuery.DeleteResult, error) {
+    return c.BaseClient.Run()
 }
 
 
 //////////////////////////////////////////////////////////////////////
-// Run by "id".
+// Run by COL_ARTICLE_ID.
 //////////////////////////////////////////////////////////////////////
-func (o *DeleteClient) RunById(id string) (*myQuery.DeleteResult, error) {
-    o.BaseClient.WhereCondition.SetWhere(COL_ID, id)
-    return o.BaseClient.Run()
+func (c *DeleteClient) RunByAccountId(accountId string) (*myQuery.DeleteResult, error) {
+    c.BaseClient.WhereCondition.SetWhere(COL_ARTICLE_ID, accountId)
+    return c.BaseClient.Run()
+}
+
+
+//////////////////////////////////////////////////////////////////////
+// Run by COL_TAG_SLUG.
+//////////////////////////////////////////////////////////////////////
+func (c *DeleteClient) RunByTagSlug(tagSlug string) (*myQuery.DeleteResult, error) {
+    c.BaseClient.WhereCondition.SetWhere(COL_TAG_SLUG, tagSlug)
+    return c.BaseClient.Run()
+}
+
+
+//////////////////////////////////////////////////////////////////////
+// Run by COL_ARTICLE_ID and COL_TAG_SLUG.
+//////////////////////////////////////////////////////////////////////
+func (c *DeleteClient) RunByAccountIdAndTagSlug(accountId, tagSlug string) (*myQuery.DeleteResult, error) {
+    c.BaseClient.WhereCondition.
+        SetWhere(COL_ARTICLE_ID, accountId).
+        AppendAnd(COL_TAG_SLUG, tagSlug)
+    return c.BaseClient.Run()
 }

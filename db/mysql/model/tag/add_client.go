@@ -58,15 +58,15 @@ func NewAddClientWithTxContext(tableName string, tx *sql.Tx, ctx context.Context
 //////////////////////////////////////////////////////////////////////
 // Run.
 //////////////////////////////////////////////////////////////////////
-func (o *AddClient) Run() (*myQuery.InsertResult, error) {
-    return o.BaseClient.Run()
+func (c *AddClient) Run() (*myQuery.InsertResult, error) {
+    return c.BaseClient.Run()
 }
 
 
 //////////////////////////////////////////////////////////////////////
 // Run with all.
 //////////////////////////////////////////////////////////////////////
-func (o *AddClient) RunWithAll(slug, name string, parentSlug *string) (*myQuery.InsertResult, error) {
+func (c *AddClient) RunWithAll(slug, name string, parentSlug *string) (*myQuery.InsertResult, error) {
     var cols []string
     var vals []interface{}
 
@@ -78,19 +78,19 @@ func (o *AddClient) RunWithAll(slug, name string, parentSlug *string) (*myQuery.
         vals = append(vals, *parentSlug)
     }
 
-    o.BaseClient.
+    c.BaseClient.
         SetColNames(cols).
         AppendValues(vals)
-    return o.BaseClient.Run()
+    return c.BaseClient.Run()
 }
 
 
 //////////////////////////////////////////////////////////////////////
 // Run with required.
 //////////////////////////////////////////////////////////////////////
-func (o *AddClient) RunWithRequired(slug, name string) (*myQuery.InsertResult, error) {
-    o.BaseClient.
+func (c *AddClient) RunWithRequired(slug, name string) (*myQuery.InsertResult, error) {
+    c.BaseClient.
         SetColNames([]string{COL_SLUG, COL_NAME}).
         AppendValues([]interface{}{slug, name})
-    return o.BaseClient.Run()
+    return c.BaseClient.Run()
 }

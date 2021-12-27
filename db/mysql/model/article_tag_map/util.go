@@ -1,95 +1,155 @@
 //////////////////////////////////////////////////////////////////////
 // util.go
 //////////////////////////////////////////////////////////////////////
-package article
+package article_tag_map
 
 import (
     "errors"
     "strings"
     myModelUtil "github.com/noknow-hub/pkg-go/db/mysql/model/util"
     myQuery "github.com/noknow-hub/pkg-go/db/mysql/query"
+    nkwMysqlModelArticle "github.com/noknow-hub/pkg-go/db/mysql/model/article"
+    nkwMysqlModelTag "github.com/noknow-hub/pkg-go/db/mysql/model/tag"
 )
 
 
 //////////////////////////////////////////////////////////////////////
-// Scan article object.
+// Scan ArticleTagMap object.
 //////////////////////////////////////////////////////////////////////
-func scanArticle(row *myQuery.Row, article *Article) error {
+func scanArticleTagMap(row *myQuery.Row, articleTagMap *ArticleTagMap) error {
     for _, col := range row.Columns {
         s := strings.Split(col.Name, ".")
         col.Name = s[len(s)-1]
 
-        if col.Name == COL_ID {
+        if col.Name == COL_ARTICLE_ID {
             if val, err := myModelUtil.ConvertInterfaceToString(col.Value); err != nil {
                 return err
             } else {
-                article.Id = val
+                articleTagMap.ArticleId = val
+            }
+        } else if col.Name == COL_TAG_SLUG {
+            if val, err := myModelUtil.ConvertInterfaceToString(col.Value); err != nil {
+                return err
+            } else {
+                articleTagMap.TagSlug = val
+            }
+        } else {
+            return errors.New("Unknown column. Name: " + col.Name)
+        }
+    }
+    return nil
+}
+
+
+//////////////////////////////////////////////////////////////////////
+// Scan ArticleTagMap with article and tag  object.
+//////////////////////////////////////////////////////////////////////
+func scanArticleTagMapWithArticleAndTag(row *myQuery.Row, mapTable, articletable, tagTable string, articleTagMap *ArticleTagMap) error {
+    for index, col := range row.Columns {
+        s := strings.Split(col.Name, ".")
+        col.Name = s[len(s)-1]
+
+        if col.Name == COL_ARTICLE_ID {
+            if val, err := myModelUtil.ConvertInterfaceToString(col.Value); err != nil {
+                return err
+            } else {
+                articleTagMap.ArticleId = val
+            }
+        } else if col.Name == COL_TAG_SLUG {
+            if val, err := myModelUtil.ConvertInterfaceToString(col.Value); err != nil {
+                return err
+            } else {
+                articleTagMap.TagSlug = val
+            }
+        } else if col.Name == COL_ID {
+            if val, err := myModelUtil.ConvertInterfaceToString(col.Value); err != nil {
+                return err
+            } else {
+                articleTagMap.Article.Id = val
             }
         } else if col.Name == COL_STATUS {
             if val, err := myModelUtil.ConvertInterfaceToString(col.Value); err != nil {
                 return err
             } else {
-                article.Status = val
+                articleTagMap.Article.Status = val
             }
         } else if col.Name == COL_TITLE {
             if val, err := myModelUtil.ConvertInterfaceToString(col.Value); err != nil {
                 return err
             } else {
-                article.Title = val
+                articleTagMap.Article.Title = val
             }
         } else if col.Name == COL_URL {
             if val, err := myModelUtil.ConvertInterfaceToString(col.Value); err != nil {
                 return err
             } else {
-                article.Url = val
+                articleTagMap.Article.Url = val
             }
         } else if col.Name == COL_TEXT {
             if val, err := myModelUtil.ConvertInterfaceToString(col.Value); err != nil {
                 return err
             } else {
-                article.Text = val
+                articleTagMap.Article.Text = val
             }
         } else if col.Name == COL_LANG_CODE {
             if val, err := myModelUtil.ConvertInterfaceToString(col.Value); err != nil {
                 return err
             } else {
-                article.LangCode = val
+                articleTagMap.Article.LangCode = val
             }
         } else if col.Name == COL_EXCERPT {
             if val, err := myModelUtil.ConvertInterfaceToString(col.Value); err != nil {
                 return err
             } else {
-                article.Excerpt = val
+                articleTagMap.Article.Excerpt = val
             }
         } else if col.Name == COL_THUMBNAIL_URL {
             if val, err := myModelUtil.ConvertInterfaceToString(col.Value); err != nil {
                 return err
             } else {
-                article.ThumbnailUrl = val
+                articleTagMap.Article.ThumbnailUrl = val
             }
         } else if col.Name == COL_PASSWORD {
             if val, err := myModelUtil.ConvertInterfaceToString(col.Value); err != nil {
                 return err
             } else {
-                article.Password = val
+                articleTagMap.Article.Password = val
             }
         } else if col.Name == COL_TYPE {
             if val, err := myModelUtil.ConvertInterfaceToString(col.Value); err != nil {
                 return err
             } else {
-                article.Type = val
+                articleTagMap.Article.Type = val
             }
         } else if col.Name == COL_CREATED_AT {
             if val, err := myModelUtil.ConvertInterfaceToTime(col.Value); err != nil {
                 return err
             } else {
-                article.CreatedAt = val
+                articleTagMap.Article.CreatedAt = val
             }
         } else if col.Name == COL_UPDATED_AT {
             if val, err := myModelUtil.ConvertInterfaceToTime(col.Value); err != nil {
                 return err
             } else {
-                article.UpdatedAt = val
+                articleTagMap.Article.UpdatedAt = val
+            }
+        } else if col.Name == COL_SLUG {
+            if val, err := myModelUtil.ConvertInterfaceToString(col.Value); err != nil {
+                return err
+            } else {
+                articleTagMap.Tag.Slug = val
+            }
+        } else if col.Name == COL_NAME {
+            if val, err := myModelUtil.ConvertInterfaceToString(col.Value); err != nil {
+                return err
+            } else {
+                articleTagMap.Tag.Name = val
+            }
+        } else if col.Name == COL_PARENT_SLUG {
+            if val, err := myModelUtil.ConvertInterfaceToString(col.Value); err != nil {
+                return err
+            } else {
+                articleTagMap.Tag.ParentSlug = val
             }
         } else {
             return errors.New("Unknown column. Name: " + col.Name)

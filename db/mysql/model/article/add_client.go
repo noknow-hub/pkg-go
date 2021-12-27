@@ -58,23 +58,23 @@ func NewAddClientWithTxContext(tableName string, tx *sql.Tx, ctx context.Context
 //////////////////////////////////////////////////////////////////////
 // Generate an ID.
 //////////////////////////////////////////////////////////////////////
-func (o *AddClient) GenerateId() string {
-    return myQuery.GenerateId(o.BaseClient.TableName, COL_ID, o.BaseClient.Db, o.BaseClient.Tx, o.BaseClient.Ctx)
+func (c *AddClient) GenerateId() string {
+    return myQuery.GenerateId(c.BaseClient.TableName, COL_ID, c.BaseClient.Db, c.BaseClient.Tx, c.BaseClient.Ctx)
 }
 
 
 //////////////////////////////////////////////////////////////////////
 // Run.
 //////////////////////////////////////////////////////////////////////
-func (o *AddClient) Run() (*myQuery.InsertResult, error) {
-    return o.BaseClient.Run()
+func (c *AddClient) Run() (*myQuery.InsertResult, error) {
+    return c.BaseClient.Run()
 }
 
 
 //////////////////////////////////////////////////////////////////////
 // Run with all.
 //////////////////////////////////////////////////////////////////////
-func (o *AddClient) RunWithAll(id, status, title, url, text string, langCode, excerpt, thumbnailUrl, password, _type *string) (*myQuery.InsertResult, error) {
+func (c *AddClient) RunWithAll(id, status, title, url, text string, langCode, excerpt, thumbnailUrl, password, _type *string) (*myQuery.InsertResult, error) {
     var cols []string
     var vals []interface{}
 
@@ -102,19 +102,19 @@ func (o *AddClient) RunWithAll(id, status, title, url, text string, langCode, ex
         vals = append(vals, *_type)
     }
 
-    o.BaseClient.
+    c.BaseClient.
         SetColNames(cols).
         AppendValues(vals)
-    return o.BaseClient.Run()
+    return c.BaseClient.Run()
 }
 
 
 //////////////////////////////////////////////////////////////////////
 // Run with required.
 //////////////////////////////////////////////////////////////////////
-func (o *AddClient) RunWithRequired(id, status, title, url, text string) (*myQuery.InsertResult, error) {
-    o.BaseClient.
+func (c *AddClient) RunWithRequired(id, status, title, url, text string) (*myQuery.InsertResult, error) {
+    c.BaseClient.
         SetColNames([]string{COL_ID, COL_STATUS, COL_TITLE, COL_URL, COL_TEXT}).
         AppendValues([]interface{}{id, status, title, url, text})
-    return o.BaseClient.Run()
+    return c.BaseClient.Run()
 }

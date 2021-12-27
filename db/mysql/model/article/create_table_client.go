@@ -59,7 +59,7 @@ func (c *CreateTableClient) Run() (*myQuery.CreateTableResult, error) {
         AppendColumnDefinition(
             myQuery.NewColumnDefinition(COL_STATUS, "VARCHAR(10)").
                 SetNotNull().
-                SetDefault(VAL_STATUS_PUBLIC).
+                SetDefault("'" + VAL_STATUS_PUBLIC + "'").
                 SetComment("Status.")).
         AppendColumnDefinition(
             myQuery.NewColumnDefinition(COL_TITLE, "VARCHAR(255)").
@@ -87,7 +87,7 @@ func (c *CreateTableClient) Run() (*myQuery.CreateTableResult, error) {
                 SetComment("Password to access it.")).
         AppendColumnDefinition(
             myQuery.NewColumnDefinition(COL_TYPE, "VARCHAR(10)").
-                SetDefault(VAL_TYPE_DEFAULT).
+                SetDefault("'" + VAL_TYPE_DEFAULT + "'").
                 SetComment("Type.")).
         AppendColumnDefinition(  
             myQuery.NewColumnDefinition(COL_CREATED_AT, "DATETIME").

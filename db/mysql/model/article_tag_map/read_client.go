@@ -1,7 +1,7 @@
 //////////////////////////////////////////////////////////////////////
 // read_client.go
 //////////////////////////////////////////////////////////////////////
-package tag
+package article
 
 import (
     "context"
@@ -75,19 +75,19 @@ func (o *ReadClient) QueryRow() (*myQuery.SelectResultQueryRow, error) {
 //////////////////////////////////////////////////////////////////////
 // Run.
 //////////////////////////////////////////////////////////////////////
-func (o *ReadClient) Run() (*Tag, *myQuery.SelectResult, error) {
-    var tag *Tag
+func (o *ReadClient) Run() (*Article, *myQuery.SelectResult, error) {
+    var article *Article
     o.BaseClient.SetLimit(1)
     result, err := o.BaseClient.Run()
     if err != nil {
-        return tag, result, err
+        return article, result, err
     }
     if result != nil && len(result.Rows) != 1 {
-        return tag, result, err
+        return article, result, err
     }
-    tag = &Tag{}
-    if err := scanTag(result.Rows[0], tag); err != nil {
-        return tag, result, err
+    article = &Article{}
+    if err := scanArticle(result.Rows[0], article); err != nil {
+        return article, result, err
     }
-    return tag, result, nil
+    return article, result, nil
 }

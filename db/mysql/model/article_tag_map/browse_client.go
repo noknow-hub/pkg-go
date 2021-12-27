@@ -1,7 +1,7 @@
 //////////////////////////////////////////////////////////////////////
-// read_client.go
+// browse_client.go
 //////////////////////////////////////////////////////////////////////
-package tag
+package article
 
 import (
     "context"
@@ -10,56 +10,64 @@ import (
     myQuery "github.com/noknow-hub/pkg-go/db/mysql/query"
 )
 
-type ReadClient struct {
+type BrowseClient struct {
     BaseClient *myQuery.SelectClient
 }
 
 
 //////////////////////////////////////////////////////////////////////
-// New ReadClient with db object.
+// New BrowseClient with db object.
 //////////////////////////////////////////////////////////////////////
-func NewReadClientWithDb(tableName string, db *sql.DB) *ReadClient {
-    return &ReadClient{
+func NewBrowseClientWithDb(tableName string, db *sql.DB) *BrowseClient {
+    return &BrowseClient{
         BaseClient: myQuery.NewSelectClientWithDb(tableName, db),
     }
 }
 
 
 //////////////////////////////////////////////////////////////////////
-// New ReadClient with db object and context.
+// New BrowseClient with db object and context.
 //////////////////////////////////////////////////////////////////////
-func NewReadClientWithDbContext(tableName string, db *sql.DB, ctx context.Context) *ReadClient {
-    return &ReadClient{
+func NewBrowseClientWithDbContext(tableName string, db *sql.DB, ctx context.Context) *BrowseClient {
+    return &BrowseClient{
         BaseClient: myQuery.NewSelectClientWithDbContext(tableName, db, ctx),
     }
 }
 
 
 //////////////////////////////////////////////////////////////////////
-// New ReadClient with tx object.
+// New BrowseClient with tx object.
 //////////////////////////////////////////////////////////////////////
-func NewReadClientWithTx(tableName string, tx *sql.Tx) *ReadClient {
-    return &ReadClient{
+func NewBrowseClientWithTx(tableName string, tx *sql.Tx) *BrowseClient {
+    return &BrowseClient{
         BaseClient: myQuery.NewSelectClientWithTx(tableName, tx),
     }
 }
 
 
 //////////////////////////////////////////////////////////////////////
-// New ReadClient with tx object and context.
+// New BrowseClient with tx object and context.
 //////////////////////////////////////////////////////////////////////
-func NewReadClientWithTxContext(tableName string, tx *sql.Tx, ctx context.Context) *ReadClient {
-    return &ReadClient{
+func NewBrowseClientWithTxContext(tableName string, tx *sql.Tx, ctx context.Context) *BrowseClient {
+    return &BrowseClient{
         BaseClient: myQuery.NewSelectClientWithTxContext(tableName, tx, ctx),
     }
 }
 
 
 //////////////////////////////////////////////////////////////////////
+// Count.
+//////////////////////////////////////////////////////////////////////
+func (o *BrowseClient) Count() (int64, *myQuery.SelectResultCount, error) {
+    resultCount, err := o.BaseClient.Count()
+    return resultCount.Count, resultCount, err
+}
+
+
+//////////////////////////////////////////////////////////////////////
 // Query.
 //////////////////////////////////////////////////////////////////////
-func (o *ReadClient) Query() (*myQuery.SelectResultQuery, error) {
-    o.BaseClient.SetLimit(1)
+func (o *BrowseClient) Query() (*myQuery.SelectResultQuery, error) {
     return o.BaseClient.Query()
 }
 
@@ -67,7 +75,7 @@ func (o *ReadClient) Query() (*myQuery.SelectResultQuery, error) {
 //////////////////////////////////////////////////////////////////////
 // QueryRow.
 //////////////////////////////////////////////////////////////////////
-func (o *ReadClient) QueryRow() (*myQuery.SelectResultQueryRow, error) {
+func (o *BrowseClient) QueryRow() (*myQuery.SelectResultQueryRow, error) {
     return o.BaseClient.QueryRow()
 }
 
@@ -75,19 +83,20 @@ func (o *ReadClient) QueryRow() (*myQuery.SelectResultQueryRow, error) {
 //////////////////////////////////////////////////////////////////////
 // Run.
 //////////////////////////////////////////////////////////////////////
-func (o *ReadClient) Run() (*Tag, *myQuery.SelectResult, error) {
-    var tag *Tag
-    o.BaseClient.SetLimit(1)
+func (o *BrowseClient) Run() ([]*Article, *myQuery.SelectResult, error) {
+    var articles []*Article
     result, err := o.BaseClient.Run()
-    if err != nil {
-        return tag, result, err
+    if err != nil { 
+        return articles, result, err
     }
-    if result != nil && len(result.Rows) != 1 {
-        return tag, result, err
+
+    for _, row := range result.Rows {
+        article := &Article{}
+        if err := scanArticle(row, article); err != nil {
+            return articles, result, err
+        }
+        articles = append(articles, article)
     }
-    tag = &Tag{}
-    if err := scanTag(result.Rows[0], tag); err != nil {
-        return tag, result, err
-    }
-    return tag, result, nil
+
+    return articles, result, nil
 }

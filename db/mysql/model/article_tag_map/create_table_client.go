@@ -1,7 +1,7 @@
 //////////////////////////////////////////////////////////////////////
 // create_table_client.go
 //////////////////////////////////////////////////////////////////////
-package tag
+package article
 
 import (
     "context"
@@ -53,17 +53,53 @@ func NewCreateTableClientWithTxContext(tableName string, tx *sql.Tx, ctx context
 func (c *CreateTableClient) Run() (*myQuery.CreateTableResult, error) {
     c.
         AppendColumnDefinition(
-            myQuery.NewColumnDefinition(COL_SLUG, "VARCHAR(255)").
+            myQuery.NewColumnDefinition(COL_ID, "BIGINT UNSIGNED").
                 SetNotNull().
-                SetComment("Tag slug")).
+                SetComment("Article ID.")).
         AppendColumnDefinition(
-            myQuery.NewColumnDefinition(COL_NAME, "VARCHAR(255)").
+            myQuery.NewColumnDefinition(COL_STATUS, "VARCHAR(10)").
                 SetNotNull().
-                SetComment("Tag name")).
+                SetDefault("'" + VAL_STATUS_PUBLIC + "'").
+                SetComment("Status.")).
         AppendColumnDefinition(
-            myQuery.NewColumnDefinition(COL_PARENT_SLUG, "VARCHAR(255)").
-                SetComment("Tag parent slug")).
-        SetPrimaryKeys([]string{COL_SLUG}).
+            myQuery.NewColumnDefinition(COL_TITLE, "VARCHAR(255)").
+                SetNotNull().
+                SetComment("Title.")).
+        AppendColumnDefinition(
+            myQuery.NewColumnDefinition(COL_URL, "VARCHAR(255)").
+                SetNotNull().
+                SetComment("URL.")).
+        AppendColumnDefinition(
+            myQuery.NewColumnDefinition(COL_TEXT, "LONGTEXT").
+                SetNotNull().
+                SetComment("Text.")).
+        AppendColumnDefinition(
+            myQuery.NewColumnDefinition(COL_LANG_CODE, "VARCHAR(2)").
+                SetComment("Language code with 2 digits.")).
+        AppendColumnDefinition(
+            myQuery.NewColumnDefinition(COL_EXCERPT, "VARCHAR(255)").
+                SetComment("Excerpt.")).
+        AppendColumnDefinition(
+            myQuery.NewColumnDefinition(COL_THUMBNAIL_URL, "VARCHAR(255)").
+                SetComment("Thumbnail image URL.")).
+        AppendColumnDefinition(
+            myQuery.NewColumnDefinition(COL_PASSWORD, "VARCHAR(255)").
+                SetComment("Password to access it.")).
+        AppendColumnDefinition(
+            myQuery.NewColumnDefinition(COL_TYPE, "VARCHAR(10)").
+                SetComment("Type.")).
+        AppendColumnDefinition(  
+            myQuery.NewColumnDefinition(COL_CREATED_AT, "DATETIME").
+                SetNotNull().
+                SetDefault("CURRENT_TIMESTAMP").
+                SetComment("Created at.")).
+        AppendColumnDefinition(
+            myQuery.NewColumnDefinition(COL_UPDATED_AT, "DATETIME").
+                SetDefault("CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP").
+                SetComment("Updated at.")).
+        SetPrimaryKeys([]string{COL_ID}).
+        SetUniqueKeys([]string{COL_URL, COL_LANG_CODE}).
+        SetIndexKeys([]string{COL_STATUS, COL_TITLE, COL_URL, COL_LANG_CODE}).
         SetComment(c.TableName + " table.")
     return c.CreateTableClient.Run()
 }

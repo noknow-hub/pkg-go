@@ -1,7 +1,7 @@
 //////////////////////////////////////////////////////////////////////
 // util.go
 //////////////////////////////////////////////////////////////////////
-package article
+package tag
 
 import (
     "errors"
@@ -12,84 +12,30 @@ import (
 
 
 //////////////////////////////////////////////////////////////////////
-// Scan article object.
+// Scan tag object.
 //////////////////////////////////////////////////////////////////////
-func scanArticle(row *myQuery.Row, article *Article) error {
+func scanTag(row *myQuery.Row, tag *Tag) error {
     for _, col := range row.Columns {
         s := strings.Split(col.Name, ".")
         col.Name = s[len(s)-1]
 
-        if col.Name == COL_ID {
+        if col.Name == COL_SLUG {
             if val, err := myModelUtil.ConvertInterfaceToString(col.Value); err != nil {
                 return err
             } else {
-                article.Id = val
+                tag.Slug = val
             }
-        } else if col.Name == COL_STATUS {
+        } else if col.Name == COL_NAME {
             if val, err := myModelUtil.ConvertInterfaceToString(col.Value); err != nil {
                 return err
             } else {
-                article.Status = val
+                tag.Name = val
             }
-        } else if col.Name == COL_TITLE {
+        } else if col.Name == COL_PARENT_SLUG {
             if val, err := myModelUtil.ConvertInterfaceToString(col.Value); err != nil {
                 return err
             } else {
-                article.Title = val
-            }
-        } else if col.Name == COL_URL {
-            if val, err := myModelUtil.ConvertInterfaceToString(col.Value); err != nil {
-                return err
-            } else {
-                article.Url = val
-            }
-        } else if col.Name == COL_TEXT {
-            if val, err := myModelUtil.ConvertInterfaceToString(col.Value); err != nil {
-                return err
-            } else {
-                article.Text = val
-            }
-        } else if col.Name == COL_LANG_CODE {
-            if val, err := myModelUtil.ConvertInterfaceToString(col.Value); err != nil {
-                return err
-            } else {
-                article.LangCode = val
-            }
-        } else if col.Name == COL_EXCERPT {
-            if val, err := myModelUtil.ConvertInterfaceToString(col.Value); err != nil {
-                return err
-            } else {
-                article.Excerpt = val
-            }
-        } else if col.Name == COL_THUMBNAIL_URL {
-            if val, err := myModelUtil.ConvertInterfaceToString(col.Value); err != nil {
-                return err
-            } else {
-                article.ThumbnailUrl = val
-            }
-        } else if col.Name == COL_PASSWORD {
-            if val, err := myModelUtil.ConvertInterfaceToString(col.Value); err != nil {
-                return err
-            } else {
-                article.Password = val
-            }
-        } else if col.Name == COL_TYPE {
-            if val, err := myModelUtil.ConvertInterfaceToString(col.Value); err != nil {
-                return err
-            } else {
-                article.Type = val
-            }
-        } else if col.Name == COL_CREATED_AT {
-            if val, err := myModelUtil.ConvertInterfaceToTime(col.Value); err != nil {
-                return err
-            } else {
-                article.CreatedAt = val
-            }
-        } else if col.Name == COL_UPDATED_AT {
-            if val, err := myModelUtil.ConvertInterfaceToTime(col.Value); err != nil {
-                return err
-            } else {
-                article.UpdatedAt = val
+                tag.ParentSlug = val
             }
         } else {
             return errors.New("Unknown column. Name: " + col.Name)

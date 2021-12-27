@@ -1,7 +1,7 @@
 //////////////////////////////////////////////////////////////////////
 // delete_client.go
 //////////////////////////////////////////////////////////////////////
-package tag
+package article
 
 import (
     "context"
@@ -64,9 +64,9 @@ func (o *DeleteClient) Run() (*myQuery.DeleteResult, error) {
 
 
 //////////////////////////////////////////////////////////////////////
-// Run by COL_SLUG.
+// Run by "id".
 //////////////////////////////////////////////////////////////////////
-func (o *DeleteClient) RunBySlug(slug string) (*myQuery.DeleteResult, error) {
-    o.BaseClient.WhereCondition.SetWhere(COL_SLUG, slug)
+func (o *DeleteClient) RunById(id string) (*myQuery.DeleteResult, error) {
+    o.BaseClient.WhereCondition.SetWhere(COL_ID, id)
     return o.BaseClient.Run()
 }

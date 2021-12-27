@@ -1,7 +1,7 @@
 //////////////////////////////////////////////////////////////////////
 // edit_client.go
 //////////////////////////////////////////////////////////////////////
-package tag
+package article
 
 import (
     "context"
@@ -64,27 +64,48 @@ func (o *EditClient) Run() (*myQuery.UpdateResult, error) {
 
 
 //////////////////////////////////////////////////////////////////////
-// Run by COL_SLUG.
+// Run by "id".
 //////////////////////////////////////////////////////////////////////
-func (o *EditClient) RunBySlug(slug string) (*myQuery.UpdateResult, error) {
-    o.BaseClient.WhereCondition.SetWhere(COL_SLUG, slug)
+func (o *EditClient) RunById(id string) (*myQuery.UpdateResult, error) {
+    o.BaseClient.WhereCondition.SetWhere(COL_ID, id)
     return o.BaseClient.Run()
 }
 
 
 //////////////////////////////////////////////////////////////////////
-// Run with all by COL_SLUG.
+// Run with all by "id".
 //////////////////////////////////////////////////////////////////////
-func (o *EditClient) RunWithAllBySlug(currentSlug string, slug, name, parentSlug *string) (*myQuery.UpdateResult, error) {
-    if slug != nil {
-        o.BaseClient.AssignmentList.Append(COL_SLUG, *slug)
+func (o *EditClient) RunWithAllById(currentId string, id, status, title, url, text, langCode, excerpt, thumbnailUrl, password, _type *string) (*myQuery.UpdateResult, error) {
+    if id != nil {
+        o.BaseClient.AssignmentList.Append(COL_ID, *id)
     }
-    if name != nil {
-        o.BaseClient.AssignmentList.Append(COL_NAME, *name)
+    if status != nil {
+        o.BaseClient.AssignmentList.Append(COL_STATUS, *status)
     }
-    if parentSlug != nil {
-        o.BaseClient.AssignmentList.Append(COL_PARENT_SLUG, *parentSlug)
+    if title != nil {
+        o.BaseClient.AssignmentList.Append(COL_TITLE, *title)
     }
-    o.BaseClient.WhereCondition.SetWhere(COL_SLUG, currentSlug)
+    if url != nil {
+        o.BaseClient.AssignmentList.Append(COL_URL, *url)
+    }
+    if text != nil {
+        o.BaseClient.AssignmentList.Append(COL_TEXT, *text)
+    }
+    if langCode != nil {
+        o.BaseClient.AssignmentList.Append(COL_LANG_CODE, *langCode)
+    }
+    if excerpt != nil {
+        o.BaseClient.AssignmentList.Append(COL_EXCERPT, *excerpt)
+    }
+    if thumbnailUrl != nil {
+        o.BaseClient.AssignmentList.Append(COL_THUMBNAIL_URL, *thumbnailUrl)
+    }
+    if password != nil {
+        o.BaseClient.AssignmentList.Append(COL_PASSWORD, *password)
+    }
+    if _type != nil {
+        o.BaseClient.AssignmentList.Append(COL_TYPE, *_type)
+    }
+    o.BaseClient.WhereCondition.SetWhere(COL_ID, currentId)
     return o.BaseClient.Run()
 }

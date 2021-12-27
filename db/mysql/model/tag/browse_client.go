@@ -1,7 +1,7 @@
 //////////////////////////////////////////////////////////////////////
 // browse_client.go
 //////////////////////////////////////////////////////////////////////
-package article
+package tag
 
 import (
     "context"
@@ -83,20 +83,20 @@ func (o *BrowseClient) QueryRow() (*myQuery.SelectResultQueryRow, error) {
 //////////////////////////////////////////////////////////////////////
 // Run.
 //////////////////////////////////////////////////////////////////////
-func (o *BrowseClient) Run() ([]*Article, *myQuery.SelectResult, error) {
-    var articles []*Article
+func (o *BrowseClient) Run() ([]*Tag, *myQuery.SelectResult, error) {
+    var tags []*Tag
     result, err := o.BaseClient.Run()
     if err != nil { 
-        return articles, result, err
+        return tags, result, err
     }
 
     for _, row := range result.Rows {
-        article := &Article{}
-        if err := scanArticle(row, article); err != nil {
-            return articles, result, err
+        tag := &Tag{}
+        if err := scanTag(row, tag); err != nil {
+            return tags, result, err
         }
-        articles = append(articles, article)
+        tags = append(tags, tag)
     }
 
-    return articles, result, nil
+    return tags, result, nil
 }

@@ -22,6 +22,7 @@ const (
     COL_URL = "url"
     NUM_COLS = 12
     TABLE_NAME = "articles"
+    VAL_TYPE_DEFAULT = "default"
     VAL_TYPE_ADVERTISEMENT = "ads"
     VAL_TYPE_PAID = "paid"
     VAL_STATUS_PUBLIC = "public"

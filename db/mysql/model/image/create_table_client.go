@@ -1,7 +1,7 @@
 //////////////////////////////////////////////////////////////////////
 // create_table_client.go
 //////////////////////////////////////////////////////////////////////
-package article
+package image
 
 import (
     "context"
@@ -53,41 +53,33 @@ func NewCreateTableClientWithTxContext(tableName string, tx *sql.Tx, ctx context
 func (c *CreateTableClient) Run() (*myQuery.CreateTableResult, error) {
     c.
         AppendColumnDefinition(
-            myQuery.NewColumnDefinition(COL_ID, "BIGINT UNSIGNED").
-                SetNotNull().
-                SetComment("Article ID.")).
-        AppendColumnDefinition(
-            myQuery.NewColumnDefinition(COL_STATUS, "VARCHAR(10)").
-                SetNotNull().
-                SetDefault("'" + VAL_STATUS_PUBLIC + "'").
-                SetComment("Status.")).
-        AppendColumnDefinition(
-            myQuery.NewColumnDefinition(COL_TITLE, "VARCHAR(255)").
-                SetNotNull().
-                SetComment("Title.")).
-        AppendColumnDefinition(
             myQuery.NewColumnDefinition(COL_URL, "VARCHAR(255)").
                 SetNotNull().
-                SetComment("URL.")).
+                SetComment("Image URL")).
         AppendColumnDefinition(
-            myQuery.NewColumnDefinition(COL_TEXT, "LONGTEXT").
-                SetNotNull().
-                SetComment("Text.")).
+            myQuery.NewColumnDefinition(COL_NAME, "VARCHAR(255)").
+                SetComment("Image name")).
         AppendColumnDefinition(
-            myQuery.NewColumnDefinition(COL_LANG_CODE, "VARCHAR(2)").
-                SetComment("Language code with 2 digits.")).
+            myQuery.NewColumnDefinition(COL_SIZE, "INT UNSIGNED").
+                SetComment("Image size")).
         AppendColumnDefinition(
-            myQuery.NewColumnDefinition(COL_EXCERPT, "VARCHAR(255)").
-                SetComment("Excerpt.")).
+            myQuery.NewColumnDefinition(COL_PATH, "VARCHAR(255)").
+                SetComment("Image path")).
         AppendColumnDefinition(
-            myQuery.NewColumnDefinition(COL_THUMBNAIL_URL, "VARCHAR(255)").
-                SetComment("Thumbnail image URL.")).
-        AppendColumnDefinition(
-            myQuery.NewColumnDefinition(COL_PASSWORD, "VARCHAR(255)").
-                SetComment("Password to access it.")).
+            myQuery.NewColumnDefinition(COL_ALT, "VARCHAR(255)").
+                SetComment("Image alt")).
         AppendColumnDefinition(
             myQuery.NewColumnDefinition(COL_TYPE, "VARCHAR(10)").
-                SetComment("Type.")).
+                SetComment("Image type")).
+        AppendColumnDefinition(
+            myQuery.NewColumnDefinition(COL_MIME_TYPE, "VARCHAR(200)").
+                SetComment("Image mime type")).
+        AppendColumnDefinition(
+            myQuery.NewColumnDefinition(COL_LABEL, "VARCHAR(255)").
+                SetComment("Image label")).
+        AppendColumnDefinition(
+            myQuery.NewColumnDefinition(COL_LINK, "VARCHAR(255)").
+                SetComment("Link URL")).
         AppendColumnDefinition(  
             myQuery.NewColumnDefinition(COL_CREATED_AT, "DATETIME").
                 SetNotNull().
@@ -97,9 +89,7 @@ func (c *CreateTableClient) Run() (*myQuery.CreateTableResult, error) {
             myQuery.NewColumnDefinition(COL_UPDATED_AT, "DATETIME").
                 SetDefault("CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP").
                 SetComment("Updated at.")).
-        SetPrimaryKeys([]string{COL_ID}).
-        SetUniqueKeys([]string{COL_URL, COL_LANG_CODE}).
-        SetIndexKeys([]string{COL_STATUS, COL_TITLE, COL_URL, COL_LANG_CODE}).
+        SetPrimaryKeys([]string{COL_URL}).
         SetComment(c.TableName + " table.")
     return c.CreateTableClient.Run()
 }

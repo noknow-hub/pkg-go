@@ -87,6 +87,7 @@ func (c *CreateTableClient) Run() (*myQuery.CreateTableResult, error) {
                 SetComment("Password to access it.")).
         AppendColumnDefinition(
             myQuery.NewColumnDefinition(COL_TYPE, "VARCHAR(10)").
+                SetDefault("'" + VAL_TYPE_DEFAULT + "'").
                 SetComment("Type.")).
         AppendColumnDefinition(  
             myQuery.NewColumnDefinition(COL_CREATED_AT, "DATETIME").

@@ -64,6 +64,15 @@ func (o *EditClient) Run() (*myQuery.UpdateResult, error) {
 
 
 //////////////////////////////////////////////////////////////////////
+// Run by COL_ID.
+//////////////////////////////////////////////////////////////////////
+func (o *EditClient) RunById(id string) (*myQuery.UpdateResult, error) {
+    o.BaseClient.WhereCondition.SetWhere(COL_ID, id)
+    return o.BaseClient.Run()
+}
+
+
+//////////////////////////////////////////////////////////////////////
 // Run by COL_URL.
 //////////////////////////////////////////////////////////////////////
 func (o *EditClient) RunByUrl(url string) (*myQuery.UpdateResult, error) {
@@ -73,9 +82,12 @@ func (o *EditClient) RunByUrl(url string) (*myQuery.UpdateResult, error) {
 
 
 //////////////////////////////////////////////////////////////////////
-// Run with all by COL_URL.
+// Run with all by COL_ID.
 //////////////////////////////////////////////////////////////////////
-func (o *EditClient) RunWithAllById(currentUrl string, url, name, size, path, alt, _type, mimeType, label, link *string) (*myQuery.UpdateResult, error) {
+func (o *EditClient) RunWithAllById(currentId string, id, url, name, size, path, alt, _type, mimeType, label, link *string) (*myQuery.UpdateResult, error) {
+    if id != nil {
+        o.BaseClient.AssignmentList.Append(COL_ID, *id)
+    }
     if url != nil {
         o.BaseClient.AssignmentList.Append(COL_URL, *url)
     }
@@ -103,6 +115,6 @@ func (o *EditClient) RunWithAllById(currentUrl string, url, name, size, path, al
     if link != nil {
         o.BaseClient.AssignmentList.Append(COL_LINK, *link)
     }
-    o.BaseClient.WhereCondition.SetWhere(COL_URL, currentUrl)
+    o.BaseClient.WhereCondition.SetWhere(COL_ID, currentId)
     return o.BaseClient.Run()
 }

@@ -19,7 +19,13 @@ func scanImage(row *myQuery.Row, image *Image) error {
         s := strings.Split(col.Name, ".")
         col.Name = s[len(s)-1]
 
-        if col.Name == COL_URL {
+        if col.Name == COL_ID {
+            if val, err := myModelUtil.ConvertInterfaceToString(col.Value); err != nil {
+                return err
+            } else {
+                image.Id = val
+            }
+        } else if col.Name == COL_URL {
             if val, err := myModelUtil.ConvertInterfaceToString(col.Value); err != nil {
                 return err
             } else {

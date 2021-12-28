@@ -10,6 +10,7 @@ import (
 const (
     COL_ALT = "alt"
     COL_CREATED_AT = "created_at"
+    COL_ID = "id"
     COL_LABEL = "label"
     COL_LINK = "link"
     COL_MIME_TYPE = "mime_type"
@@ -19,13 +20,13 @@ const (
     COL_TYPE = "type"
     COL_UPDATED_AT = "updated_at"
     COL_URL = "url"
-    NUM_COLS = 11
+    NUM_COLS = 12
     TABLE_NAME = "images"
-    VAL_TYPE_DEFAULT = "default"
     VAL_TYPE_ADVERTISEMENT = "ads"
 )
 
 type Image struct {
+    Id string
     Url string
     Name string
     Size string

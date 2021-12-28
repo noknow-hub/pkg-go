@@ -53,6 +53,10 @@ func NewCreateTableClientWithTxContext(tableName string, tx *sql.Tx, ctx context
 func (c *CreateTableClient) Run() (*myQuery.CreateTableResult, error) {
     c.
         AppendColumnDefinition(
+            myQuery.NewColumnDefinition(COL_ID, "BIGINT UNSIGNED").
+                SetNotNull().
+                SetComment("Image ID.")).
+        AppendColumnDefinition(
             myQuery.NewColumnDefinition(COL_URL, "VARCHAR(255)").
                 SetNotNull().
                 SetComment("Image URL")).
@@ -89,7 +93,8 @@ func (c *CreateTableClient) Run() (*myQuery.CreateTableResult, error) {
             myQuery.NewColumnDefinition(COL_UPDATED_AT, "DATETIME").
                 SetDefault("CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP").
                 SetComment("Updated at.")).
-        SetPrimaryKeys([]string{COL_URL}).
+        SetPrimaryKeys([]string{COL_ID}).
+        SetUniqueKeys([]string{COL_URL}).
         SetComment(c.TableName + " table.")
     return c.CreateTableClient.Run()
 }

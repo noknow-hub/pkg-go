@@ -66,12 +66,12 @@ func (o *AddClient) Run() (*myQuery.InsertResult, error) {
 //////////////////////////////////////////////////////////////////////
 // Run with all.
 //////////////////////////////////////////////////////////////////////
-func (o *AddClient) RunWithAll(url string, name, size, path, alt, _type, mimeType, label, link *string) (*myQuery.InsertResult, error) {
+func (o *AddClient) RunWithAll(id, url string, name, size, path, alt, _type, mimeType, label, link *string) (*myQuery.InsertResult, error) {
     var cols []string
     var vals []interface{}
 
-    cols = append(cols, COL_URL)
-    vals = append(vals, url)
+    cols = append(cols, []string{COL_ID, COL_URL}...)
+    vals = append(vals, []interface{}{id, url}...)
 
     if name != nil {
         cols = append(cols, COL_NAME)
@@ -116,9 +116,9 @@ func (o *AddClient) RunWithAll(url string, name, size, path, alt, _type, mimeTyp
 //////////////////////////////////////////////////////////////////////
 // Run with required.
 //////////////////////////////////////////////////////////////////////
-func (o *AddClient) RunWithRequired(url string) (*myQuery.InsertResult, error) {
+func (o *AddClient) RunWithRequired(id, url string) (*myQuery.InsertResult, error) {
     o.BaseClient.
-        SetColNames([]string{COL_URL}).
-        AppendValues([]interface{}{url})
+        SetColNames([]string{COL_ID, COL_URL}).
+        AppendValues([]interface{}{id, url})
     return o.BaseClient.Run()
 }

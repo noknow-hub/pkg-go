@@ -80,7 +80,7 @@ func (c *CreateTableClient) Run() (*myQuery.CreateTableResult, error) {
             myQuery.NewColumnDefinition(COL_TAG_ID, "BIGINT UNSIGNED").
                 SetNotNull().
                 SetComment("Tag ID")).
-        SetPrimaryKeys([]string{COL_ARTICLE_ID, COL_TAG_SLUG}).
+        SetPrimaryKeys([]string{COL_ARTICLE_ID, COL_TAG_ID}).
         AppendConstraint("", COL_ARTICLE_ID, c.RefArticleTableName, nkwMysqlModelArticle.COL_ID, true, true).
         AppendConstraint("", COL_TAG_ID, c.RefTagTableName, nkwMysqlModelTag.COL_ID, true, true).
         SetComment(c.TableName + " table.")

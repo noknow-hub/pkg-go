@@ -1,24 +1,17 @@
 //////////////////////////////////////////////////////////////////////
 // read_client.go
 //////////////////////////////////////////////////////////////////////
-package article_tag_map
+package book
 
 import (
     "context"
     "database/sql"
     _ "github.com/go-sql-driver/mysql"
     myQuery "github.com/noknow-hub/pkg-go/db/mysql/query"
-    nkwMysqlModelArticle "github.com/noknow-hub/pkg-go/db/mysql/model/article"
-    nkwMysqlModelTag "github.com/noknow-hub/pkg-go/db/mysql/model/tag"
 )
 
 type ReadClient struct {
     BaseClient *myQuery.SelectClient
-}
-type ReadClientWithArticleAndTag struct {
-    BaseClient *myQuery.SelectClient
-    RefArticlesTable string
-    RefTagsTable string
 }
 
 
@@ -63,18 +56,6 @@ func NewReadClientWithTxContext(tableName string, tx *sql.Tx, ctx context.Contex
 
 
 //////////////////////////////////////////////////////////////////////
-// New ReadClient with reference articles and tags table.
-//////////////////////////////////////////////////////////////////////
-func (c *ReadClient) NewReadClientWithArticleAndTag(refArticlesTable, refTagsTable string) *ReadClientWithArticleAndTag {
-    return &ReadClientWithArticleAndTag{
-        BaseClient: c.BaseClient,
-        RefArticlesTable: refArticlesTable,
-        RefTagsTable: refTagsTable,
-    }
-}
-
-
-//////////////////////////////////////////////////////////////////////
 // Query.
 //////////////////////////////////////////////////////////////////////
 func (c *ReadClient) Query() (*myQuery.SelectResultQuery, error) {
@@ -94,47 +75,19 @@ func (c *ReadClient) QueryRow() (*myQuery.SelectResultQueryRow, error) {
 //////////////////////////////////////////////////////////////////////
 // Run.
 //////////////////////////////////////////////////////////////////////
-func (c *ReadClient) Run() (*ArticleTagMap, *myQuery.SelectResult, error) {
-    var articleTagMap *ArticleTagMap
+func (c *ReadClient) Run() (*Book, *myQuery.SelectResult, error) {
+    var book *Book
     c.BaseClient.SetLimit(1)
     result, err := c.BaseClient.Run()
     if err != nil {
-        return articleTagMap, result, err
+        return book, result, err
     }
     if result != nil && len(result.Rows) != 1 {
-        return articleTagMap, result, err
+        return book, result, err
     }
-    articleTagMap = &ArticleTagMap{}
-    if err := scanArticleTagMap(result.Rows[0], articleTagMap); err != nil {
-        return articleTagMap, result, err
+    book = &Book{}
+    if err := scanBook(result.Rows[0], book); err != nil {
+        return book, result, err
     }
-    return articleTagMap, result, nil
+    return book, result, nil
 }
-
-
-//////////////////////////////////////////////////////////////////////
-// Run with INNER JOIN.
-//////////////////////////////////////////////////////////////////////
-func (c *ReadClientWithArticleAndTag) Run() (*ArticleTagMap, *myQuery.SelectResult, error) {
-    var articleTagMap *ArticleTagMap
-    c.BaseClient.SetLimit(1)
-    c.BaseClient.
-        AppendInnerJoinTables(c.BaseClient.TableName, COL_ARTICLE_ID, c.RefArticlesTable, nkwMysqlModelArticle.COL_ID).
-        AppendInnerJoinTables(c.BaseClient.TableName, COL_TAG_SLUG, c.RefTagsTable, nkwMysqlModelTag.COL_SLUG)
-    result, err := c.BaseClient.Run()
-    if err != nil {
-        return articleTagMap, result, err
-    }
-    if result != nil && len(result.Rows) != 1 {
-        return articleTagMap, result, err
-    }
-    articleTagMap = &ArticleTagMap{
-        Article: &nkwMysqlModelArticle.Article{},
-        Tag: &nkwMysqlModelTag.Tag{},
-    }
-    if err := scanArticleTagMapWithArticleAndTag(result.Rows[0], c.BaseClient.TableName, c.RefArticlesTable, c.RefTagsTable, articleTagMap); err != nil {
-        return articleTagMap, result, err
-    }
-    return articleTagMap, result, nil
-}
-

@@ -64,29 +64,11 @@ func (c *DeleteClient) Run() (*myQuery.DeleteResult, error) {
 
 
 //////////////////////////////////////////////////////////////////////
-// Run by COL_ARTICLE_ID.
+// Run by COL_ARTICLE_ID and COL_TAG_ID.
 //////////////////////////////////////////////////////////////////////
-func (c *DeleteClient) RunByAccountId(accountId string) (*myQuery.DeleteResult, error) {
-    c.BaseClient.WhereCondition.SetWhere(COL_ARTICLE_ID, accountId)
-    return c.BaseClient.Run()
-}
-
-
-//////////////////////////////////////////////////////////////////////
-// Run by COL_TAG_SLUG.
-//////////////////////////////////////////////////////////////////////
-func (c *DeleteClient) RunByTagSlug(tagSlug string) (*myQuery.DeleteResult, error) {
-    c.BaseClient.WhereCondition.SetWhere(COL_TAG_SLUG, tagSlug)
-    return c.BaseClient.Run()
-}
-
-
-//////////////////////////////////////////////////////////////////////
-// Run by COL_ARTICLE_ID and COL_TAG_SLUG.
-//////////////////////////////////////////////////////////////////////
-func (c *DeleteClient) RunByAccountIdAndTagSlug(accountId, tagSlug string) (*myQuery.DeleteResult, error) {
+func (c *DeleteClient) RunByAccountIdAndTagId(accountId, tagId string) (*myQuery.DeleteResult, error) {
     c.BaseClient.WhereCondition.
         SetWhere(COL_ARTICLE_ID, accountId).
-        AppendAnd(COL_TAG_SLUG, tagSlug)
+        AppendAnd(COL_TAG_ID, tagId)
     return c.BaseClient.Run()
 }

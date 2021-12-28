@@ -17,8 +17,8 @@ type BrowseClient struct {
 }
 type BrowseClientWithArticleAndTag struct {
     BaseClient *myQuery.SelectClient
-    RefArticlesTable string
-    RefTagsTable string
+    RefArticleTable string
+    RefTagTable string
 }
 
 
@@ -65,11 +65,11 @@ func NewBrowseClientWithTxContext(tableName string, tx *sql.Tx, ctx context.Cont
 //////////////////////////////////////////////////////////////////////
 // New BrowseClient with reference article and tag table.
 //////////////////////////////////////////////////////////////////////
-func (c *BrowseClient) NewBrowseClientWithArticleAndTag(refArticlesTable, refTagsTable string) *BrowseClientWithArticleAndTag {
+func (c *BrowseClient) NewBrowseClientWithArticleAndTag(refArticleTable, refTagTable string) *BrowseClientWithArticleAndTag {
     return &BrowseClientWithArticleAndTag{
         BaseClient: c.BaseClient,
-        RefArticlesTable: refArticlesTable,
-        RefTagsTable: refTagsTable,
+        RefArticleTable: refArticleTable,
+        RefTagTable: refTagTable,
     }
 }
 
@@ -127,8 +127,8 @@ func (c *BrowseClient) Run() ([]*ArticleTagMap, *myQuery.SelectResult, error) {
 func (c *BrowseClientWithArticleAndTag) Run() ([]*ArticleTagMap, *myQuery.SelectResult, error) {
     var articleTagMaps []*ArticleTagMap
     c.BaseClient.
-        AppendInnerJoinTables(c.BaseClient.TableName, COL_ARTICLE_ID, c.RefArticlesTable, nkwMysqlModelArticle.COL_ID).
-        AppendInnerJoinTables(c.BaseClient.TableName, COL_TAG_SLUG, c.RefTagsTable, nkwMysqlModelTag.COL_SLUG)
+        AppendInnerJoinTables(c.BaseClient.TableName, COL_ARTICLE_ID, c.RefArticleTable, nkwMysqlModelArticle.COL_ID).
+        AppendInnerJoinTables(c.BaseClient.TableName, COL_TAG_ID, c.RefTagTable, nkwMysqlModelTag.COL_ID)
     result, err := c.BaseClient.Run()
     if err != nil {
         return articleTagMaps, result, err
@@ -139,7 +139,7 @@ func (c *BrowseClientWithArticleAndTag) Run() ([]*ArticleTagMap, *myQuery.Select
             Article: &nkwMysqlModelArticle.Article{},
             Tag: &nkwMysqlModelTag.Tag{},
         }
-        if err := scanArticleTagMapWithArticleAndTag(row, c.BaseClient.TableName, c.RefArticlesTable, c.RefTagsTable, articleTagMap); err != nil {
+        if err := scanArticleTagMapWithArticleAndTag(row, c.BaseClient.TableName, c.RefArticleTable, c.RefTagTable, articleTagMap); err != nil {
             return articleTagMaps, result, err
         }
         articleTagMaps = append(articleTagMaps, articleTagMap)

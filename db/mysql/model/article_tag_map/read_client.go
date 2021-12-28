@@ -17,8 +17,8 @@ type ReadClient struct {
 }
 type ReadClientWithArticleAndTag struct {
     BaseClient *myQuery.SelectClient
-    RefArticlesTable string
-    RefTagsTable string
+    RefArticleTable string
+    RefTagTable string
 }
 
 
@@ -65,11 +65,11 @@ func NewReadClientWithTxContext(tableName string, tx *sql.Tx, ctx context.Contex
 //////////////////////////////////////////////////////////////////////
 // New ReadClient with reference articles and tags table.
 //////////////////////////////////////////////////////////////////////
-func (c *ReadClient) NewReadClientWithArticleAndTag(refArticlesTable, refTagsTable string) *ReadClientWithArticleAndTag {
+func (c *ReadClient) NewReadClientWithArticleAndTag(refArticleTable, refTagTable string) *ReadClientWithArticleAndTag {
     return &ReadClientWithArticleAndTag{
         BaseClient: c.BaseClient,
-        RefArticlesTable: refArticlesTable,
-        RefTagsTable: refTagsTable,
+        RefArticleTable: refArticleTable,
+        RefTagTable: refTagTable,
     }
 }
 
@@ -119,8 +119,8 @@ func (c *ReadClientWithArticleAndTag) Run() (*ArticleTagMap, *myQuery.SelectResu
     var articleTagMap *ArticleTagMap
     c.BaseClient.SetLimit(1)
     c.BaseClient.
-        AppendInnerJoinTables(c.BaseClient.TableName, COL_ARTICLE_ID, c.RefArticlesTable, nkwMysqlModelArticle.COL_ID).
-        AppendInnerJoinTables(c.BaseClient.TableName, COL_TAG_SLUG, c.RefTagsTable, nkwMysqlModelTag.COL_SLUG)
+        AppendInnerJoinTables(c.BaseClient.TableName, COL_ARTICLE_ID, c.RefArticleTable, nkwMysqlModelArticle.COL_ID).
+        AppendInnerJoinTables(c.BaseClient.TableName, COL_TAG_ID, c.RefTagTable, nkwMysqlModelTag.COL_ID)
     result, err := c.BaseClient.Run()
     if err != nil {
         return articleTagMap, result, err
@@ -132,7 +132,7 @@ func (c *ReadClientWithArticleAndTag) Run() (*ArticleTagMap, *myQuery.SelectResu
         Article: &nkwMysqlModelArticle.Article{},
         Tag: &nkwMysqlModelTag.Tag{},
     }
-    if err := scanArticleTagMapWithArticleAndTag(result.Rows[0], c.BaseClient.TableName, c.RefArticlesTable, c.RefTagsTable, articleTagMap); err != nil {
+    if err := scanArticleTagMapWithArticleAndTag(result.Rows[0], c.BaseClient.TableName, c.RefArticleTable, c.RefTagTable, articleTagMap); err != nil {
         return articleTagMap, result, err
     }
     return articleTagMap, result, nil

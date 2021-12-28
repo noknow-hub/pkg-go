@@ -53,17 +53,18 @@ func NewCreateTableClientWithTxContext(tableName string, tx *sql.Tx, ctx context
 func (c *CreateTableClient) Run() (*myQuery.CreateTableResult, error) {
     c.
         AppendColumnDefinition(
-            myQuery.NewColumnDefinition(COL_SLUG, "VARCHAR(255)").
+            myQuery.NewColumnDefinition(COL_ID, "BIGINT UNSIGNED").
                 SetNotNull().
-                SetComment("Tag slug")).
+                SetComment("Tag ID.")).
         AppendColumnDefinition(
             myQuery.NewColumnDefinition(COL_NAME, "VARCHAR(255)").
                 SetNotNull().
                 SetComment("Tag name")).
         AppendColumnDefinition(
-            myQuery.NewColumnDefinition(COL_PARENT_SLUG, "VARCHAR(255)").
-                SetComment("Tag parent slug")).
-        SetPrimaryKeys([]string{COL_SLUG}).
+            myQuery.NewColumnDefinition(COL_LABEL, "VARCHAR(255)").
+                SetComment("Tag label")).
+        SetPrimaryKeys([]string{COL_ID}).
+        SetIndexKeys([]string{COL_NAME}).
         SetComment(c.TableName + " table.")
     return c.CreateTableClient.Run()
 }

@@ -27,11 +27,11 @@ func scanArticleTagMap(row *myQuery.Row, articleTagMap *ArticleTagMap) error {
             } else {
                 articleTagMap.ArticleId = val
             }
-        } else if col.Name == COL_TAG_SLUG {
+        } else if col.Name == COL_TAG_ID {
             if val, err := myModelUtil.ConvertInterfaceToString(col.Value); err != nil {
                 return err
             } else {
-                articleTagMap.TagSlug = val
+                articleTagMap.TagId = val
             }
         } else {
             return errors.New("Unknown column. Name: " + col.Name)
@@ -45,27 +45,47 @@ func scanArticleTagMap(row *myQuery.Row, articleTagMap *ArticleTagMap) error {
 // Scan ArticleTagMap with article and tag  object.
 //////////////////////////////////////////////////////////////////////
 func scanArticleTagMapWithArticleAndTag(row *myQuery.Row, mapTable, articletable, tagTable string, articleTagMap *ArticleTagMap) error {
-    for _, col := range row.Columns {
+    var specifiedTblName string
+    for index, col := range row.Columns {
         s := strings.Split(col.Name, ".")
+        if len(s) > 1 {
+            specifiedTblName = strings.Join(s[:len(s)-1], ".")
+        }
         col.Name = s[len(s)-1]
-
+    
         if col.Name == COL_ARTICLE_ID {
             if val, err := myModelUtil.ConvertInterfaceToString(col.Value); err != nil {
                 return err
             } else {
                 articleTagMap.ArticleId = val
             }
-        } else if col.Name == COL_TAG_SLUG {
+        } else if col.Name == COL_TAG_ID {
             if val, err := myModelUtil.ConvertInterfaceToString(col.Value); err != nil {
                 return err
             } else {
-                articleTagMap.TagSlug = val
+                articleTagMap.TagId = val
             }
         } else if col.Name == nkwMysqlModelArticle.COL_ID {
-            if val, err := myModelUtil.ConvertInterfaceToString(col.Value); err != nil {
+            val, err := myModelUtil.ConvertInterfaceToString(col.Value)
+            if err != nil {
                 return err
+            }
+            if specifiedTblName != "" {
+                if specifiedTblName == articletable {
+                    articleTagMap.Article.Id = val
+                } else if specifiedTblName == tagTable {
+                    articleTagMap.Tag.Id = val
+                } else {
+                    return errors.New("Unknown the table name. Table: " + specifiedTblName + ", column name: " + col.Name)
+                }
             } else {
-                articleTagMap.Article.Id = val
+                if index >= NUM_COLS && index < nkwMysqlModelArticle.NUM_COLS {
+                    articleTagMap.Article.Id = val
+                } else if index >= nkwMysqlModelArticle.NUM_COLS && index < nkwMysqlModelTag.NUM_COLS {
+                    articleTagMap.Tag.Id = val
+                } else {
+                    return errors.New("Unknown the column index. Index: " + strconv.FormatInt(int64(index), 10) + ", column name: " + col.Name)
+                }
             }
         } else if col.Name == nkwMysqlModelArticle.COL_STATUS {
             if val, err := myModelUtil.ConvertInterfaceToString(col.Value); err != nil {
@@ -133,23 +153,17 @@ func scanArticleTagMapWithArticleAndTag(row *myQuery.Row, mapTable, articletable
             } else {
                 articleTagMap.Article.UpdatedAt = val
             }
-        } else if col.Name == nkwMysqlModelTag.COL_SLUG {
-            if val, err := myModelUtil.ConvertInterfaceToString(col.Value); err != nil {
-                return err
-            } else {
-                articleTagMap.Tag.Slug = val
-            }
         } else if col.Name == nkwMysqlModelTag.COL_NAME {
             if val, err := myModelUtil.ConvertInterfaceToString(col.Value); err != nil {
                 return err
             } else {
                 articleTagMap.Tag.Name = val
             }
-        } else if col.Name == nkwMysqlModelTag.COL_PARENT_SLUG {
+        } else if col.Name == nkwMysqlModelTag.COL_LABEL {
             if val, err := myModelUtil.ConvertInterfaceToString(col.Value); err != nil {
                 return err
             } else {
-                articleTagMap.Tag.ParentSlug = val
+                articleTagMap.Tag.Label = val
             }
         } else {
             return errors.New("Unknown column. Name: " + col.Name)

@@ -77,12 +77,12 @@ func (c *CreateTableClient) Run() (*myQuery.CreateTableResult, error) {
                 SetNotNull().
                 SetComment("Article ID")).
         AppendColumnDefinition(
-            myQuery.NewColumnDefinition(COL_TAG_SLUG, "VARCHAR(255)").
+            myQuery.NewColumnDefinition(COL_TAG_ID, "BIGINT UNSIGNED").
                 SetNotNull().
-                SetComment("Tag slug")).
+                SetComment("Tag ID")).
         SetPrimaryKeys([]string{COL_ARTICLE_ID, COL_TAG_SLUG}).
         AppendConstraint("", COL_ARTICLE_ID, c.RefArticleTableName, nkwMysqlModelArticle.COL_ID, true, true).
-        AppendConstraint("", COL_TAG_SLUG, c.RefTagTableName, nkwMysqlModelTag.COL_SLUG, true, true).
+        AppendConstraint("", COL_TAG_ID, c.RefTagTableName, nkwMysqlModelTag.COL_ID, true, true).
         SetComment(c.TableName + " table.")
     return c.CreateTableClient.Run()
 }

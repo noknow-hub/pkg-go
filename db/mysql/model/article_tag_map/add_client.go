@@ -66,9 +66,9 @@ func (c *AddClient) Run() (*myQuery.InsertResult, error) {
 //////////////////////////////////////////////////////////////////////
 // Run with required.
 //////////////////////////////////////////////////////////////////////
-func (c *AddClient) RunWithRequired(articleId, tagSlug string) (*myQuery.InsertResult, error) {
+func (c *AddClient) RunWithRequired(articleId, tagId string) (*myQuery.InsertResult, error) {
     c.BaseClient.
-        SetColNames([]string{COL_ARTICLE_ID, COL_TAG_SLUG}).
-        AppendValues([]interface{}{articleId, tagSlug})
+        SetColNames([]string{COL_ARTICLE_ID, COL_TAG_ID}).
+        AppendValues([]interface{}{articleId, tagId})
     return c.BaseClient.Run()
 }

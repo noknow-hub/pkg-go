@@ -10,14 +10,14 @@ import (
 
 const (
     COL_ARTICLE_ID = "article_id"
-    COL_TAG_SLUG = "tag_slug"
+    COL_TAG_ID = "tag_id"
     NUM_COLS = 2
     TABLE_NAME = "article_tag_map"
 )
 
 type ArticleTagMap struct {
     ArticleId string
-    TagSlug string
+    TagId string
     Article *nkwMysqlModelArticle.Article
     Tag *nkwMysqlModelTag.Tag
 }

@@ -64,9 +64,9 @@ func (c *DeleteClient) Run() (*myQuery.DeleteResult, error) {
 
 
 //////////////////////////////////////////////////////////////////////
-// Run by COL_SLUG.
+// Run by COL_ID.
 //////////////////////////////////////////////////////////////////////
-func (c *DeleteClient) RunBySlug(slug string) (*myQuery.DeleteResult, error) {
-    c.BaseClient.WhereCondition.SetWhere(COL_SLUG, slug)
+func (c *DeleteClient) RunById(id string) (*myQuery.DeleteResult, error) {
+    c.BaseClient.WhereCondition.SetWhere(COL_ID, id)
     return c.BaseClient.Run()
 }

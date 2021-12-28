@@ -19,11 +19,11 @@ func scanTag(row *myQuery.Row, tag *Tag) error {
         s := strings.Split(col.Name, ".")
         col.Name = s[len(s)-1]
 
-        if col.Name == COL_SLUG {
+        if col.Name == COL_ID {
             if val, err := myModelUtil.ConvertInterfaceToString(col.Value); err != nil {
                 return err
             } else {
-                tag.Slug = val
+                tag.Id = val
             }
         } else if col.Name == COL_NAME {
             if val, err := myModelUtil.ConvertInterfaceToString(col.Value); err != nil {
@@ -31,11 +31,11 @@ func scanTag(row *myQuery.Row, tag *Tag) error {
             } else {
                 tag.Name = val
             }
-        } else if col.Name == COL_PARENT_SLUG {
+        } else if col.Name == COL_LABEL {
             if val, err := myModelUtil.ConvertInterfaceToString(col.Value); err != nil {
                 return err
             } else {
-                tag.ParentSlug = val
+                tag.Label = val
             }
         } else {
             return errors.New("Unknown column. Name: " + col.Name)

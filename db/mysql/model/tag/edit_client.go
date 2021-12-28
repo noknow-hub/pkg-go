@@ -64,27 +64,27 @@ func (c *EditClient) Run() (*myQuery.UpdateResult, error) {
 
 
 //////////////////////////////////////////////////////////////////////
-// Run by COL_SLUG.
+// Run by COL_ID.
 //////////////////////////////////////////////////////////////////////
-func (c *EditClient) RunBySlug(slug string) (*myQuery.UpdateResult, error) {
-    c.BaseClient.WhereCondition.SetWhere(COL_SLUG, slug)
+func (c *EditClient) RunById(id string) (*myQuery.UpdateResult, error) {
+    c.BaseClient.WhereCondition.SetWhere(COL_ID, id)
     return c.BaseClient.Run()
 }
 
 
 //////////////////////////////////////////////////////////////////////
-// Run with all by COL_SLUG.
+// Run with all by COL_ID.
 //////////////////////////////////////////////////////////////////////
-func (c *EditClient) RunWithAllBySlug(currentSlug string, slug, name, parentSlug *string) (*myQuery.UpdateResult, error) {
-    if slug != nil {
-        c.BaseClient.AssignmentList.Append(COL_SLUG, *slug)
+func (c *EditClient) RunWithAllById(currentId string, id, name, label *string) (*myQuery.UpdateResult, error) {
+    if id != nil {
+        c.BaseClient.AssignmentList.Append(COL_ID, *id)
     }
     if name != nil {
         c.BaseClient.AssignmentList.Append(COL_NAME, *name)
     }
-    if parentSlug != nil {
-        c.BaseClient.AssignmentList.Append(COL_PARENT_SLUG, *parentSlug)
+    if label != nil {
+        c.BaseClient.AssignmentList.Append(COL_LABEL, *label)
     }
-    c.BaseClient.WhereCondition.SetWhere(COL_SLUG, currentSlug)
+    c.BaseClient.WhereCondition.SetWhere(COL_ID, currentId)
     return c.BaseClient.Run()
 }

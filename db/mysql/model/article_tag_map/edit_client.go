@@ -64,17 +64,17 @@ func (c *EditClient) Run() (*myQuery.UpdateResult, error) {
 
 
 //////////////////////////////////////////////////////////////////////
-// Run with all by "id".
+// Run with all by COL_ARTICLE_ID and COL_TAG_ID.
 //////////////////////////////////////////////////////////////////////
-func (c *EditClient) RunWithAllByAccountIdAndTagSlug(currentAccountId, currentTagSlug string, articleId, tagSlug *string) (*myQuery.UpdateResult, error) {
+func (c *EditClient) RunWithAllByAccountIdAndTagId(currentAccountId, currentTagId string, articleId, tagId *string) (*myQuery.UpdateResult, error) {
     if articleId != nil {
         c.BaseClient.AssignmentList.Append(COL_ARTICLE_ID, *articleId)
     }
-    if tagSlug != nil {
-        c.BaseClient.AssignmentList.Append(COL_TAG_SLUG, *tagSlug)
+    if tagId != nil {
+        c.BaseClient.AssignmentList.Append(COL_TAG_ID, *tagId)
     }
     c.BaseClient.WhereCondition.
         SetWhere(COL_ARTICLE_ID, currentAccountId).
-        AppendAnd(COL_TAG_SLUG, currentTagSlug)
+        AppendAnd(COL_TAG_ID, currentTagId)
     return c.BaseClient.Run()
 }

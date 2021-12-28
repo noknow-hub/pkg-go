@@ -1,0 +1,14 @@
+github.com/go-sql-driver/mysql v1.6.0 h1:BCTh4TKNUYmOmMUcQ3IipzF5prigylS7XXjEkfCHuOE=
+github.com/go-sql-driver/mysql v1.6.0/go.mod h1:DCzpHaOWr8IXmIStZouvnhqoel9Qv2LBy8hT2VhHyBg=
+github.com/noknow-hub/pkg-go/db/mysql/model/article v0.0.0-20211228040901-a773d2c81a2d h1:Eb+ro53VHxNuC0H0GIhC1pWrWyyIsU+KC7yCy2AvO30=
+github.com/noknow-hub/pkg-go/db/mysql/model/article v0.0.0-20211228040901-a773d2c81a2d/go.mod h1:hPp6l8a/+8pN7qO1tIuRBNYb5tcKMhpv2kGOxKn/z44=
+github.com/noknow-hub/pkg-go/db/mysql/model/book v0.0.0-20211228040901-a773d2c81a2d h1:50VUijgb+IWKqoW9qlWLnS4kxuO7XPzYSk4y/GVO5JI=
+github.com/noknow-hub/pkg-go/db/mysql/model/book v0.0.0-20211228040901-a773d2c81a2d/go.mod h1:QQGlpsUQou0znZp1jXpDS49OFYKCkFiOnMtDfaepPzc=
+github.com/noknow-hub/pkg-go/db/mysql/model/util v0.0.0-20211227081505-a4e31b4d3d17/go.mod h1:5s4lj4Z3fQWuT3rm8MiZiKzuKvX5ngdDRT5JrgOeAqQ=
+github.com/noknow-hub/pkg-go/db/mysql/model/util v0.0.0-20211227165326-c541657cda39/go.mod h1:5s4lj4Z3fQWuT3rm8MiZiKzuKvX5ngdDRT5JrgOeAqQ=
+github.com/noknow-hub/pkg-go/db/mysql/model/util v0.0.0-20211228040901-a773d2c81a2d h1:uIe3F+XH9Q2yKlBEsRqfmrOzQe1pXjZxyrSylHT6Btk=
+github.com/noknow-hub/pkg-go/db/mysql/model/util v0.0.0-20211228040901-a773d2c81a2d/go.mod h1:5s4lj4Z3fQWuT3rm8MiZiKzuKvX5ngdDRT5JrgOeAqQ=
+github.com/noknow-hub/pkg-go/db/mysql/query v0.0.0-20211227081505-a4e31b4d3d17/go.mod h1:DbpY3fdptQR8gYUFizhuFwdF/P+8/IVmOU1uVBiQiu0=
+github.com/noknow-hub/pkg-go/db/mysql/query v0.0.0-20211227165326-c541657cda39/go.mod h1:DbpY3fdptQR8gYUFizhuFwdF/P+8/IVmOU1uVBiQiu0=
+github.com/noknow-hub/pkg-go/db/mysql/query v0.0.0-20211228040901-a773d2c81a2d h1:4lJxAy0zUXzG35bkhotdS9aSLC2Xp+gnREkfkmu/hOE=
+github.com/noknow-hub/pkg-go/db/mysql/query v0.0.0-20211228040901-a773d2c81a2d/go.mod h1:DbpY3fdptQR8gYUFizhuFwdF/P+8/IVmOU1uVBiQiu0=

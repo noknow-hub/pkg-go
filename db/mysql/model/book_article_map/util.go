@@ -7,7 +7,7 @@ import (
     "errors"
     "strconv"
     "strings"
-    myModelUtil "github.com/noknow-hub/pkg-go/db/mysql/model/util"
+    myUtil "github.com/noknow-hub/pkg-go/db/mysql/util"
     myQuery "github.com/noknow-hub/pkg-go/db/mysql/query"
     nkwMysqlModelArticle "github.com/noknow-hub/pkg-go/db/mysql/model/article"
     nkwMysqlModelBook "github.com/noknow-hub/pkg-go/db/mysql/model/book"
@@ -23,43 +23,43 @@ func scanBookArticleMap(row *myQuery.Row, bookArticleMap *BookArticleMap) error 
         col.Name = s[len(s)-1]
 
         if col.Name == COL_BOOK_ID {
-            if val, err := myModelUtil.ConvertInterfaceToString(col.Value); err != nil {
+            if val, err := myUtil.ConvertInterfaceToString(col.Value); err != nil {
                 return err
             } else {
                 bookArticleMap.BookId = val
             }
         } else if col.Name == COL_ARTICLE_ID {
-            if val, err := myModelUtil.ConvertInterfaceToString(col.Value); err != nil {
+            if val, err := myUtil.ConvertInterfaceToString(col.Value); err != nil {
                 return err
             } else {
                 bookArticleMap.ArticleId = val
             }
         } else if col.Name == COL_PART {
-            if val, err := myModelUtil.ConvertInterfaceToString(col.Value); err != nil {
+            if val, err := myUtil.ConvertInterfaceToString(col.Value); err != nil {
                 return err
             } else {
                 bookArticleMap.Part = val
             }
         } else if col.Name == COL_CHAPTER {
-            if val, err := myModelUtil.ConvertInterfaceToString(col.Value); err != nil {
+            if val, err := myUtil.ConvertInterfaceToString(col.Value); err != nil {
                 return err
             } else {
                 bookArticleMap.Chapter = val
             }
         } else if col.Name == COL_SECTION {
-            if val, err := myModelUtil.ConvertInterfaceToString(col.Value); err != nil {
+            if val, err := myUtil.ConvertInterfaceToString(col.Value); err != nil {
                 return err
             } else {
                 bookArticleMap.Section = val
             }
         } else if col.Name == COL_SUB_SECTION {
-            if val, err := myModelUtil.ConvertInterfaceToString(col.Value); err != nil {
+            if val, err := myUtil.ConvertInterfaceToString(col.Value); err != nil {
                 return err
             } else {
                 bookArticleMap.SubSection = val
             }
         } else if col.Name == COL_INTRODUCTION {
-            if val, err := myModelUtil.ConvertInterfaceToString(col.Value); err != nil {
+            if val, err := myUtil.ConvertInterfaceToString(col.Value); err != nil {
                 return err
             } else {
                 bookArticleMap.Introduction = val
@@ -85,43 +85,43 @@ func scanBookArticleMapWithBookAndArticle(row *myQuery.Row, mapTable, bookTable,
         col.Name = s[len(s)-1]
 
         if col.Name == COL_BOOK_ID {
-            if val, err := myModelUtil.ConvertInterfaceToString(col.Value); err != nil {
+            if val, err := myUtil.ConvertInterfaceToString(col.Value); err != nil {
                 return err
             } else {
                 bookArticleMap.BookId = val
             }
         } else if col.Name == COL_ARTICLE_ID {
-            if val, err := myModelUtil.ConvertInterfaceToString(col.Value); err != nil {
+            if val, err := myUtil.ConvertInterfaceToString(col.Value); err != nil {
                 return err
             } else {
                 bookArticleMap.ArticleId = val
             }
         } else if col.Name == COL_PART {
-            if val, err := myModelUtil.ConvertInterfaceToString(col.Value); err != nil {
+            if val, err := myUtil.ConvertInterfaceToString(col.Value); err != nil {
                 return err
             } else {
                 bookArticleMap.Part = val
             }
         } else if col.Name == COL_CHAPTER {
-            if val, err := myModelUtil.ConvertInterfaceToString(col.Value); err != nil {
+            if val, err := myUtil.ConvertInterfaceToString(col.Value); err != nil {
                 return err
             } else {
                 bookArticleMap.Chapter = val
             }
         } else if col.Name == COL_SECTION {
-            if val, err := myModelUtil.ConvertInterfaceToString(col.Value); err != nil {
+            if val, err := myUtil.ConvertInterfaceToString(col.Value); err != nil {
                 return err
             } else {
                 bookArticleMap.Section = val
             }
         } else if col.Name == COL_SUB_SECTION {
-            if val, err := myModelUtil.ConvertInterfaceToString(col.Value); err != nil {
+            if val, err := myUtil.ConvertInterfaceToString(col.Value); err != nil {
                 return err
             } else {
                 bookArticleMap.SubSection = val
             }
         } else if col.Name == COL_INTRODUCTION {
-            val, err := myModelUtil.ConvertInterfaceToString(col.Value)
+            val, err := myUtil.ConvertInterfaceToString(col.Value)
             if err != nil {
                 return err
             }
@@ -143,7 +143,7 @@ func scanBookArticleMapWithBookAndArticle(row *myQuery.Row, mapTable, bookTable,
                 }
             }
         } else if col.Name == nkwMysqlModelBook.COL_ID {
-            val, err := myModelUtil.ConvertInterfaceToString(col.Value)
+            val, err := myUtil.ConvertInterfaceToString(col.Value)
             if err != nil {
                 return err
             }
@@ -165,7 +165,7 @@ func scanBookArticleMapWithBookAndArticle(row *myQuery.Row, mapTable, bookTable,
                 }
             }
         } else if col.Name == nkwMysqlModelBook.COL_STATUS {
-            val, err := myModelUtil.ConvertInterfaceToString(col.Value)
+            val, err := myUtil.ConvertInterfaceToString(col.Value)
             if err != nil {
                 return err
             }
@@ -187,7 +187,7 @@ func scanBookArticleMapWithBookAndArticle(row *myQuery.Row, mapTable, bookTable,
                 }
             }
         } else if col.Name == nkwMysqlModelBook.COL_TITLE {
-            val, err := myModelUtil.ConvertInterfaceToString(col.Value)
+            val, err := myUtil.ConvertInterfaceToString(col.Value)
             if err != nil {
                 return err
             }
@@ -209,7 +209,7 @@ func scanBookArticleMapWithBookAndArticle(row *myQuery.Row, mapTable, bookTable,
                 }
             }
         } else if col.Name == nkwMysqlModelBook.COL_URL {
-            val, err := myModelUtil.ConvertInterfaceToString(col.Value)
+            val, err := myUtil.ConvertInterfaceToString(col.Value)
             if err != nil {
                 return err
             }
@@ -231,7 +231,7 @@ func scanBookArticleMapWithBookAndArticle(row *myQuery.Row, mapTable, bookTable,
                 }
             }
         } else if col.Name == nkwMysqlModelBook.COL_LANG_CODE {
-            val, err := myModelUtil.ConvertInterfaceToString(col.Value)
+            val, err := myUtil.ConvertInterfaceToString(col.Value)
             if err != nil {
                 return err
             }
@@ -253,7 +253,7 @@ func scanBookArticleMapWithBookAndArticle(row *myQuery.Row, mapTable, bookTable,
                 }
             }
         } else if col.Name == nkwMysqlModelBook.COL_THUMBNAIL_URL {
-            val, err := myModelUtil.ConvertInterfaceToString(col.Value)
+            val, err := myUtil.ConvertInterfaceToString(col.Value)
             if err != nil {
                 return err
             }
@@ -275,31 +275,31 @@ func scanBookArticleMapWithBookAndArticle(row *myQuery.Row, mapTable, bookTable,
                 }
             }
         } else if col.Name == nkwMysqlModelBook.COL_PREFACE {
-            if val, err := myModelUtil.ConvertInterfaceToString(col.Value); err != nil {
+            if val, err := myUtil.ConvertInterfaceToString(col.Value); err != nil {
                 return err
             } else {
                 bookArticleMap.Book.Preface = val
             }
         } else if col.Name == nkwMysqlModelBook.COL_FOREWORD {
-            if val, err := myModelUtil.ConvertInterfaceToString(col.Value); err != nil {
+            if val, err := myUtil.ConvertInterfaceToString(col.Value); err != nil {
                 return err
             } else {
                 bookArticleMap.Book.Foreword = val
             }
         } else if col.Name == nkwMysqlModelBook.COL_ACKNOWLEDGMENTS {
-            if val, err := myModelUtil.ConvertInterfaceToString(col.Value); err != nil {
+            if val, err := myUtil.ConvertInterfaceToString(col.Value); err != nil {
                 return err
             } else {
                 bookArticleMap.Book.Acknowledgements = val
             }
         } else if col.Name == nkwMysqlModelBook.COL_AUTHOR_NOTE {
-            if val, err := myModelUtil.ConvertInterfaceToString(col.Value); err != nil {
+            if val, err := myUtil.ConvertInterfaceToString(col.Value); err != nil {
                 return err
             } else {
                 bookArticleMap.Book.AuthorNote = val
             }
         } else if col.Name == nkwMysqlModelBook.COL_PASSWORD {
-            val, err := myModelUtil.ConvertInterfaceToString(col.Value)
+            val, err := myUtil.ConvertInterfaceToString(col.Value)
             if err != nil {
                 return err
             }
@@ -321,7 +321,7 @@ func scanBookArticleMapWithBookAndArticle(row *myQuery.Row, mapTable, bookTable,
                 }
             }
         } else if col.Name == nkwMysqlModelBook.COL_TYPE {
-            val, err := myModelUtil.ConvertInterfaceToString(col.Value)
+            val, err := myUtil.ConvertInterfaceToString(col.Value)
             if err != nil {
                 return err
             }
@@ -343,7 +343,7 @@ func scanBookArticleMapWithBookAndArticle(row *myQuery.Row, mapTable, bookTable,
                 }
             }
         } else if col.Name == nkwMysqlModelBook.COL_CREATED_AT {
-            val, err := myModelUtil.ConvertInterfaceToTime(col.Value)
+            val, err := myUtil.ConvertInterfaceToTime(col.Value)
             if err != nil {
                 return err
             }
@@ -365,7 +365,7 @@ func scanBookArticleMapWithBookAndArticle(row *myQuery.Row, mapTable, bookTable,
                 }
             }
         } else if col.Name == nkwMysqlModelBook.COL_UPDATED_AT {
-            val, err := myModelUtil.ConvertInterfaceToTime(col.Value)
+            val, err := myUtil.ConvertInterfaceToTime(col.Value)
             if err != nil {
                 return err
             }
@@ -387,13 +387,13 @@ func scanBookArticleMapWithBookAndArticle(row *myQuery.Row, mapTable, bookTable,
                 }
             }
         } else if col.Name == nkwMysqlModelArticle.COL_TEXT {
-            if val, err := myModelUtil.ConvertInterfaceToString(col.Value); err != nil {
+            if val, err := myUtil.ConvertInterfaceToString(col.Value); err != nil {
                 return err
             } else {
                 bookArticleMap.Article.Text = val
             }
         } else if col.Name == nkwMysqlModelArticle.COL_EXCERPT {
-            if val, err := myModelUtil.ConvertInterfaceToString(col.Value); err != nil {
+            if val, err := myUtil.ConvertInterfaceToString(col.Value); err != nil {
                 return err
             } else {
                 bookArticleMap.Article.Excerpt = val

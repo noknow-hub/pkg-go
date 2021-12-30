@@ -1,6 +1,4 @@
 github.com/go-sql-driver/mysql v1.6.0 h1:BCTh4TKNUYmOmMUcQ3IipzF5prigylS7XXjEkfCHuOE=
 github.com/go-sql-driver/mysql v1.6.0/go.mod h1:DCzpHaOWr8IXmIStZouvnhqoel9Qv2LBy8hT2VhHyBg=
-github.com/noknow-hub/pkg-go/db/mysql/model/util v0.0.0-20211227165326-c541657cda39 h1:Kh3HeZf66JABrLPY4NL03UaIc3mSNlpLKOPzxQt3Px4=
-github.com/noknow-hub/pkg-go/db/mysql/model/util v0.0.0-20211227165326-c541657cda39/go.mod h1:5s4lj4Z3fQWuT3rm8MiZiKzuKvX5ngdDRT5JrgOeAqQ=
-github.com/noknow-hub/pkg-go/db/mysql/query v0.0.0-20211227165326-c541657cda39 h1:KA16R96Su7L1TL6sXqkIe6dL6TcD8RxgBRnRvRE6NSw=
-github.com/noknow-hub/pkg-go/db/mysql/query v0.0.0-20211227165326-c541657cda39/go.mod h1:DbpY3fdptQR8gYUFizhuFwdF/P+8/IVmOU1uVBiQiu0=
+github.com/noknow-hub/pkg-go/db/mysql v0.1.2 h1:6uzESQtYEEUAfUwGQEsGpVhtmw7ohlfp3lFqIvIAFNA=
+github.com/noknow-hub/pkg-go/db/mysql v0.1.2/go.mod h1:7PJ0BvHrNhu2T0nqcUy6N5DbF5d2nOQQm1mKN3VfBac=

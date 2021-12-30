@@ -4,6 +4,6 @@ go 1.17
 
 require (
 	github.com/go-sql-driver/mysql v1.6.0
-	github.com/noknow-hub/pkg-go/db/mysql/model/util v0.0.0-20211227081505-a4e31b4d3d17
-	github.com/noknow-hub/pkg-go/db/mysql/query v0.0.0-20211227081505-a4e31b4d3d17
+	github.com/noknow-hub/pkg-go/db/mysql/model/util v0.0.0-20211230133801-d1fda7a4c062
+	github.com/noknow-hub/pkg-go/db/mysql/query v0.1.0
 )

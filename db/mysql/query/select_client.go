@@ -288,13 +288,13 @@ func (c *SelectClient) generateQuery() (string, []interface{}) {
     }
 
     // INNER JOIN
-    if tmpBuf, tmpArgs := GenerateQueryForInnerJoin(c.InnerJoinTables, c.JoinCondition); tmpBuf != "" && len(tmpArgs) > 0 {
+    if tmpBuf, tmpArgs := GenerateQueryForInnerJoin(c.InnerJoinTables, c.JoinCondition); tmpBuf != "" {
         buf = append(buf, tmpBuf...)
         args = append(args, tmpArgs...)
     }
 
     // OUTER JOIN
-    if tmpBuf, tmpArgs := GenerateQueryForOuterJoin(c.OuterJoinTables, c.JoinCondition); tmpBuf != "" && len(tmpArgs) > 0 {
+    if tmpBuf, tmpArgs := GenerateQueryForOuterJoin(c.OuterJoinTables, c.JoinCondition); tmpBuf != "" {
         buf = append(buf, tmpBuf...)
         args = append(args, tmpArgs...)
     }

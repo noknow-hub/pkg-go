@@ -82,7 +82,7 @@ func scanArticleTagMapWithArticleAndTag(row *myQuery.Row, mapTable, articletable
             } else {
                 if index >= NUM_COLS && index < nkwMysqlModelArticle.NUM_COLS {
                     articleTagMap.Article.Id = val
-                } else if index >= nkwMysqlModelArticle.NUM_COLS && index < nkwMysqlModelTag.NUM_COLS {
+                } else if index >= nkwMysqlModelArticle.NUM_COLS && index < nkwMysqlModelArticle.NUM_COLS + nkwMysqlModelTag.NUM_COLS {
                     articleTagMap.Tag.Id = val
                 } else {
                     return errors.New("Unknown the column index. Index: " + strconv.FormatInt(int64(index), 10) + ", column name: " + col.Name)

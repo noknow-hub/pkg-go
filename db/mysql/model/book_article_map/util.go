@@ -158,7 +158,7 @@ func scanBookArticleMapWithBookAndArticle(row *myQuery.Row, mapTable, bookTable,
             } else {
                 if index >= NUM_COLS && index < nkwMysqlModelBook.NUM_COLS {
                     bookArticleMap.Book.Id = val
-                } else if index >= nkwMysqlModelBook.NUM_COLS && index < nkwMysqlModelArticle.NUM_COLS {
+                } else if index >= nkwMysqlModelBook.NUM_COLS && index < nkwMysqlModelBook.NUM_COLS + nkwMysqlModelArticle.NUM_COLS {
                     bookArticleMap.Article.Id = val
                 } else {
                     return errors.New("Unknown the column index. Index: " + strconv.FormatInt(int64(index), 10) + ", column name: " + col.Name)
@@ -180,7 +180,7 @@ func scanBookArticleMapWithBookAndArticle(row *myQuery.Row, mapTable, bookTable,
             } else {
                 if index >= NUM_COLS && index < nkwMysqlModelBook.NUM_COLS {
                     bookArticleMap.Book.Status = val
-                } else if index >= nkwMysqlModelBook.NUM_COLS && index < nkwMysqlModelArticle.NUM_COLS {
+                } else if index >= nkwMysqlModelBook.NUM_COLS && index < nkwMysqlModelBook.NUM_COLS + nkwMysqlModelArticle.NUM_COLS {
                     bookArticleMap.Article.Status = val
                 } else {
                     return errors.New("Unknown the column index. Index: " + strconv.FormatInt(int64(index), 10) + ", column name: " + col.Name)
@@ -202,7 +202,7 @@ func scanBookArticleMapWithBookAndArticle(row *myQuery.Row, mapTable, bookTable,
             } else {
                 if index >= NUM_COLS && index < nkwMysqlModelBook.NUM_COLS {
                     bookArticleMap.Book.Title = val
-                } else if index >= nkwMysqlModelBook.NUM_COLS && index < nkwMysqlModelArticle.NUM_COLS {
+                } else if index >= nkwMysqlModelBook.NUM_COLS && index < nkwMysqlModelBook.NUM_COLS + nkwMysqlModelArticle.NUM_COLS {
                     bookArticleMap.Article.Title = val
                 } else {
                     return errors.New("Unknown the column index. Index: " + strconv.FormatInt(int64(index), 10) + ", column name: " + col.Name)
@@ -224,7 +224,7 @@ func scanBookArticleMapWithBookAndArticle(row *myQuery.Row, mapTable, bookTable,
             } else {
                 if index >= NUM_COLS && index < nkwMysqlModelBook.NUM_COLS {
                     bookArticleMap.Book.Url = val
-                } else if index >= nkwMysqlModelBook.NUM_COLS && index < nkwMysqlModelArticle.NUM_COLS {
+                } else if index >= nkwMysqlModelBook.NUM_COLS && index < nkwMysqlModelBook.NUM_COLS + nkwMysqlModelArticle.NUM_COLS {
                     bookArticleMap.Article.Url = val
                 } else {
                     return errors.New("Unknown the column index. Index: " + strconv.FormatInt(int64(index), 10) + ", column name: " + col.Name)
@@ -246,7 +246,7 @@ func scanBookArticleMapWithBookAndArticle(row *myQuery.Row, mapTable, bookTable,
             } else {
                 if index >= NUM_COLS && index < nkwMysqlModelBook.NUM_COLS {
                     bookArticleMap.Book.LangCode = val
-                } else if index >= nkwMysqlModelBook.NUM_COLS && index < nkwMysqlModelArticle.NUM_COLS {
+                } else if index >= nkwMysqlModelBook.NUM_COLS && index < nkwMysqlModelBook.NUM_COLS + nkwMysqlModelArticle.NUM_COLS {
                     bookArticleMap.Article.LangCode = val
                 } else {
                     return errors.New("Unknown the column index. Index: " + strconv.FormatInt(int64(index), 10) + ", column name: " + col.Name)
@@ -268,7 +268,7 @@ func scanBookArticleMapWithBookAndArticle(row *myQuery.Row, mapTable, bookTable,
             } else {
                 if index >= NUM_COLS && index < nkwMysqlModelBook.NUM_COLS {
                     bookArticleMap.Book.ThumbnailUrl = val
-                } else if index >= nkwMysqlModelBook.NUM_COLS && index < nkwMysqlModelArticle.NUM_COLS {
+                } else if index >= nkwMysqlModelBook.NUM_COLS && index < nkwMysqlModelBook.NUM_COLS + nkwMysqlModelArticle.NUM_COLS {
                     bookArticleMap.Article.ThumbnailUrl = val
                 } else {
                     return errors.New("Unknown the column index. Index: " + strconv.FormatInt(int64(index), 10) + ", column name: " + col.Name)
@@ -314,7 +314,7 @@ func scanBookArticleMapWithBookAndArticle(row *myQuery.Row, mapTable, bookTable,
             } else {
                 if index >= NUM_COLS && index < nkwMysqlModelBook.NUM_COLS {
                     bookArticleMap.Book.Password = val
-                } else if index >= nkwMysqlModelBook.NUM_COLS && index < nkwMysqlModelArticle.NUM_COLS {
+                } else if index >= nkwMysqlModelBook.NUM_COLS && index < nkwMysqlModelBook.NUM_COLS + nkwMysqlModelArticle.NUM_COLS {
                     bookArticleMap.Article.Password = val
                 } else {
                     return errors.New("Unknown the column index. Index: " + strconv.FormatInt(int64(index), 10) + ", column name: " + col.Name)
@@ -336,7 +336,7 @@ func scanBookArticleMapWithBookAndArticle(row *myQuery.Row, mapTable, bookTable,
             } else {
                 if index >= NUM_COLS && index < nkwMysqlModelBook.NUM_COLS {
                     bookArticleMap.Book.Type = val
-                } else if index >= nkwMysqlModelBook.NUM_COLS && index < nkwMysqlModelArticle.NUM_COLS {
+                } else if index >= nkwMysqlModelBook.NUM_COLS && index < nkwMysqlModelBook.NUM_COLS + nkwMysqlModelArticle.NUM_COLS {
                     bookArticleMap.Article.Type = val
                 } else {
                     return errors.New("Unknown the column index. Index: " + strconv.FormatInt(int64(index), 10) + ", column name: " + col.Name)
@@ -358,7 +358,7 @@ func scanBookArticleMapWithBookAndArticle(row *myQuery.Row, mapTable, bookTable,
             } else {
                 if index >= NUM_COLS && index < nkwMysqlModelBook.NUM_COLS {
                     bookArticleMap.Book.CreatedAt = val
-                } else if index >= nkwMysqlModelBook.NUM_COLS && index < nkwMysqlModelArticle.NUM_COLS {
+                } else if index >= nkwMysqlModelBook.NUM_COLS && index < nkwMysqlModelBook.NUM_COLS + nkwMysqlModelArticle.NUM_COLS {
                     bookArticleMap.Article.CreatedAt = val
                 } else {
                     return errors.New("Unknown the column index. Index: " + strconv.FormatInt(int64(index), 10) + ", column name: " + col.Name)
@@ -380,7 +380,7 @@ func scanBookArticleMapWithBookAndArticle(row *myQuery.Row, mapTable, bookTable,
             } else {
                 if index >= NUM_COLS && index < nkwMysqlModelBook.NUM_COLS {
                     bookArticleMap.Book.UpdatedAt = val
-                } else if index >= nkwMysqlModelBook.NUM_COLS && index < nkwMysqlModelArticle.NUM_COLS {
+                } else if index >= nkwMysqlModelBook.NUM_COLS && index < nkwMysqlModelBook.NUM_COLS + nkwMysqlModelArticle.NUM_COLS {
                     bookArticleMap.Article.UpdatedAt = val
                 } else {
                     return errors.New("Unknown the column index. Index: " + strconv.FormatInt(int64(index), 10) + ", column name: " + col.Name)

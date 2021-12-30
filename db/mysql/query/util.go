@@ -11,6 +11,8 @@ import (
     "strings"
     "time"
     _ "github.com/go-sql-driver/mysql"
+
+"log"
 )
 
 type AssignmentList struct {
@@ -198,6 +200,7 @@ func GenerateQueryForInnerJoin(innerJoinTables []*InnerJoinTable, jc *JoinCondit
         buf = append(buf, ")"...)
     }
 
+log.Printf("[TEST] KAKERU  %s\n", string(buf[:]))
     return string(buf[:]), args
 }
 

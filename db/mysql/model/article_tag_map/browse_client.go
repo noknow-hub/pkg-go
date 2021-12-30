@@ -20,6 +20,14 @@ type BrowseClientWithArticleAndTag struct {
     RefArticleTable string
     RefTagTable string
 }
+type BrowseClientWithArticle struct {
+    BaseClient *myQuery.SelectClient
+    RefArticleTable string
+}
+type BrowseClientWithTag struct {
+    BaseClient *myQuery.SelectClient
+    RefTagTable string
+}
 
 
 //////////////////////////////////////////////////////////////////////
@@ -75,6 +83,28 @@ func (c *BrowseClient) NewBrowseClientWithArticleAndTag(refArticleTable, refTagT
 
 
 //////////////////////////////////////////////////////////////////////
+// New BrowseClient with reference article table.
+//////////////////////////////////////////////////////////////////////
+func (c *BrowseClient) NewBrowseClientWithArticle(refArticleTable string) *BrowseClientWithArticle {
+    return &BrowseClientWithArticle{
+        BaseClient: c.BaseClient,
+        RefArticleTable: refArticleTable,
+    }
+}
+
+
+//////////////////////////////////////////////////////////////////////
+// New BrowseClient with reference tag table.
+//////////////////////////////////////////////////////////////////////
+func (c *BrowseClient) NewBrowseClientWithTag(refTagTable string) *BrowseClientWithTag {
+    return &BrowseClientWithTag{
+        BaseClient: c.BaseClient,
+        RefTagTable: refTagTable,
+    }
+}
+
+
+//////////////////////////////////////////////////////////////////////
 // Count.
 //////////////////////////////////////////////////////////////////////
 func (c *BrowseClient) Count() (int64, *myQuery.SelectResultCount, error) {
@@ -122,10 +152,10 @@ func (c *BrowseClient) Run() ([]*ArticleTagMap, *myQuery.SelectResult, error) {
 
 
 //////////////////////////////////////////////////////////////////////
-// Run with INNER JOIN.
+// Run with INNER JOIN article and tag.
 //////////////////////////////////////////////////////////////////////
-func (c *BrowseClientWithArticleAndTag) Run() ([]*ArticleTagMap, *myQuery.SelectResult, error) {
-    var articleTagMaps []*ArticleTagMap
+func (c *BrowseClientWithArticleAndTag) Run() ([]*ArticleTagMapWithArticleAndTag, *myQuery.SelectResult, error) {
+    var articleTagMaps []*ArticleTagMapWithArticleAndTag
     c.BaseClient.
         AppendInnerJoinTables(c.BaseClient.TableName, COL_ARTICLE_ID, c.RefArticleTable, nkwMysqlModelArticle.COL_ID).
         AppendInnerJoinTables(c.BaseClient.TableName, COL_TAG_ID, c.RefTagTable, nkwMysqlModelTag.COL_ID)
@@ -135,11 +165,61 @@ func (c *BrowseClientWithArticleAndTag) Run() ([]*ArticleTagMap, *myQuery.Select
     }
 
     for _, row := range result.Rows {
-        articleTagMap := &ArticleTagMap{
+        articleTagMap := &ArticleTagMapWithArticleAndTag{
             Article: &nkwMysqlModelArticle.Article{},
             Tag: &nkwMysqlModelTag.Tag{},
         }
         if err := scanArticleTagMapWithArticleAndTag(row, c.BaseClient.TableName, c.RefArticleTable, c.RefTagTable, articleTagMap); err != nil {
+            return articleTagMaps, result, err
+        }
+        articleTagMaps = append(articleTagMaps, articleTagMap)
+    }
+
+    return articleTagMaps, result, nil
+}
+
+
+//////////////////////////////////////////////////////////////////////
+// Run with INNER JOIN article.
+//////////////////////////////////////////////////////////////////////
+func (c *BrowseClientWithArticle) Run() ([]*ArticleTagMapWithArticle, *myQuery.SelectResult, error) {
+    var articleTagMaps []*ArticleTagMapWithArticle
+    c.BaseClient.AppendInnerJoinTables(c.BaseClient.TableName, COL_ARTICLE_ID, c.RefArticleTable, nkwMysqlModelArticle.COL_ID)
+    result, err := c.BaseClient.Run()
+    if err != nil {
+        return articleTagMaps, result, err
+    }
+
+    for _, row := range result.Rows {
+        articleTagMap := &ArticleTagMapWithArticle{
+            Article: &nkwMysqlModelArticle.Article{},
+        }
+        if err := scanArticleTagMapWithArticle(row, c.BaseClient.TableName, c.RefArticleTable, articleTagMap); err != nil {
+            return articleTagMaps, result, err
+        }
+        articleTagMaps = append(articleTagMaps, articleTagMap)
+    }
+
+    return articleTagMaps, result, nil
+}
+
+
+//////////////////////////////////////////////////////////////////////
+// Run with INNER JOIN tag.
+//////////////////////////////////////////////////////////////////////
+func (c *BrowseClientWithTag) Run() ([]*ArticleTagMapWithTag, *myQuery.SelectResult, error) {
+    var articleTagMaps []*ArticleTagMapWithTag
+    c.BaseClient.AppendInnerJoinTables(c.BaseClient.TableName, COL_TAG_ID, c.RefTagTable, nkwMysqlModelTag.COL_ID)
+    result, err := c.BaseClient.Run()
+    if err != nil {
+        return articleTagMaps, result, err
+    }
+
+    for _, row := range result.Rows {
+        articleTagMap := &ArticleTagMapWithTag{
+            Tag: &nkwMysqlModelTag.Tag{},
+        }
+        if err := scanArticleTagMapWithTag(row, c.BaseClient.TableName, c.RefTagTable, articleTagMap); err != nil {
             return articleTagMaps, result, err
         }
         articleTagMaps = append(articleTagMaps, articleTagMap)

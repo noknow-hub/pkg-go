@@ -18,6 +18,24 @@ const (
 type ArticleTagMap struct {
     ArticleId string
     TagId string
+}
+
+type ArticleTagMapWithArticleAndTag struct {
+    ArticleId string
+    TagId string
     Article *nkwMysqlModelArticle.Article
+    Tag *nkwMysqlModelTag.Tag
+}
+
+type ArticleTagMapWithArticle struct {
+    ArticleId string
+    TagId string
+    Article *nkwMysqlModelArticle.Article
+    Tag *nkwMysqlModelTag.Tag
+}
+
+type ArticleTagMapWithTag struct {
+    ArticleId string
+    TagId string
     Tag *nkwMysqlModelTag.Tag
 }

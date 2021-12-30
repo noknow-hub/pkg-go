@@ -6,7 +6,7 @@ package tag
 import (
     "errors"
     "strings"
-    myModelUtil "github.com/noknow-hub/pkg-go/db/mysql/model/util"
+    myUtil "github.com/noknow-hub/pkg-go/db/mysql/util"
     myQuery "github.com/noknow-hub/pkg-go/db/mysql/query"
 )
 
@@ -20,19 +20,19 @@ func scanTag(row *myQuery.Row, tag *Tag) error {
         col.Name = s[len(s)-1]
 
         if col.Name == COL_ID {
-            if val, err := myModelUtil.ConvertInterfaceToString(col.Value); err != nil {
+            if val, err := myUtil.ConvertInterfaceToString(col.Value); err != nil {
                 return err
             } else {
                 tag.Id = val
             }
         } else if col.Name == COL_NAME {
-            if val, err := myModelUtil.ConvertInterfaceToString(col.Value); err != nil {
+            if val, err := myUtil.ConvertInterfaceToString(col.Value); err != nil {
                 return err
             } else {
                 tag.Name = val
             }
         } else if col.Name == COL_LABEL {
-            if val, err := myModelUtil.ConvertInterfaceToString(col.Value); err != nil {
+            if val, err := myUtil.ConvertInterfaceToString(col.Value); err != nil {
                 return err
             } else {
                 tag.Label = val

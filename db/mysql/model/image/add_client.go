@@ -56,17 +56,25 @@ func NewAddClientWithTxContext(tableName string, tx *sql.Tx, ctx context.Context
 
 
 //////////////////////////////////////////////////////////////////////
+// Generate an ID.
+//////////////////////////////////////////////////////////////////////
+func (c *AddClient) GenerateId() string {
+    return myQuery.GenerateId(c.BaseClient.TableName, COL_ID, c.BaseClient.Db, c.BaseClient.Tx, c.BaseClient.Ctx)
+}
+
+
+//////////////////////////////////////////////////////////////////////
 // Run.
 //////////////////////////////////////////////////////////////////////
-func (o *AddClient) Run() (*myQuery.InsertResult, error) {
-    return o.BaseClient.Run()
+func (c *AddClient) Run() (*myQuery.InsertResult, error) {
+    return c.BaseClient.Run()
 }
 
 
 //////////////////////////////////////////////////////////////////////
 // Run with all.
 //////////////////////////////////////////////////////////////////////
-func (o *AddClient) RunWithAll(id, url string, name, size, path, alt, _type, mimeType, label, link *string) (*myQuery.InsertResult, error) {
+func (c *AddClient) RunWithAll(id, url string, name, size, path, alt, _type, mimeType, label, link *string) (*myQuery.InsertResult, error) {
     var cols []string
     var vals []interface{}
 
@@ -106,19 +114,19 @@ func (o *AddClient) RunWithAll(id, url string, name, size, path, alt, _type, mim
         vals = append(vals, *link)
     }
 
-    o.BaseClient.
+    c.BaseClient.
         SetColNames(cols).
         AppendValues(vals)
-    return o.BaseClient.Run()
+    return c.BaseClient.Run()
 }
 
 
 //////////////////////////////////////////////////////////////////////
 // Run with required.
 //////////////////////////////////////////////////////////////////////
-func (o *AddClient) RunWithRequired(id, url string) (*myQuery.InsertResult, error) {
-    o.BaseClient.
+func (c *AddClient) RunWithRequired(id, url string) (*myQuery.InsertResult, error) {
+    c.BaseClient.
         SetColNames([]string{COL_ID, COL_URL}).
         AppendValues([]interface{}{id, url})
-    return o.BaseClient.Run()
+    return c.BaseClient.Run()
 }

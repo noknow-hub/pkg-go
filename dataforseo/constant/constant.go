@@ -10,6 +10,8 @@ const (
     DEVICE_DESKTOP = "desktop"
     DEVICE_MOBILE = "mobile" 
 
+    ENDPOINT_KEYWORDS_DATA_GOOGLE_ADS_SEARCH_VOLUME_TASK_GET_V3 = "https://api.dataforseo.com/v3/keywords_data/google_ads/search_volume/task_get/$id"
+    ENDPOINT_KEYWORDS_DATA_GOOGLE_ADS_SEARCH_VOLUME_TASK_GET_V3_SANDBOX = "https://sandbox.dataforseo.com/v3/keywords_data/google_ads/search_volume/task_get/$id"
     ENDPOINT_KEYWORDS_DATA_GOOGLE_ADS_SEARCH_VOLUME_TASK_POST_V3 = "https://api.dataforseo.com/v3/keywords_data/google_ads/search_volume/task_post"
     ENDPOINT_KEYWORDS_DATA_GOOGLE_ADS_SEARCH_VOLUME_TASK_POST_V3_SANDBOX = "https://sandbox.dataforseo.com/v3/keywords_data/google_ads/search_volume/task_post"
 

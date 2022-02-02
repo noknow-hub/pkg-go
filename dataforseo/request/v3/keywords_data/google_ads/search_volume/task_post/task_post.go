@@ -1,47 +1,47 @@
 //////////////////////////////////////////////////////////////////////
-// task_post_client.go
+// task_post.go
 //////////////////////////////////////////////////////////////////////
-package search_volume
+package task_post
 
 import (
     "encoding/json"
     myAuthentication "github.com/noknow-hub/pkg-go/dataforseo/authentication"
     myConstant "github.com/noknow-hub/pkg-go/dataforseo/constant"
     myHttpClient "github.com/noknow-hub/pkg-go/http/client"
-    myResult "github.com/noknow-hub/pkg-go/dataforseo/result/v3/keywords_data/google_ads/search_volume"
+    myResult "github.com/noknow-hub/pkg-go/dataforseo/response/v3/keywords_data/google_ads/search_volume/task_post"
 )
 
-type TaskPostClient struct {
+type Client struct {
     *myAuthentication.Authentication
     EndpointUrl string
 }
 
-type TaskPostData struct {
-    DateFrom string              `json:"date_from,omitempty"`
-    DateTo string                `json:"date_to,omitempty"`
-    Keywords []string            `json:"keywords,omitempty"`
-    LanguageName string          `json:"language_name,omitempty"`
-    LanguageCode string          `json:"language_code,omitempty"`
-    LocationName string          `json:"location_name,omitempty"`
-    LocationCode int             `json:"location_code,omitempty"`
-    LocationCoordinate string    `json:"location_coordinate,omitempty"`
-    PingbackUrl string           `json:"pingback_url,omitempty"`
-    PostbackUrl string           `json:"postback_url,omitempty"`
-    SearchPartners bool          `json:"search_partners,omitempty"`
-    SortBy string                `json:"sort_by,omitempty"`
-    Tag string                   `json:"tag,omitempty"`
+type Data struct {
+    DateFrom string             `json:"date_from,omitempty"`
+    DateTo string               `json:"date_to,omitempty"`
+    Keywords []string           `json:"keywords,omitempty"`
+    LanguageName string         `json:"language_name,omitempty"`
+    LanguageCode string         `json:"language_code,omitempty"`
+    LocationName string         `json:"location_name,omitempty"`
+    LocationCode int            `json:"location_code,omitempty"`
+    LocationCoordinate string   `json:"location_coordinate,omitempty"`
+    PingbackUrl string          `json:"pingback_url,omitempty"`
+    PostbackUrl string          `json:"postback_url,omitempty"`
+    SearchPartners bool         `json:"search_partners,omitempty"`
+    SortBy string               `json:"sort_by,omitempty"`
+    Tag string                  `json:"tag,omitempty"`
 }
 
 
 //////////////////////////////////////////////////////////////////////
-// New TaskPostClient object.
+// New Client object.
 //////////////////////////////////////////////////////////////////////
-func NewTaskPostClient(login, password string, isSandbox bool) *TaskPostClient {
+func NewClient(login, password string, isSandbox bool) *Client {
     endpointUrl := myConstant.ENDPOINT_KEYWORDS_DATA_GOOGLE_ADS_SEARCH_VOLUME_TASK_POST_V3
     if isSandbox {
         endpointUrl = myConstant.ENDPOINT_KEYWORDS_DATA_GOOGLE_ADS_SEARCH_VOLUME_TASK_POST_V3_SANDBOX
     }
-    return &TaskPostClient{
+    return &Client{
         Authentication: myAuthentication.NewAuthentication(login, password),
         EndpointUrl: endpointUrl,
     }
@@ -49,10 +49,10 @@ func NewTaskPostClient(login, password string, isSandbox bool) *TaskPostClient {
 
 
 //////////////////////////////////////////////////////////////////////
-// New TaskPostData with "location_name".
+// New Data with "location_name".
 //////////////////////////////////////////////////////////////////////
-func NewTaskPostDataWithLocationName(keywords []string, locationName string) *TaskPostData {
-    return &TaskPostData{
+func NewDataWithLocationName(keywords []string, locationName string) *Data {
+    return &Data{
         Keywords: keywords,
         LocationName: locationName,
     }
@@ -60,10 +60,10 @@ func NewTaskPostDataWithLocationName(keywords []string, locationName string) *Ta
 
 
 //////////////////////////////////////////////////////////////////////
-// New TaskPostData with "location_code".
+// New Data with "location_code".
 //////////////////////////////////////////////////////////////////////
-func NewTaskPostDataWithLocationCode(keywords []string, locationCode int) *TaskPostData {
-    return &TaskPostData{
+func NewDataWithLocationCode(keywords []string, locationCode int) *Data {
+    return &Data{
         Keywords: keywords,
         LocationCode: locationCode,
     }
@@ -71,10 +71,10 @@ func NewTaskPostDataWithLocationCode(keywords []string, locationCode int) *TaskP
 
 
 //////////////////////////////////////////////////////////////////////
-// New TaskPostData with "location_coordinate".
+// New Data with "location_coordinate".
 //////////////////////////////////////////////////////////////////////
-func NewTaskPostDataWithLocationCoordinate(keywords []string, locationCoordinate string) *TaskPostData {
-    return &TaskPostData{
+func NewDataWithLocationCoordinate(keywords []string, locationCoordinate string) *Data {
+    return &Data{
         Keywords: keywords,
         LocationCoordinate: locationCoordinate,
     }
@@ -84,7 +84,7 @@ func NewTaskPostDataWithLocationCoordinate(keywords []string, locationCoordinate
 //////////////////////////////////////////////////////////////////////
 // Run.
 //////////////////////////////////////////////////////////////////////
-func (c *TaskPostClient) Run(data []*TaskPostData) (int, *myResult.TaskPostResults, error) {
+func (c *Client) Run(data []*Data) (int, *myResult.Response, error) {
     jsonData, err := json.Marshal(data)
     if err != nil {
         return 0, nil, err
@@ -99,7 +99,7 @@ func (c *TaskPostClient) Run(data []*TaskPostData) (int, *myResult.TaskPostResul
     if err != nil {
         return 0, nil, err
     }
-    var result *myResult.TaskPostResults
+    var result *myResult.Response
     if err := json.Unmarshal(resp.Body, &result); err != nil {
         return 0, nil, err
     }
@@ -112,7 +112,7 @@ func (c *TaskPostClient) Run(data []*TaskPostData) (int, *myResult.TaskPostResul
 //////////////////////////////////////////////////////////////////////
 // Set "date_from".
 //////////////////////////////////////////////////////////////////////
-func (d *TaskPostData) SetDateFrom(dateFrom string) *TaskPostData {
+func (d *Data) SetDateFrom(dateFrom string) *Data {
     d.DateFrom = dateFrom
     return d
 }
@@ -121,7 +121,7 @@ func (d *TaskPostData) SetDateFrom(dateFrom string) *TaskPostData {
 //////////////////////////////////////////////////////////////////////
 // Set "date_to".
 //////////////////////////////////////////////////////////////////////
-func (d *TaskPostData) SetDateTo(dateTo string) *TaskPostData {
+func (d *Data) SetDateTo(dateTo string) *Data {
     d.DateTo = dateTo
     return d
 }
@@ -130,7 +130,7 @@ func (d *TaskPostData) SetDateTo(dateTo string) *TaskPostData {
 //////////////////////////////////////////////////////////////////////
 // Set "language_code".
 //////////////////////////////////////////////////////////////////////
-func (d *TaskPostData) SetLanguageCode(languageCode string) *TaskPostData {
+func (d *Data) SetLanguageCode(languageCode string) *Data {
     d.LanguageCode = languageCode
     return d
 }
@@ -139,7 +139,7 @@ func (d *TaskPostData) SetLanguageCode(languageCode string) *TaskPostData {
 //////////////////////////////////////////////////////////////////////
 // Set "language_name".
 //////////////////////////////////////////////////////////////////////
-func (d *TaskPostData) SetLanguageName(languageName string) *TaskPostData {
+func (d *Data) SetLanguageName(languageName string) *Data {
     d.LanguageName = languageName
     return d
 }
@@ -148,7 +148,7 @@ func (d *TaskPostData) SetLanguageName(languageName string) *TaskPostData {
 //////////////////////////////////////////////////////////////////////
 // Set "pingback_url".
 //////////////////////////////////////////////////////////////////////
-func (d *TaskPostData) SetPingbackUrl(pingbackUrl string) *TaskPostData {
+func (d *Data) SetPingbackUrl(pingbackUrl string) *Data {
     d.PingbackUrl = pingbackUrl
     return d
 }
@@ -157,7 +157,7 @@ func (d *TaskPostData) SetPingbackUrl(pingbackUrl string) *TaskPostData {
 //////////////////////////////////////////////////////////////////////
 // Set "postback_url".
 //////////////////////////////////////////////////////////////////////
-func (d *TaskPostData) SetPostbackUrl(postbackUrl string) *TaskPostData {
+func (d *Data) SetPostbackUrl(postbackUrl string) *Data {
     d.PostbackUrl = postbackUrl
     return d
 }
@@ -166,7 +166,7 @@ func (d *TaskPostData) SetPostbackUrl(postbackUrl string) *TaskPostData {
 //////////////////////////////////////////////////////////////////////
 // Set "search_partners".
 //////////////////////////////////////////////////////////////////////
-func (d *TaskPostData) SetSearchPartners(searchPartners bool) *TaskPostData {
+func (d *Data) SetSearchPartners(searchPartners bool) *Data {
     d.SearchPartners = searchPartners
     return d
 }
@@ -175,7 +175,7 @@ func (d *TaskPostData) SetSearchPartners(searchPartners bool) *TaskPostData {
 //////////////////////////////////////////////////////////////////////
 // Set "sort_by".
 //////////////////////////////////////////////////////////////////////
-func (d *TaskPostData) SetSortBy(sortBy string) *TaskPostData {
+func (d *Data) SetSortBy(sortBy string) *Data {
     d.SortBy = sortBy
     return d
 }
@@ -184,7 +184,7 @@ func (d *TaskPostData) SetSortBy(sortBy string) *TaskPostData {
 //////////////////////////////////////////////////////////////////////
 // Set "tag".
 //////////////////////////////////////////////////////////////////////
-func (d *TaskPostData) SetTag(tag string) *TaskPostData {
+func (d *Data) SetTag(tag string) *Data {
     d.Tag = tag
     return d
 }

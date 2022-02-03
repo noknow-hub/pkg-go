@@ -85,7 +85,56 @@ func NewDataWithLocationCoordinate(keywords []string, locationCoordinate string)
 // Run.
 //////////////////////////////////////////////////////////////////////
 func (c *Client) Run(datas []*Data) (int, *myResult.Response, error) {
-    jsonData, err := json.Marshal(datas)
+    var optDatas []*Data
+    for _, data := range datas {
+        if len(data.Keywords) <= myConstant.LIMIT_NUM_OF_KEYWORDS_PER_TASK_FOR_KEYWORDS_DATA_GOOGLE_ADS_SEARCH_VOLUME_TASK_POST_V3 {
+            optDatas = append(optDatas, &Data{
+                DateFrom: data.DateFrom,
+                DateTo: data.DateTo,
+                Keywords: data.Keywords,
+                LanguageName: data.LanguageName,
+                LanguageCode: data.LanguageCode,
+                LocationName: data.LocationName,
+                LocationCode: data.LocationCode,
+                LocationCoordinate: data.LocationCoordinate,
+                PingbackUrl: data.PingbackUrl,
+                PostbackUrl: data.PostbackUrl,
+                SearchPartners: data.SearchPartners,
+                SortBy: data.SortBy,
+                Tag: data.Tag,
+            })
+        } else {
+            var index int
+            for {
+                if len(data.Keywords) < myConstant.LIMIT_NUM_OF_KEYWORDS_PER_TASK_FOR_KEYWORDS_DATA_GOOGLE_ADS_SEARCH_VOLUME_TASK_POST_V3 {
+                    index = len(data.Keywords)
+                } else {
+                    index = myConstant.LIMIT_NUM_OF_KEYWORDS_PER_TASK_FOR_KEYWORDS_DATA_GOOGLE_ADS_SEARCH_VOLUME_TASK_POST_V3
+                }
+                optDatas = append(optDatas, &Data{
+                    DateFrom: data.DateFrom,
+                    DateTo: data.DateTo,
+                    Keywords: data.Keywords[:index],
+                    LanguageName: data.LanguageName,
+                    LanguageCode: data.LanguageCode,
+                    LocationName: data.LocationName,
+                    LocationCode: data.LocationCode,
+                    LocationCoordinate: data.LocationCoordinate,
+                    PingbackUrl: data.PingbackUrl,
+                    PostbackUrl: data.PostbackUrl,
+                    SearchPartners: data.SearchPartners,
+                    SortBy: data.SortBy,
+                    Tag: data.Tag,
+                })
+                data.Keywords = data.Keywords[index:]
+                if len(data.Keywords) == 0 {
+                    break
+                }
+            }
+        }
+    }
+
+    jsonData, err := json.Marshal(optDatas)
     if err != nil {
         return 0, nil, err
     }

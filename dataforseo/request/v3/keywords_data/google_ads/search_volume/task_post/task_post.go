@@ -84,7 +84,7 @@ func NewDataWithLocationCoordinate(keywords []string, locationCoordinate string)
 //////////////////////////////////////////////////////////////////////
 // Run.
 //////////////////////////////////////////////////////////////////////
-func (c *Client) Run(data []*Data) (int, *myResult.Response, error) {
+func (c *Client) Run(data *Data) (int, *myResult.Response, error) {
     jsonData, err := json.Marshal(data)
     if err != nil {
         return 0, nil, err

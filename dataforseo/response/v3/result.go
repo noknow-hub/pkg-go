@@ -84,9 +84,9 @@ func (t *Task) GetKeywordsSliceFromData() []string {
     }
     var result []string
     for i := 0; i < vv.Len(); i++ {
-        vvv := vv.Index(i)
-        if vvv.Kind() == reflect.String {
-            result = append(result, vvv.String())
+        vvv := vv.Index(i).String()
+        if vvv != "" {
+            result = append(result, vvv)
         }
     }
     return result

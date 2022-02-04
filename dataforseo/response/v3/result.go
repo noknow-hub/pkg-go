@@ -3,6 +3,10 @@
 //////////////////////////////////////////////////////////////////////
 package v3
 
+import (
+    "reflect"
+)
+
 type General struct {
     Version string        `json:"version"`
     StatusCode int        `json:"status_code"`
@@ -74,11 +78,18 @@ func (t *Task) GetKeywordsSliceFromData() []string {
     if !exist {
         return nil
     }
-    vv, ok := v.([]string)
-    if !ok {
+    vv := reflect.ValueOf(v)
+    if vv.Kind() != reflect.Slice {
         return nil
     }
-    return vv
+    var result []string
+    for i := 0; i < vv.Len(); i++ {
+        vvv := vv.Index(i)
+        if vvv.Kind() == reflect.String {
+            result = append(result, vvv.String())
+        }
+    }
+    return result
 }
 
 

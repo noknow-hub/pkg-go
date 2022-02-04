@@ -64,13 +64,13 @@ func (t *Task) GetKeywordFromData() string {
 
 
 //////////////////////////////////////////////////////////////////////
-// Get "keyword" slice from "Task.Data".
+// Get "keywords" slice from "Task.Data".
 //////////////////////////////////////////////////////////////////////
-func (t *Task) GetKeywordSliceFromData() []string {
+func (t *Task) GetKeywordsSliceFromData() []string {
     if t.Data == nil {
         return nil
     }
-    v, exist := t.Data["keyword"]
+    v, exist := t.Data["keywords"]
     if !exist {
         return nil
     }

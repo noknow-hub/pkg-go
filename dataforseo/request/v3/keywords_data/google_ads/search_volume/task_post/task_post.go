@@ -5,10 +5,21 @@ package task_post
 
 import (
     "encoding/json"
+    "time"
     myAuthentication "github.com/noknow-hub/pkg-go/dataforseo/authentication"
     myConstant "github.com/noknow-hub/pkg-go/dataforseo/constant"
     myHttpClient "github.com/noknow-hub/pkg-go/http/client"
     myResult "github.com/noknow-hub/pkg-go/dataforseo/response/v3/keywords_data/google_ads/search_volume/task_post"
+)
+
+const (
+    LIMIT_NUM_OF_TASKS_PER_REQ = myConstant.LIMIT_NUM_OF_TASKS_PER_REQ_FOR_KEYWORDS_DATA_GOOGLE_ADS_SEARCH_VOLUME_TASK_POST_V3
+)
+
+var (
+    NumOfApiCalls = 0
+    LastCalledAt time.Time
+    ApiCallQueues []time.Time
 )
 
 type Client struct {
@@ -30,6 +41,22 @@ type Data struct {
     SearchPartners bool         `json:"search_partners,omitempty"`
     SortBy string               `json:"sort_by,omitempty"`
     Tag string                  `json:"tag,omitempty"`
+}
+
+
+//////////////////////////////////////////////////////////////////////
+// Clear NumOfApiCalls.
+//////////////////////////////////////////////////////////////////////
+func ClearNumOfApiCalls() {
+    NumOfApiCalls = 0
+}
+
+
+//////////////////////////////////////////////////////////////////////
+// Is over the number of tasks.
+//////////////////////////////////////////////////////////////////////
+func IsOverNumOfTasks(datas []*Data) bool {
+    return len(datas) > myConstant.LIMIT_NUM_OF_TASKS_PER_REQ_FOR_KEYWORDS_DATA_GOOGLE_ADS_SEARCH_VOLUME_TASK_POST_V3
 }
 
 
@@ -82,9 +109,9 @@ func NewDataWithLocationCoordinate(keywords []string, locationCoordinate string)
 
 
 //////////////////////////////////////////////////////////////////////
-// Run.
+// Optimize data.
 //////////////////////////////////////////////////////////////////////
-func (c *Client) Run(datas []*Data) (int, *myResult.Response, error) {
+func OptData(datas []*Data) []*Data {
     var optDatas []*Data
     for _, data := range datas {
         if len(data.Keywords) <= myConstant.LIMIT_NUM_OF_KEYWORDS_PER_TASK_FOR_KEYWORDS_DATA_GOOGLE_ADS_SEARCH_VOLUME_TASK_POST_V3 {
@@ -133,8 +160,29 @@ func (c *Client) Run(datas []*Data) (int, *myResult.Response, error) {
             }
         }
     }
+    return optDatas
+}
 
-    jsonData, err := json.Marshal(optDatas)
+
+//////////////////////////////////////////////////////////////////////
+// Run.
+//////////////////////////////////////////////////////////////////////
+func (c *Client) Run(datas []*Data) (int, *myResult.Response, error) {
+    minAgo := time.Now().Add(time.Minute * -1)
+    for i, ApiCallQueue := range ApiCallQueues {
+        if ApiCallQueue.After(minAgo) {
+            ApiCallQueues = ApiCallQueues[i:]
+            break
+        }
+    }
+
+    if len(ApiCallQueues) > myConstant.LIMIT_NUM_OF_CALLS_PER_MIN_FOR_KEYWORDS_DATA_GOOGLE_ADS_SEARCH_VOLUME_TASK_POST_V3 {
+        time.Sleep(60 * time.Second)
+        ApiCallQueues = nil
+    }
+    ApiCallQueues = append(ApiCallQueues, time.Now())
+
+    jsonData, err := json.Marshal(datas)
     if err != nil {
         return 0, nil, err
     }

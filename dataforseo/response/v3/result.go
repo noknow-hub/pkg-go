@@ -64,6 +64,25 @@ func (t *Task) GetKeywordFromData() string {
 
 
 //////////////////////////////////////////////////////////////////////
+// Get "keyword" slice from "Task.Data".
+//////////////////////////////////////////////////////////////////////
+func (t *Task) GetKeywordSliceFromData() []string {
+    if t.Data == nil {
+        return nil
+    }
+    v, exist := t.Data["keyword"]
+    if !exist {
+        return nil
+    }
+    vv, ok := v.([]string)
+    if !ok {
+        return nil
+    }
+    return vv
+}
+
+
+//////////////////////////////////////////////////////////////////////
 // Get "language_code" from "Task.Data".
 //////////////////////////////////////////////////////////////////////
 func (t *Task) GetLanguageCodeFromData() string {

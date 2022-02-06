@@ -15,7 +15,7 @@ type Response struct {
 
 type Task struct {
     *myResult.Task
-    Result []*Result    `json:"result"`
+    Results []*Result    `json:"result"`
 }
 
 type Result struct {

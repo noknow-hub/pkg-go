@@ -1,10 +1,15 @@
 //////////////////////////////////////////////////////////////////////
-// general.go
+// result.go
 //////////////////////////////////////////////////////////////////////
 package v3
 
 import (
     "reflect"
+)
+
+const (
+    STATUS_CODE_OK = 20000
+    STATUS_CODE_TASK_CREATED = 20100
 )
 
 type General struct {
@@ -19,13 +24,29 @@ type General struct {
 
 type Task struct {
     Id string                    `json:"id"`
-    Status_code int              `json:"status_code"`
-    Status_message string        `json:"status_message"`
+    StatusCode int              `json:"status_code"`
+    StatusMessage string        `json:"status_message"`
     Time string                  `json:"time"`
     Cost float64                 `json:"cost"`
     ResultCount int              `json:"result_count"`
     Path []string                `json:"path"`
     Data map[string]interface{}  `json:"data"`
+}
+
+
+//////////////////////////////////////////////////////////////////////
+// Is status code "OK"
+//////////////////////////////////////////////////////////////////////
+func (t *Task) IsOk() bool {
+    return t.StatusCode == STATUS_CODE_OK
+}
+
+
+//////////////////////////////////////////////////////////////////////
+// Is status code "task created"
+//////////////////////////////////////////////////////////////////////
+func (t *Task) IsTaskCreated() bool {
+    return t.StatusCode == STATUS_CODE_TASK_CREATED
 }
 
 

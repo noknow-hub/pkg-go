@@ -5,6 +5,7 @@ package task_post
 
 import (
     "encoding/json"
+    "regexp"
     "time"
     myAuthentication "github.com/noknow-hub/pkg-go/dataforseo/authentication"
     myConstant "github.com/noknow-hub/pkg-go/dataforseo/constant"
@@ -20,6 +21,7 @@ var (
     NumOfApiCalls = 0
     LastCalledAt time.Time
     ApiCallQueues []time.Time
+    reg := regexp.MustCompile("[!！@＠%％^＾()（）=＝{};；：~〜`｀<>＜＞?？\\|｜,、，。…．Ⅱ⇨:ｦ-ﾝ○※＊「」［］【】｛｝‘’“”〈〉〔〕《》*]")
 )
 
 type Client struct {
@@ -161,6 +163,14 @@ func OptData(datas []*Data) []*Data {
         }
     }
     return optDatas
+}
+
+
+//////////////////////////////////////////////////////////////////////
+// Valid keyword.
+//////////////////////////////////////////////////////////////////////
+func ValidKeyword(keyword string) bool {
+    return !reg.MatchString(keyword)
 }
 
 

@@ -52,9 +52,9 @@ func NewClient(apiToken, roomId string) *Client {
 //////////////////////////////////////////////////////////////////////
 func (c *Client) Post(body string, selfUnread bool) (int, *Message, *myResponse.Error) {
     errResp := &myResponse.Error{}
-    tmpSelfUnread := "1"
-    if !selfUnread {
-        tmpSelfUnread = "0"
+    tmpSelfUnread := "0"
+    if selfUnread {
+        tmpSelfUnread = "1"
     }
     httpClient := myHttpClient.NewClient(c.EndpointUrl)
     httpClient.Config.

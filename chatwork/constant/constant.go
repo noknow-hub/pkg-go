@@ -10,5 +10,5 @@ const (
     ENDPOINT_URL_ROOMS = "https://api.chatwork.com/v2/rooms"
     ENDPOINT_URL_INCOMING_REQUESTS = "https://api.chatwork.com/v2/incoming_requests"
 
-    HTTP_HEADER_TOKEN = "X-ChatWorkToken: "
+    HTTP_HEADER_TOKEN = "X-ChatWorkToken"
 )

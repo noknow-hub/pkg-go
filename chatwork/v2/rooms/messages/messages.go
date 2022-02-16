@@ -6,7 +6,6 @@ package messages
 import (
     "encoding/json"
     "net/http"
-    "strconv"
     myConstant "github.com/noknow-hub/pkg-go/chatwork/constant"
     myHttpClient "github.com/noknow-hub/pkg-go/http/client"
     myResponse "github.com/noknow-hub/pkg-go/chatwork/v2/response"
@@ -53,11 +52,15 @@ func NewClient(apiToken, roomId string) *Client {
 //////////////////////////////////////////////////////////////////////
 func (c *Client) Post(body string, selfUnread bool) (int, *Message, *myResponse.Error) {
     errResp := &myResponse.Error{}
+    tmpSelfUnread := "1"
+    if !selfUnread {
+        tmpSelfUnread = "0"
+    }
     httpClient := myHttpClient.NewClient(c.EndpointUrl)
     httpClient.Config.
         AddHeader(myConstant.HTTP_HEADER_TOKEN, c.ApiToken).
         AddFormData(PARAM_BODY, body).
-        AddFormData(PARAM_SELF_UNREAD, strconv.FormatBool(selfUnread))
+        AddFormData(PARAM_SELF_UNREAD, tmpSelfUnread)
     resp, err := httpClient.Post()
     if err != nil {
         errResp.Errors = append(errResp.Errors, err.Error())

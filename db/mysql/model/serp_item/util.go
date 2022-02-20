@@ -141,7 +141,7 @@ func scanSerpItemWithSerp(row *myQuery.Row, serpItemTable, serpTable string, ser
             } else {
                 if index < NUM_COLS {
                     serpItem.Id = val
-                } else if index >= NUM_COLS && index < mySerp.NUM_COLS {
+                } else if index >= NUM_COLS && index < NUM_COLS + mySerp.NUM_COLS {
                     serpItem.Serp.Id = val
                 } else {
                     return errors.New("Unknown the column index. Index: " + strconv.FormatInt(int64(index), 10) + ", column name: " + col.Name)
@@ -229,7 +229,7 @@ func scanSerpItemWithSerp(row *myQuery.Row, serpItemTable, serpTable string, ser
             } else {
                 if index < NUM_COLS { 
                     serpItem.CreatedAt = val 
-                } else if index >= NUM_COLS && index < mySerp.NUM_COLS {
+                } else if index >= NUM_COLS && index < NUM_COLS + mySerp.NUM_COLS {
                     serpItem.Serp.CreatedAt = val
                 } else {
                     return errors.New("Unknown the column index. Index: " + strconv.FormatInt(int64(index), 10) + ", column name: " + col.Name)            
@@ -251,7 +251,7 @@ func scanSerpItemWithSerp(row *myQuery.Row, serpItemTable, serpTable string, ser
             } else {
                 if index < NUM_COLS {
                     serpItem.UpdatedAt = val
-                } else if index >= NUM_COLS && index < mySerp.NUM_COLS {
+                } else if index >= NUM_COLS && index < NUM_COLS + mySerp.NUM_COLS {
                     serpItem.Serp.UpdatedAt = val
                 } else {
                     return errors.New("Unknown the column index. Index: " + strconv.FormatInt(int64(index), 10) + ", column name: " + col.Name)

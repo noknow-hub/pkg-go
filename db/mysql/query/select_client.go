@@ -286,7 +286,15 @@ func (c *SelectClient) generateQuery() (string, []interface{}) {
     if len(c.Columns) == 0 {
         buf = append(buf, "SELECT * FROM " + c.TableName...)
     } else {
-        buf = append(buf, "SELECT " + strings.Join(c.Columns, ",") + " FROM " + c.TableName...)
+        var cols []string
+        for _ col := range c.Columns {
+            if !strings.Contains(col, "*") && strings.Contains(col, ".") && !strings.Contains(strings.ToUpper(col), "AS") {
+                cols = append(cols, col + " AS " + col)
+            } else {
+                cols = append(cols, col)
+            }
+        }
+        buf = append(buf, "SELECT " + strings.Join(cols, ",") + " FROM " + c.TableName...)
     }
 
     // INNER JOIN

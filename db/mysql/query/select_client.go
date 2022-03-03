@@ -287,7 +287,7 @@ func (c *SelectClient) generateQuery() (string, []interface{}) {
         buf = append(buf, "SELECT * FROM " + c.TableName...)
     } else {
         var cols []string
-        for _ col := range c.Columns {
+        for _, col := range c.Columns {
             if !strings.Contains(col, "*") && strings.Contains(col, ".") && !strings.Contains(strings.ToUpper(col), "AS") {
                 cols = append(cols, col + " AS " + col)
             } else {

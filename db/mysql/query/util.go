@@ -66,6 +66,7 @@ type WhereConditionParam struct {
 
 type Row struct {
     Columns []*Column
+    SpecifiedColumns []string
 }
 
 type Column struct {

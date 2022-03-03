@@ -209,7 +209,9 @@ func (c *SelectClient) Run() (*SelectResult, error) {
         dests[i] = &vals[i]
     }
     for rows.Next() {
-        row := &Row{}
+        row := &Row{
+            SpecifiedColumns: c.Columns,
+        }
 
         if err := rows.Scan(dests...); err != nil {
             return result, err

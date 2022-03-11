@@ -193,10 +193,10 @@ func (c *SelectClient) Run() (*SelectResult, error) {
     result := &SelectResult{}
     result.RawQuery, result.RawArgs = c.generateQuery()
     rows, err := Query(c.Db, c.Tx, c.Ctx, result.RawQuery, result.RawArgs)
-    defer rows.Close()
     if err != nil {
         return result, err
     }
+    defer rows.Close()
 
     cols, err := rows.Columns()
     if err != nil {

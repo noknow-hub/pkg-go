@@ -122,6 +122,18 @@ func (c *BrowseClient) Run() ([]*BookArticleMap, *myQuery.SelectResult, error) {
 
 
 //////////////////////////////////////////////////////////////////////
+// Count.
+//////////////////////////////////////////////////////////////////////
+func (c *BrowseClientWithBookAndArticle) Count() (int64, *myQuery.SelectResultCount, error) {
+    c.BaseClient.
+        AppendInnerJoinTables(c.BaseClient.TableName, COL_BOOK_ID, c.RefBookTable, nkwMysqlModelBook.COL_ID).
+        AppendInnerJoinTables(c.BaseClient.TableName, COL_ARTICLE_ID, c.RefArticleTable, nkwMysqlModelArticle.COL_ID)
+    resultCount, err := c.BaseClient.Count()
+    return resultCount.Count, resultCount, err
+}
+
+
+//////////////////////////////////////////////////////////////////////
 // Run with INNER JOIN.
 //////////////////////////////////////////////////////////////////////
 func (c *BrowseClientWithBookAndArticle) Run() ([]*BookArticleMap, *myQuery.SelectResult, error) {

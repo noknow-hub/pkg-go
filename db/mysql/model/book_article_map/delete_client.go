@@ -66,7 +66,7 @@ func (c *DeleteClient) Run() (*myQuery.DeleteResult, error) {
 //////////////////////////////////////////////////////////////////////
 // Run by COL_BOOK_ID and  COL_ARTICLE_ID.
 //////////////////////////////////////////////////////////////////////
-func (c *DeleteClient) RunByAccountIdAndTagSlug(bookId, accountId string) (*myQuery.DeleteResult, error) {
+func (c *DeleteClient) RunByBookIdAndAccountId(bookId, accountId string) (*myQuery.DeleteResult, error) {
     c.BaseClient.WhereCondition.
         SetWhere(COL_BOOK_ID, bookId).
         AppendAnd(COL_ARTICLE_ID, accountId)

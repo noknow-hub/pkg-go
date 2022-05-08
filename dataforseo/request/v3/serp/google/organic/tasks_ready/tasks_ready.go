@@ -1,31 +1,31 @@
 //////////////////////////////////////////////////////////////////////
-// tasks_ready_client.go
+// tasks_ready.go
 //////////////////////////////////////////////////////////////////////
-package standard
+package tasks_ready
 
 import (
     "encoding/json"
     myAuthentication "github.com/noknow-hub/pkg-go/dataforseo/authentication"
     myConstant "github.com/noknow-hub/pkg-go/dataforseo/constant"
     myHttpClient "github.com/noknow-hub/pkg-go/http/client"
-    myResult "github.com/noknow-hub/pkg-go/dataforseo/result/v3/serp/google/organic/standard"
+    Response "github.com/noknow-hub/pkg-go/dataforseo/response/v3/serp/google/organic/tasks_ready"
 )
 
-type TasksReadyClient struct {
+type Client struct {
     *myAuthentication.Authentication
     EndpointUrl string
 }
 
 
 //////////////////////////////////////////////////////////////////////
-// New TasksReadyClient object.
+// New Client
 //////////////////////////////////////////////////////////////////////
-func NewTasksReadyClient(login, password string, isSandbox bool) *TasksReadyClient {
+func NewClient(login, password string, isSandbox bool) *Client {
     endpointUrl := myConstant.ENDPOINT_SERP_GOOGLE_ORGANIC_TASKS_READY_V3
     if isSandbox {
         endpointUrl = myConstant.ENDPOINT_SERP_GOOGLE_ORGANIC_TASKS_READY_V3_SANDBOX
     }
-    return &TasksReadyClient{
+    return &Client{
         Authentication: myAuthentication.NewAuthentication(login, password),
         EndpointUrl: endpointUrl,
     }
@@ -33,9 +33,9 @@ func NewTasksReadyClient(login, password string, isSandbox bool) *TasksReadyClie
 
 
 //////////////////////////////////////////////////////////////////////
-// Run.
+// Run
 //////////////////////////////////////////////////////////////////////
-func (c *TasksReadyClient) Run() (int, *myResult.TasksReadyResults, error) {
+func (c *Client) Run() (int, *Response.Response, error) {
     httpClient := myHttpClient.NewClient(c.EndpointUrl)
     httpClient.Config.
         AddHeaderContentType(myHttpClient.CONTENT_TYPE_JSON).
@@ -44,7 +44,7 @@ func (c *TasksReadyClient) Run() (int, *myResult.TasksReadyResults, error) {
     if err != nil {
         return 0, nil, err
     }
-    var result *myResult.TasksReadyResults
+    var result *Response.Response
     if err := json.Unmarshal(resp.Body, &result); err != nil {
         return 0, nil, err
     }

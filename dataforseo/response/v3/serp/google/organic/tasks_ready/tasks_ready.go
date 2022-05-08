@@ -1,24 +1,24 @@
 //////////////////////////////////////////////////////////////////////
-// standard.go
+// tasks_ready.go
 //////////////////////////////////////////////////////////////////////
-package standard
+package tasks_ready
 
 import (
-    myResult "github.com/noknow-hub/pkg-go/dataforseo/result/v3"
+    myResult "github.com/noknow-hub/pkg-go/dataforseo/response/v3"
 )
 
-type TasksReadyResults struct {
+type Response struct {
     *myResult.General
-    Tasks []*TasksReadyTask  `json:"tasks"`
+    Tasks []*Task  `json:"tasks"`
     Raw string
 }
 
-type TasksReadyTask struct {
+type Task struct {
     *myResult.Task
-    Result []*TasksReadyResult  `json:"result"`
+    Result []*Result  `json:"result"`
 }
 
-type TasksReadyResult struct {
+type Result struct {
     Id string                `json:"id"`
     Se string                `json:"se"`
     SeType string            `json:"se_type"`
@@ -31,13 +31,13 @@ type TasksReadyResult struct {
 
 
 //////////////////////////////////////////////////////////////////////
-// Get Results of TasksReadyResults.
+// Get Results of Response.
 //////////////////////////////////////////////////////////////////////
-func (r *TasksReadyResults) GetResults() []*TasksReadyResult {
+func (r *Response) GetResults() []*Result {
     if len(r.Tasks) == 0 {
         return nil
     }
-    var result []*TasksReadyResult
+    var result []*Result
     for _, o := range r.Tasks {
         for _, oo := range o.Result {
             result = append(result, oo)

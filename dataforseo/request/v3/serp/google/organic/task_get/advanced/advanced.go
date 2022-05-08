@@ -1,7 +1,7 @@
 //////////////////////////////////////////////////////////////////////
-// task_get_advanced_client.go
+// advanced.go
 //////////////////////////////////////////////////////////////////////
-package standard
+package advanced
 
 import (
     "encoding/json"
@@ -9,24 +9,24 @@ import (
     myAuthentication "github.com/noknow-hub/pkg-go/dataforseo/authentication"
     myConstant "github.com/noknow-hub/pkg-go/dataforseo/constant"
     myHttpClient "github.com/noknow-hub/pkg-go/http/client"
-    myResult "github.com/noknow-hub/pkg-go/dataforseo/result/v3/serp/google/organic/standard"
+    myResponse "github.com/noknow-hub/pkg-go/dataforseo/response/v3/serp/google/organic/task_get/advanced"
 )
 
-type TaskGetAdvancedClient struct {
+type Client struct {
     *myAuthentication.Authentication
     EndpointUrl string
 }
 
 
 //////////////////////////////////////////////////////////////////////
-// New TaskGetAdvancedClient object.
+// New Client
 //////////////////////////////////////////////////////////////////////
-func NewTaskGetAdvancedClient(login, password string, isSandbox bool, id string) *TaskGetAdvancedClient {
+func NewClient(login, password string, isSandbox bool, id string) *Client {
     endpointUrl := strings.Replace(myConstant.ENDPOINT_SERP_GOOGLE_ORGANIC_TASK_GET_ADVANCED_V3, "$id", id, 1)
     if isSandbox {
         endpointUrl = strings.Replace(myConstant.ENDPOINT_SERP_GOOGLE_ORGANIC_TASK_GET_ADVANCED_V3_SANDBOX, "$id", id, 1)
     }
-    return &TaskGetAdvancedClient{
+    return &Client{
         Authentication: myAuthentication.NewAuthentication(login, password),
         EndpointUrl: endpointUrl,
     }
@@ -36,7 +36,7 @@ func NewTaskGetAdvancedClient(login, password string, isSandbox bool, id string)
 //////////////////////////////////////////////////////////////////////
 // Run.
 //////////////////////////////////////////////////////////////////////
-func (c *TaskGetAdvancedClient) Run() (int, *myResult.TaskGetAdvancedResults, error) {
+func (c *Client) Run() (int, *myResponse.Response, error) {
     httpClient := myHttpClient.NewClient(c.EndpointUrl)
     httpClient.Config.
         AddHeaderContentType(myHttpClient.CONTENT_TYPE_JSON).
@@ -45,7 +45,7 @@ func (c *TaskGetAdvancedClient) Run() (int, *myResult.TaskGetAdvancedResults, er
     if err != nil {
         return 0, nil, err
     }
-    var result *myResult.TaskGetAdvancedResults
+    var result *myResponse.Response
     if err := json.Unmarshal(resp.Body, &result); err != nil {
         return 0, nil, err
     }

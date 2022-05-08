@@ -1,22 +1,29 @@
 //////////////////////////////////////////////////////////////////////
-// task_post_client.go
+// task_post.go
 //////////////////////////////////////////////////////////////////////
-package standard
+package task_post
 
 import (
     "encoding/json"
+    "time"
     myAuthentication "github.com/noknow-hub/pkg-go/dataforseo/authentication"
     myConstant "github.com/noknow-hub/pkg-go/dataforseo/constant"
     myHttpClient "github.com/noknow-hub/pkg-go/http/client"
-    myResult "github.com/noknow-hub/pkg-go/dataforseo/result/v3/serp/google/organic/standard"
+    myResponse "github.com/noknow-hub/pkg-go/dataforseo/response/v3/serp/google/organic/task_post"
 )
 
-type TaskPostClient struct {
+var (
+    NumOfApiCalls = 0
+    LastCalledAt time.Time
+    ApiCallQueues []time.Time
+)
+
+type Client struct {
     *myAuthentication.Authentication
     EndpointUrl string
 }
 
-type TaskPostData struct {
+type Data struct {
     Keyword string                    `json:"keyword,omitempty"`
     Url string                        `json:"url,omitempty"`
     Priority int                      `json:"priority,omitempty"`
@@ -42,14 +49,29 @@ type TaskPostData struct {
 
 
 //////////////////////////////////////////////////////////////////////
-// New TaskPostClient object.
+// Clear NumOfApiCalls
 //////////////////////////////////////////////////////////////////////
-func NewTaskPostClient(login, password string, isSandbox bool) *TaskPostClient {
+func ClearNumOfApiCalls() {
+    NumOfApiCalls = 0
+}
+
+
+//////////////////////////////////////////////////////////////////////
+// Is over the number of tasks
+//////////////////////////////////////////////////////////////////////
+func IsOverNumOfTasks(datas []*Data) bool {
+    return len(datas) > myConstant.LIMIT_NUM_OF_TASKS_PER_REQ_FOR_SERP_GOOGLE_ORGANIC_TASK_POST_V3
+}
+
+//////////////////////////////////////////////////////////////////////
+// New Client
+//////////////////////////////////////////////////////////////////////
+func NewClient(login, password string, isSandbox bool) *Client {
     endpointUrl := myConstant.ENDPOINT_SERP_GOOGLE_ORGANIC_TASK_POST_V3
     if isSandbox {
         endpointUrl = myConstant.ENDPOINT_SERP_GOOGLE_ORGANIC_TASK_POST_V3_SANDBOX
     }
-    return &TaskPostClient{
+    return &Client{
         Authentication: myAuthentication.NewAuthentication(login, password),
         EndpointUrl: endpointUrl,
     }
@@ -57,10 +79,10 @@ func NewTaskPostClient(login, password string, isSandbox bool) *TaskPostClient {
 
 
 //////////////////////////////////////////////////////////////////////
-// New TaskPostData.
+// New Data.
 //////////////////////////////////////////////////////////////////////
-func NewTaskPostData(keyword, postbackData string, langCode string, locationCode int) *TaskPostData {
-    return &TaskPostData{
+func NewData(keyword, postbackData string, langCode string, locationCode int) *Data {
+    return &Data{
         Keyword: keyword,
         PostbackData: postbackData,
         LanguageCode: langCode,
@@ -72,7 +94,21 @@ func NewTaskPostData(keyword, postbackData string, langCode string, locationCode
 //////////////////////////////////////////////////////////////////////
 // Run.
 //////////////////////////////////////////////////////////////////////
-func (c *TaskPostClient) Run(data []*TaskPostData) (int, *myResult.TaskPostResults, error) {
+func (c *Client) Run(data []*Data) (int, *myResponse.Response, error) {
+    minAgo := time.Now().Add(time.Minute * -1)
+    for i, ApiCallQueue := range ApiCallQueues {
+        if ApiCallQueue.After(minAgo) {
+            ApiCallQueues = ApiCallQueues[i:]
+            break
+        }
+    }
+
+    if len(ApiCallQueues) > myConstant.LIMIT_NUM_OF_CALLS_PER_MIN_FOR_SERP_GOOGLE_ORGANIC_TASK_POST_V3 {
+        time.Sleep(60 * time.Second)
+        ApiCallQueues = nil
+    }
+    ApiCallQueues = append(ApiCallQueues, time.Now())
+
     jsonData, err := json.Marshal(data)
     if err != nil {
         return 0, nil, err
@@ -87,7 +123,7 @@ func (c *TaskPostClient) Run(data []*TaskPostData) (int, *myResult.TaskPostResul
     if err != nil {
         return 0, nil, err
     }
-    var result *myResult.TaskPostResults
+    var result *myResponse.Response
     if err := json.Unmarshal(resp.Body, &result); err != nil {
         return 0, nil, err
     }
@@ -100,7 +136,7 @@ func (c *TaskPostClient) Run(data []*TaskPostData) (int, *myResult.TaskPostResul
 //////////////////////////////////////////////////////////////////////
 // Set "url".
 //////////////////////////////////////////////////////////////////////
-func (o *TaskPostData) SetUrl(url string) *TaskPostData {
+func (o *Data) SetUrl(url string) *Data {
     o.Url = url
     return o
 }
@@ -109,7 +145,7 @@ func (o *TaskPostData) SetUrl(url string) *TaskPostData {
 //////////////////////////////////////////////////////////////////////
 // Set "priority".
 //////////////////////////////////////////////////////////////////////
-func (o *TaskPostData) SetPriority(priority int) *TaskPostData {
+func (o *Data) SetPriority(priority int) *Data {
     o.Priority = priority
     return o
 }
@@ -118,7 +154,7 @@ func (o *TaskPostData) SetPriority(priority int) *TaskPostData {
 //////////////////////////////////////////////////////////////////////
 // Set "depth".
 //////////////////////////////////////////////////////////////////////
-func (o *TaskPostData) SetDepth(depth int) *TaskPostData {
+func (o *Data) SetDepth(depth int) *Data {
     o.Depth = depth
     return o
 }
@@ -127,7 +163,7 @@ func (o *TaskPostData) SetDepth(depth int) *TaskPostData {
 //////////////////////////////////////////////////////////////////////
 // Set "location_name".
 //////////////////////////////////////////////////////////////////////
-func (o *TaskPostData) SetLocationName(locationName string) *TaskPostData {
+func (o *Data) SetLocationName(locationName string) *Data {
     o.LocationName = locationName
     return o
 }
@@ -136,7 +172,7 @@ func (o *TaskPostData) SetLocationName(locationName string) *TaskPostData {
 //////////////////////////////////////////////////////////////////////
 // Set "location_coordinate".
 //////////////////////////////////////////////////////////////////////
-func (o *TaskPostData) SetLocationCoordinate(locationCoordinate string) *TaskPostData {
+func (o *Data) SetLocationCoordinate(locationCoordinate string) *Data {
     o.LocationCoordinate = locationCoordinate
     return o
 }
@@ -145,7 +181,7 @@ func (o *TaskPostData) SetLocationCoordinate(locationCoordinate string) *TaskPos
 //////////////////////////////////////////////////////////////////////
 // Set "language_name".
 //////////////////////////////////////////////////////////////////////
-func (o *TaskPostData) SetLanguageName(languageName string) *TaskPostData {
+func (o *Data) SetLanguageName(languageName string) *Data {
     o.LanguageName = languageName
     return o
 }
@@ -154,7 +190,7 @@ func (o *TaskPostData) SetLanguageName(languageName string) *TaskPostData {
 //////////////////////////////////////////////////////////////////////
 // Set "se_domain".
 //////////////////////////////////////////////////////////////////////
-func (o *TaskPostData) SetSeDomain(seDomain string) *TaskPostData {
+func (o *Data) SetSeDomain(seDomain string) *Data {
     o.SeDomain = seDomain
     return o
 }
@@ -163,7 +199,7 @@ func (o *TaskPostData) SetSeDomain(seDomain string) *TaskPostData {
 //////////////////////////////////////////////////////////////////////
 // Set "device".
 //////////////////////////////////////////////////////////////////////
-func (o *TaskPostData) SetDevice(device string) *TaskPostData {
+func (o *Data) SetDevice(device string) *Data {
     o.Device = device
     return o
 }
@@ -172,7 +208,7 @@ func (o *TaskPostData) SetDevice(device string) *TaskPostData {
 //////////////////////////////////////////////////////////////////////
 // Set "os".
 //////////////////////////////////////////////////////////////////////
-func (o *TaskPostData) SetOs(os string) *TaskPostData {
+func (o *Data) SetOs(os string) *Data {
     o.Os = os
     return o
 }
@@ -181,7 +217,7 @@ func (o *TaskPostData) SetOs(os string) *TaskPostData {
 //////////////////////////////////////////////////////////////////////
 // Set "calculate_rectangles".
 //////////////////////////////////////////////////////////////////////
-func (o *TaskPostData) SetCalculateRectangles(calculateRectangles bool) *TaskPostData {
+func (o *Data) SetCalculateRectangles(calculateRectangles bool) *Data {
     o.CalculateRectangles = calculateRectangles
     return o
 }
@@ -190,7 +226,7 @@ func (o *TaskPostData) SetCalculateRectangles(calculateRectangles bool) *TaskPos
 //////////////////////////////////////////////////////////////////////
 // Set "browser_screen_width".
 //////////////////////////////////////////////////////////////////////
-func (o *TaskPostData) SetBrowserScreenWidth(browserScreenWidth int) *TaskPostData {
+func (o *Data) SetBrowserScreenWidth(browserScreenWidth int) *Data {
     o.BrowserScreenWidth = browserScreenWidth
     return o
 }
@@ -199,7 +235,7 @@ func (o *TaskPostData) SetBrowserScreenWidth(browserScreenWidth int) *TaskPostDa
 //////////////////////////////////////////////////////////////////////
 // Set "browser_screen_height".
 //////////////////////////////////////////////////////////////////////
-func (o *TaskPostData) SetBrowserScreenHeight(browserScreenHeight int) *TaskPostData {
+func (o *Data) SetBrowserScreenHeight(browserScreenHeight int) *Data {
     o.BrowserScreenHeight = browserScreenHeight
     return o
 }
@@ -208,7 +244,7 @@ func (o *TaskPostData) SetBrowserScreenHeight(browserScreenHeight int) *TaskPost
 //////////////////////////////////////////////////////////////////////
 // Set "browser_screen_resolution_ratio".
 //////////////////////////////////////////////////////////////////////
-func (o *TaskPostData) SetBrowserScreenResolutionRatio(browserScreenResolutionRatio int) *TaskPostData {
+func (o *Data) SetBrowserScreenResolutionRatio(browserScreenResolutionRatio int) *Data {
     o.BrowserScreenResolutionRatio = browserScreenResolutionRatio
     return o
 }
@@ -217,7 +253,7 @@ func (o *TaskPostData) SetBrowserScreenResolutionRatio(browserScreenResolutionRa
 //////////////////////////////////////////////////////////////////////
 // Set "search_param".
 //////////////////////////////////////////////////////////////////////
-func (o *TaskPostData) SetSearchParam(searchParam string) *TaskPostData {
+func (o *Data) SetSearchParam(searchParam string) *Data {
     o.SearchParam = searchParam
     return o
 }
@@ -226,7 +262,7 @@ func (o *TaskPostData) SetSearchParam(searchParam string) *TaskPostData {
 //////////////////////////////////////////////////////////////////////
 // Set "tag".
 //////////////////////////////////////////////////////////////////////
-func (o *TaskPostData) SetTag(tag string) *TaskPostData {
+func (o *Data) SetTag(tag string) *Data {
     o.Tag = tag
     return o
 }
@@ -235,7 +271,7 @@ func (o *TaskPostData) SetTag(tag string) *TaskPostData {
 //////////////////////////////////////////////////////////////////////
 // Set "postback_url".
 //////////////////////////////////////////////////////////////////////
-func (o *TaskPostData) SetPostbackUrl(postbackUrl string) *TaskPostData {
+func (o *Data) SetPostbackUrl(postbackUrl string) *Data {
     o.PostbackUrl = postbackUrl
     return o
 }
@@ -244,7 +280,7 @@ func (o *TaskPostData) SetPostbackUrl(postbackUrl string) *TaskPostData {
 //////////////////////////////////////////////////////////////////////
 // Set "pingback_url".
 //////////////////////////////////////////////////////////////////////
-func (o *TaskPostData) SetPingbackUrl(pingbackUrl string) *TaskPostData {
+func (o *Data) SetPingbackUrl(pingbackUrl string) *Data {
     o.PingbackUrl = pingbackUrl
     return o
 }

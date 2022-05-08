@@ -1,24 +1,24 @@
 //////////////////////////////////////////////////////////////////////
-// task_get_advanced_results.go
+// advanced.go
 //////////////////////////////////////////////////////////////////////
-package standard
+package advanced
 
 import (
-    myResult "github.com/noknow-hub/pkg-go/dataforseo/result/v3"
+    myResult "github.com/noknow-hub/pkg-go/dataforseo/response/v3"
 )
 
-type TaskGetAdvancedResults struct {
+type Response struct {
     *myResult.General
-    Tasks []*TaskGetAdvancedTask  `json:"tasks"`
+    Tasks []*Task  `json:"tasks"`
     Raw string
 }
 
-type TaskGetAdvancedTask struct {
+type Task struct {
     *myResult.Task
-    Result []*TaskGetAdvancedResult  `json:"result"`
+    Result []*Result  `json:"result"`
 }
 
-type TaskGetAdvancedResult struct {
+type Result struct {
     Keyword string       `json:"keyword"`
     Type string          `json:"type"`
     SeDomain string      `json:"se_domain"`
@@ -121,13 +121,13 @@ type Rectangle struct {
 
 
 //////////////////////////////////////////////////////////////////////
-// Get Results of TaskGetAdvancedResults.
+// Get Results of Response.
 //////////////////////////////////////////////////////////////////////
-func (r *TaskGetAdvancedResults) GetResults() []*TaskGetAdvancedResult {
+func (r *Response) GetResults() []*Result {
     if len(r.Tasks) == 0 {
         return nil
     }
-    var result []*TaskGetAdvancedResult
+    var result []*Result
     for _, o := range r.Tasks {
         for _, oo := range o.Result {
             result = append(result, oo)

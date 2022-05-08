@@ -6,7 +6,9 @@ package dataforseo
 import (
     myV3KeywordsDataGoogleAdsSearchVolumeTaskGet "github.com/noknow-hub/pkg-go/dataforseo/request/v3/keywords_data/google_ads/search_volume/task_get"
     myV3KeywordsDataGoogleAdsSearchVolumeTaskPost "github.com/noknow-hub/pkg-go/dataforseo/request/v3/keywords_data/google_ads/search_volume/task_post"
-    myV3SerpGoogleOrganicStandard "github.com/noknow-hub/pkg-go/dataforseo/client/v3/serp/google/organic/standard"
+    myV3SerpGoogleOrganicTaskGetAdvanced "github.com/noknow-hub/pkg-go/dataforseo/request/v3/serp/google/organic/task_get/advanced"
+    myV3SerpGoogleOrganicTaskPost "github.com/noknow-hub/pkg-go/dataforseo/request/v3/serp/google/organic/task_post"
+    myV3SerpGoogleOrganicTasksReady "github.com/noknow-hub/pkg-go/dataforseo/request/v3/serp/google/organic/tasks_ready"
 )
 
 
@@ -29,24 +31,24 @@ func NewClientV3KeywordsDataGoogleAdsSearchVolumeTaskPost(login, password string
 //////////////////////////////////////////////////////////////////////
 // New client for "v3: serp: google: organic: task: get: advanced".
 //////////////////////////////////////////////////////////////////////
-func NewClientV3SerpGoogleOrganicTaskGetAdvanced(login, password string, isSandbox bool, id string) *myV3SerpGoogleOrganicStandard.TaskGetAdvancedClient {
-    return myV3SerpGoogleOrganicStandard.NewTaskGetAdvancedClient(login, password, isSandbox, id)
+func NewClientV3SerpGoogleOrganicTaskGetAdvanced(login, password string, isSandbox bool, id string) *myV3SerpGoogleOrganicTaskGetAdvanced.Client {
+    return myV3SerpGoogleOrganicTaskGetAdvanced.NewClient(login, password, isSandbox, id)
 }
 
 
 //////////////////////////////////////////////////////////////////////
 // New client for "v3: serp: google: organic: task: post".
 //////////////////////////////////////////////////////////////////////
-func NewClientV3SerpGoogleOrganicTaskPost(login, password string, isSandbox bool) *myV3SerpGoogleOrganicStandard.TaskPostClient {
-    return myV3SerpGoogleOrganicStandard.NewTaskPostClient(login, password, isSandbox)
+func NewClientV3SerpGoogleOrganicTaskPost(login, password string, isSandbox bool) *myV3SerpGoogleOrganicTaskPost.Client {
+    return myV3SerpGoogleOrganicTaskPost.NewClient(login, password, isSandbox)
 }
 
 
 //////////////////////////////////////////////////////////////////////
 // New client for "v3: serp: google: organic: tasks: ready".
 //////////////////////////////////////////////////////////////////////
-func NewClientV3SerpGoogleOrganicTasksReady(login, password string, isSandbox bool) *myV3SerpGoogleOrganicStandard.TasksReadyClient {
-    return myV3SerpGoogleOrganicStandard.NewTasksReadyClient(login, password, isSandbox)
+func NewClientV3SerpGoogleOrganicTasksReady(login, password string, isSandbox bool) *myV3SerpGoogleOrganicTasksReady.Client {
+    return myV3SerpGoogleOrganicTasksReady.NewClient(login, password, isSandbox)
 }
 
 

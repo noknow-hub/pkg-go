@@ -5,8 +5,6 @@ package market_data
 
 import (
     "encoding/json"
-    "time"
-    myAuthentication "github.com/noknow-hub/pkg-go/binance/authentication"
     myConstant "github.com/noknow-hub/pkg-go/binance/constant"
     myHttpClient "github.com/noknow-hub/pkg-go/http/client"
     myResponseMarketData "github.com/noknow-hub/pkg-go/binance/response/v3/market_data"
@@ -31,8 +29,8 @@ func NewClient() *Client {
 //////////////////////////////////////////////////////////////////////
 // Symbol Price Ticker
 //////////////////////////////////////////////////////////////////////
-func (c *Client) v3TickerPrice(symbol string) (*myHttpClient.Response, *myResponseMarketData.TickerPrice, error) {
-    httpClient := myHttpClient.NewClient(c.EndpointUrl)
+func (c *Client) TickerPrice(symbol string) (*myHttpClient.Response, *myResponseMarketData.TickerPrice, error) {
+    httpClient := myHttpClient.NewClient(myConstant.API_BASE_URL + myConstant.API_V3_TICKER_PRICE)
     httpClient.Config.AddUrlQueryData(SYMBOL, symbol)
     resp, err := httpClient.Get()
     if err != nil {
@@ -50,8 +48,8 @@ func (c *Client) v3TickerPrice(symbol string) (*myHttpClient.Response, *myRespon
 //////////////////////////////////////////////////////////////////////
 // Symbol Price Ticker All
 //////////////////////////////////////////////////////////////////////
-func (c *Client) v3TickerPriceAll() (int, []*myResponseMarketData.TickerPrice, error) {
-    httpClient := myHttpClient.NewClient(c.EndpointUrl)
+func (c *Client) TickerPriceAll() (*myHttpClient.Response, []*myResponseMarketData.TickerPrice, error) {
+    httpClient := myHttpClient.NewClient(myConstant.API_BASE_URL + myConstant.API_V3_TICKER_PRICE)
     resp, err := httpClient.Get()
     if err != nil {
         return resp, nil, err

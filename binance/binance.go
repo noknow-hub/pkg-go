@@ -4,8 +4,13 @@
 package binance
 
 import (
-
+    myV3MarketData "github.com/noknow-hub/pkg-go/binance/request/v3/market_data"
 )
 
 
-
+//////////////////////////////////////////////////////////////////////
+// New client for "v3 > Market Data"
+//////////////////////////////////////////////////////////////////////
+func NewClientV3MarketData() *myV3MarketData.Client {
+    return myV3MarketData.NewClient()
+}

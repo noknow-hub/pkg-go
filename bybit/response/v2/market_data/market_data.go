@@ -32,8 +32,8 @@ type LatestInformation struct {
     OpenValue string               `json:"open_value"`
     TotalTurnover string           `json:"total_turnover"`
     Turnover_24h string            `json:"turnover_24h"`
-    TotalVolume string             `json:"total_volume"`
-    Volume24h string               `json:"volume_24h"`
+    TotalVolume int                `json:"total_volume"`
+    Volume24h int                  `json:"volume_24h"`
     FundingRate string             `json:"funding_rate"`
     PredictedFundingRate string    `json:"predicted_funding_rate"`
     NextFundingTime string         `json:"next_funding_time"`

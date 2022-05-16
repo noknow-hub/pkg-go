@@ -28,12 +28,12 @@ type LatestInformation struct {
     Price1hPcnt string             `json:"price_1h_pcnt"`
     MarkPrice string               `json:"mark_price"`
     IndexPrice string              `json:"index_price"`
-    OpenInterest int               `json:"open_interest"`
+    OpenInterest float64           `json:"open_interest"`
     OpenValue string               `json:"open_value"`
     TotalTurnover string           `json:"total_turnover"`
     Turnover_24h string            `json:"turnover_24h"`
-    TotalVolume int                `json:"total_volume"`
-    Volume24h int                  `json:"volume_24h"`
+    TotalVolume float64            `json:"total_volume"`
+    Volume24h float64              `json:"volume_24h"`
     FundingRate string             `json:"funding_rate"`
     PredictedFundingRate string    `json:"predicted_funding_rate"`
     NextFundingTime string         `json:"next_funding_time"`

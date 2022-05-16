@@ -37,7 +37,7 @@ type LatestInformation struct {
     FundingRate string             `json:"funding_rate"`
     PredictedFundingRate string    `json:"predicted_funding_rate"`
     NextFundingTime string         `json:"next_funding_time"`
-    CountdownHour string           `json:"countdown_hour"`
+    CountdownHour float64          `json:"countdown_hour"`
     DeliveryFeeRate string         `json:"delivery_fee_rate"`
     PredictedDeliveryPrice string  `json:"predicted_delivery_price"`
     DeliveryTime string            `json:"delivery_time"`

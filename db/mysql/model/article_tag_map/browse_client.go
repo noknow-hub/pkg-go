@@ -152,6 +152,18 @@ func (c *BrowseClient) Run() ([]*ArticleTagMap, *myQuery.SelectResult, error) {
 
 
 //////////////////////////////////////////////////////////////////////
+// Count.
+//////////////////////////////////////////////////////////////////////
+func (c *BrowseClientWithArticleAndTag) Count() (int64, *myQuery.SelectResultCount, error) {
+    c.BaseClient.
+        AppendInnerJoinTables(c.BaseClient.TableName, COL_ARTICLE_ID, c.RefArticleTable, nkwMysqlModelArticle.COL_ID).
+        AppendInnerJoinTables(c.BaseClient.TableName, COL_TAG_ID, c.RefTagTable, nkwMysqlModelTag.COL_ID)
+    resultCount, err := c.BaseClient.Count()
+    return resultCount.Count, resultCount, err
+}
+
+
+//////////////////////////////////////////////////////////////////////
 // Run with INNER JOIN article and tag.
 //////////////////////////////////////////////////////////////////////
 func (c *BrowseClientWithArticleAndTag) Run() ([]*ArticleTagMapWithArticleAndTag, *myQuery.SelectResult, error) {

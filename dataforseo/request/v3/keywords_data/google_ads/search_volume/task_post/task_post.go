@@ -21,7 +21,7 @@ var (
     NumOfApiCalls = 0
     LastCalledAt time.Time
     ApiCallQueues []time.Time
-    reg = regexp.MustCompile("[!！@＠%％^＾()（）=＝{};；：~〜`｀<>＜＞?？\\|｜,、，。…．Ⅱ⇨:ｦ-ﾝ○※＊「」［］【】｛｝‘’“”〈〉〔〕《》*🟡]")
+    Reg = regexp.MustCompile("[!！@＠%％^＾()（）=＝{};；：~〜`｀<>＜＞?？\\|｜,、，。…．Ⅱ⇨:ｦ-ﾝ○※＊「」［］【】｛｝‘’“”〈〉〔〕《》*🟡×]")
 )
 
 type Client struct {
@@ -167,10 +167,18 @@ func OptData(datas []*Data) []*Data {
 
 
 //////////////////////////////////////////////////////////////////////
+// Optimize keyword.
+//////////////////////////////////////////////////////////////////////
+func OptimazeKeyword(keyword string) string {
+    return Reg.ReplaceAllString(keyword, " ")
+}
+
+
+//////////////////////////////////////////////////////////////////////
 // Valid keyword.
 //////////////////////////////////////////////////////////////////////
 func ValidKeyword(keyword string) bool {
-    return !reg.MatchString(keyword)
+    return !Reg.MatchString(keyword)
 }
 
 

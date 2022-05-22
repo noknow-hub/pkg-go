@@ -6,6 +6,7 @@ package task_post
 import (
     "encoding/json"
     "regexp"
+    "strings"
     "time"
     myAuthentication "github.com/noknow-hub/pkg-go/dataforseo/authentication"
     myConstant "github.com/noknow-hub/pkg-go/dataforseo/constant"
@@ -170,7 +171,14 @@ func OptData(datas []*Data) []*Data {
 // Optimize keyword.
 //////////////////////////////////////////////////////////////////////
 func OptimazeKeyword(keyword string) string {
-    return Reg.ReplaceAllString(keyword, " ")
+    s := Reg.ReplaceAllString(keyword, " ")
+    ss := strings.Split(s, " ")
+    if len(ss) > myConstant.LIMIT_NUM_OF_WARDS_PER_REQ_FOR_KEYWORDS_DATA_GOOGLE_ADS_SEARCH_VOLUME_TASK_POST_V3 {
+        s = strings.Join(ss[:myConstant.LIMIT_NUM_OF_WARDS_PER_REQ_FOR_KEYWORDS_DATA_GOOGLE_ADS_SEARCH_VOLUME_TASK_POST_V3], " ")
+    } else {
+        s = strings.Join(ss, " ")
+    }
+    return s
 }
 
 

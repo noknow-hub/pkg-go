@@ -22,7 +22,7 @@ var (
     NumOfApiCalls = 0
     LastCalledAt time.Time
     ApiCallQueues []time.Time
-    Reg = regexp.MustCompile("[!！@＠%％^＾()（）=＝{};；：~〜～`｀<>＜＞?？\\|｜,、，。…．Ⅱ⇨:ｦ-ﾝ○※＊「」｣［］【】｛｝‘’“”〈〉〔〕《》*🟡×『』－]")
+    Reg = regexp.MustCompile("[!！@＠%％^＾()（）=＝{};；：~〜～`｀<>＜＞?？\\|｜,、，。…．Ⅱ⇨:ｦ-ﾝ○※＊「」｣［］【】｛｝‘’“”〈〉〔〕《》*🟡×『』－〇]")
 )
 
 type Client struct {

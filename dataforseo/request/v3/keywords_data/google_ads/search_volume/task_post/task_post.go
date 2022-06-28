@@ -23,8 +23,8 @@ var (
     LastCalledAt time.Time
     ApiCallQueues []time.Time
     NewLineReg = regexp.MustCompile(`\r?\n`)
-    NewLineReg2 = regexp.MustCompile("\\r")
-    NewLineReg3 = regexp.MustCompile("\\n")
+    NewLineReg2 = regexp.MustCompile("\\r|\\n")
+    NewLineReg3 = regexp.MustCompile("\\\\r|\\\\n")
     Reg = regexp.MustCompile("[!！@＠%％^＾()（）=＝{};；：~〜～`｀<>＜＞?？\\|｜,、，。…．Ⅱ⇨:ｦ-ﾝ○※＊「」｣［］【】｛｝‘’“”〈〉〔〕《》*🟡×『』－〇]")
 )
 

@@ -23,6 +23,7 @@ var (
     LastCalledAt time.Time
     ApiCallQueues []time.Time
     NewLineReg = regexp.MustCompile(`\r?\n`)
+    NewLineReg2 = regexp.MustCompile("[\\r|\\n]")
     Reg = regexp.MustCompile("[!！@＠%％^＾()（）=＝{};；：~〜～`｀<>＜＞?？\\|｜,、，。…．Ⅱ⇨:ｦ-ﾝ○※＊「」｣［］【】｛｝‘’“”〈〉〔〕《》*🟡×『』－〇]")
 )
 
@@ -173,6 +174,7 @@ func OptData(datas []*Data) []*Data {
 //////////////////////////////////////////////////////////////////////
 func OptimazeKeyword(keyword string) string {
     s := NewLineReg.ReplaceAllString(keyword, " ")
+    s = NewLineReg2.ReplaceAllString(s, " ")
     s = Reg.ReplaceAllString(s, " ")
     ss := strings.Split(s, " ")
     if len(ss) > myConstant.LIMIT_NUM_OF_WARDS_PER_REQ_FOR_KEYWORDS_DATA_GOOGLE_ADS_SEARCH_VOLUME_TASK_POST_V3 {
@@ -188,7 +190,7 @@ func OptimazeKeyword(keyword string) string {
 // Valid keyword.
 //////////////////////////////////////////////////////////////////////
 func ValidKeyword(keyword string) bool {
-    return !Reg.MatchString(keyword) && !NewLineReg.MatchString(keyword)
+    return !Reg.MatchString(keyword) && !NewLineReg.MatchString(keyword) && !NewLineReg2.MatchString(keyword)
 }
 
 

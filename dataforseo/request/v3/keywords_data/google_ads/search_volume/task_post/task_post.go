@@ -22,7 +22,8 @@ var (
     NumOfApiCalls = 0
     LastCalledAt time.Time
     ApiCallQueues []time.Time
-    Reg = regexp.MustCompile("[\\r\\n!！@＠%％^＾()（）=＝{};；：~〜～`｀<>＜＞?？\\|｜,、，。…．Ⅱ⇨:ｦ-ﾝ○※＊「」｣［］【】｛｝‘’“”〈〉〔〕《》*🟡×『』－〇]")
+    NewLineReg = regexp.MustCompile(`\r?\n`)
+    Reg = regexp.MustCompile("[!！@＠%％^＾()（）=＝{};；：~〜～`｀<>＜＞?？\\|｜,、，。…．Ⅱ⇨:ｦ-ﾝ○※＊「」｣［］【】｛｝‘’“”〈〉〔〕《》*🟡×『』－〇]")
 )
 
 type Client struct {
@@ -171,7 +172,8 @@ func OptData(datas []*Data) []*Data {
 // Optimize keyword.
 //////////////////////////////////////////////////////////////////////
 func OptimazeKeyword(keyword string) string {
-    s := Reg.ReplaceAllString(keyword, " ")
+    s := NewLineReg.ReplaceAllString(keyword, " ")
+    s = Reg.ReplaceAllString(s, " ")
     ss := strings.Split(s, " ")
     if len(ss) > myConstant.LIMIT_NUM_OF_WARDS_PER_REQ_FOR_KEYWORDS_DATA_GOOGLE_ADS_SEARCH_VOLUME_TASK_POST_V3 {
         s = strings.Join(ss[:myConstant.LIMIT_NUM_OF_WARDS_PER_REQ_FOR_KEYWORDS_DATA_GOOGLE_ADS_SEARCH_VOLUME_TASK_POST_V3], " ")
@@ -186,7 +188,7 @@ func OptimazeKeyword(keyword string) string {
 // Valid keyword.
 //////////////////////////////////////////////////////////////////////
 func ValidKeyword(keyword string) bool {
-    return !Reg.MatchString(keyword)
+    return !Reg.MatchString(keyword) && !NewLineReg.MatchString(keyword)
 }
 
 

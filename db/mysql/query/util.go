@@ -748,19 +748,11 @@ func (wc *WhereCondition) appendAnd(column string, value interface{}, likeFlag, 
 //////////////////////////////////////////////////////////////////////
 // Append AND BETWEEN clause.
 //////////////////////////////////////////////////////////////////////
-func (wc *WhereCondition) appendAndBetween(column string, betweenStart, betweenEnd string, likeFlag, inFlag, lessThanFlag, lessThanOrEqualToFlag, greaterThanFlag, greaterThanOrEqualToFlag, equalToFlag, notEqualToFlag bool) {
+func (wc *WhereCondition) AppendAndBetween(column string, betweenStart, betweenEnd string) {
     wc.And = append(wc.And, &WhereConditionParam{
         BetweenEnd: betweenEnd,
         BetweenStart: betweenStart,
         Column: column,
-        LikeFlag: likeFlag,
-        InFlag: inFlag,
-        LessThanFlag: lessThanFlag,
-        LessThanOrEqualToFlag: lessThanOrEqualToFlag,
-        GreaterThanFlag: greaterThanFlag,
-        GreaterThanOrEqualToFlag: greaterThanOrEqualToFlag,
-        EqualToFlag: equalToFlag,
-        NotEqualToFlag: notEqualToFlag,
     })
 }
 

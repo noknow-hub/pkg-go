@@ -52,6 +52,8 @@ type JoinCondition struct {
 }
 
 type WhereConditionParam struct {
+    BetweenEnd string
+    BetweenStart string
     Column string
     Value interface{}
     LikeFlag bool
@@ -436,10 +438,15 @@ func GenerateQueryForWhere(wc *WhereCondition) (string, []interface{}) {
                     buf = append(buf, " AND " + param.Column + " = ?"...)
                 } else if param.NotEqualToFlag {
                     buf = append(buf, " AND " + param.Column + " != ?"...)
+                } else if param.BetweenStart != "" && param.BetweenEnd != "" {
+                    buf = append(buf, " AND " + param.Column + " BETWEEN ? AND ?"...)
                 } else {
                     buf = append(buf, " AND " + param.Column + " = ?"...)
                 }
-                if !param.InFlag {
+                if param.BetweenStart != "" && param.BetweenEnd != "" { 
+                    args = append(args, param.BetweenStart)
+                    args = append(args, param.BetweenEnd)
+                } else if !param.InFlag {
                     args = append(args, param.Value)
                 }
             }
@@ -726,6 +733,26 @@ func (wc *WhereCondition) appendAnd(column string, value interface{}, likeFlag, 
     wc.And = append(wc.And, &WhereConditionParam{
         Column: column,
         Value: value,
+        LikeFlag: likeFlag,
+        InFlag: inFlag,
+        LessThanFlag: lessThanFlag,
+        LessThanOrEqualToFlag: lessThanOrEqualToFlag,
+        GreaterThanFlag: greaterThanFlag,
+        GreaterThanOrEqualToFlag: greaterThanOrEqualToFlag,
+        EqualToFlag: equalToFlag,
+        NotEqualToFlag: notEqualToFlag,
+    })
+}
+
+
+//////////////////////////////////////////////////////////////////////
+// Append AND BETWEEN clause.
+//////////////////////////////////////////////////////////////////////
+func (wc *WhereCondition) appendAndBetween(column string, betweenStart, betweenEnd string, likeFlag, inFlag, lessThanFlag, lessThanOrEqualToFlag, greaterThanFlag, greaterThanOrEqualToFlag, equalToFlag, notEqualToFlag bool) {
+    wc.And = append(wc.And, &WhereConditionParam{
+        BetweenEnd: betweenEnd,
+        BetweenStart: betweenStart,
+        Column: column,
         LikeFlag: likeFlag,
         InFlag: inFlag,
         LessThanFlag: lessThanFlag,

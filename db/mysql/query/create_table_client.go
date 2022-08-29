@@ -50,9 +50,9 @@ type Constraint struct {
     RefTableName string
     RefTblColName string
     OnDelete bool
-    OnDeleteSetNull bool
     OnUpdate bool
-    OnUpdateSetNull bool
+    RefActionForDelete string
+    RefActionForUpdate string
 }
 
 type CreateTableResult struct {
@@ -123,6 +123,39 @@ func NewColumnDefinition(colName, dataType string) *ColumnDefinition {
         ColName: colName,
         DataType: dataType,
     }
+}
+
+
+//////////////////////////////////////////////////////////////////////
+// New Constraint.
+//////////////////////////////////////////////////////////////////////
+func NewConstraint(symbol, foreignKey, refTableName, refTableColName string) *Constraint {
+    return &Constraint{
+        Symbol: symbol,
+        ForeignKey: foreignKey,
+        RefTableName: refTableName,
+        RefTblColName: refTableColName,
+    }
+}
+
+
+func (c *Constraint) SetOnDeleteCascade() *Constraint {
+    c.RefActionForDelete = "ON DELETE CASCADE"
+}
+
+
+func (c *Constraint) SetOnDeleteSetNull() *Constraint {
+    c.RefActionForDelete = "ON DELETE SET NULL"
+}
+
+
+func (c *Constraint) SetOnUpdateCascade() *Constraint {
+    c.RefActionForUpdate = "ON UPDATE CASCADE"
+}
+
+
+func (c *Constraint) SetOnUpdateSetNull() *Constraint {
+    c.RefActionForUpdate = "ON UPDATE SET NULL"
 }
 
 
@@ -308,12 +341,16 @@ func (c *CreateTableClient) generateQuery() string {
             }
             buf = append(buf, " FOREIGN KEY (" + c.ForeignKey + ")"...)
             buf = append(buf, " REFERENCES " + c.RefTableName + " (" + c.RefTblColName + ")"...)
-            if c.OnDelete && c.OnDeleteSetNull {
+            if c.RefActionForDelete != "" {
+                buf = append(buf, " " + c.RefActionForDelete...)
+            } else if c.OnDelete && c.OnDeleteSetNull {
                 buf = append(buf, " ON DELETE SET NULL"...)
             } else if c.OnDelete {
                 buf = append(buf, " ON DELETE CASCADE"...)
             }
-            if c.OnUpdate && c.OnUpdateSetNull {
+            if c.RefActionForUpdate != "" {
+                buf = append(buf, " " + c.RefActionForUpdate...)
+            } else if c.OnUpdate && c.OnUpdateSetNull {
                 buf = append(buf, " ON UPDATE SET NULL"...)
             } else if c.OnUpdate {
                 buf = append(buf, " ON UPDATE CASCADE"...)

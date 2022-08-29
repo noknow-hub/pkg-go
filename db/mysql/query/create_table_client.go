@@ -50,7 +50,9 @@ type Constraint struct {
     RefTableName string
     RefTblColName string
     OnDelete bool
+    OnDeleteSetNull bool
     OnUpdate bool
+    OnUpdateSetNull bool
 }
 
 type CreateTableResult struct {
@@ -242,6 +244,23 @@ func (c *CreateTableClient) SetUniqueKeys(uniqueKeys []string) *CreateTableClien
 
 
 //////////////////////////////////////////////////////////////////////
+// Set ON DELETE SET NULL
+//////////////////////////////////////////////////////////////////////
+func (c *CreateTableClient) SetOnDeleteSetNull() *CreateTableClient {
+    c.OnDeleteSetNull = true
+}
+
+
+//////////////////////////////////////////////////////////////////////
+// Set ON UPDATE SET NULL
+//////////////////////////////////////////////////////////////////////
+func (c *CreateTableClient) SetOnUpdateSetNull() *CreateTableClient {
+    c.OnUpdateSetNull = true
+}
+
+
+
+//////////////////////////////////////////////////////////////////////
 // Generate query.
 //////////////////////////////////////////////////////////////////////
 func (c *CreateTableClient) generateQuery() string {
@@ -289,10 +308,14 @@ func (c *CreateTableClient) generateQuery() string {
             }
             buf = append(buf, " FOREIGN KEY (" + c.ForeignKey + ")"...)
             buf = append(buf, " REFERENCES " + c.RefTableName + " (" + c.RefTblColName + ")"...)
-            if c.OnDelete {
+            if c.OnDelete && c.OnDeleteSetNull {
+                buf = append(buf, " ON DELETE SET NULL"...)
+            } else if c.OnDelete {
                 buf = append(buf, " ON DELETE CASCADE"...)
             }
-            if c.OnUpdate {
+            if c.OnUpdate && c.OnUpdateSetNull {
+                buf = append(buf, " ON UPDATE SET NULL"...)
+            } else if c.OnUpdate {
                 buf = append(buf, " ON UPDATE CASCADE"...)
             }
         }

@@ -141,21 +141,25 @@ func NewConstraint(symbol, foreignKey, refTableName, refTableColName string) *Co
 
 func (c *Constraint) SetOnDeleteCascade() *Constraint {
     c.RefActionForDelete = "ON DELETE CASCADE"
+    return c
 }
 
 
 func (c *Constraint) SetOnDeleteSetNull() *Constraint {
     c.RefActionForDelete = "ON DELETE SET NULL"
+    return c
 }
 
 
 func (c *Constraint) SetOnUpdateCascade() *Constraint {
     c.RefActionForUpdate = "ON UPDATE CASCADE"
+    return c
 }
 
 
 func (c *Constraint) SetOnUpdateSetNull() *Constraint {
     c.RefActionForUpdate = "ON UPDATE SET NULL"
+    return c
 }
 
 
@@ -171,6 +175,15 @@ func (c *CreateTableClient) AppendConstraint(symbol, foreignKey, refTableName, r
         OnDelete: onDelete,
         OnUpdate: onUpdate,
     })
+    return c
+}
+
+
+//////////////////////////////////////////////////////////////////////
+// Append constraint by object.
+//////////////////////////////////////////////////////////////////////
+func (c *CreateTableClient) AppendConstraintByObject(constraint *Constraint) *CreateTableClient {
+    c.Constraints = append(c.Constraints, constraint)
     return c
 }
 

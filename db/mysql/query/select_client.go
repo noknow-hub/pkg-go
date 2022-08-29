@@ -341,7 +341,19 @@ func (c *SelectClient) generateQueryForCount() (string, []interface{}) {
     buf := make([]byte, 0)
 
     // SELECT
-    buf = append(buf, "SELECT COUNT(*) FROM " + c.TableName...)
+    if len(c.Columns) == 0 {
+        buf = append(buf, "SELECT COUNT(*) FROM " + c.TableName...)
+    } else {
+        var cols []string
+        for _, col := range c.Columns {
+            if !strings.Contains(col, "*") && strings.Contains(col, ".") && !strings.Contains(strings.ToUpper(col), "AS") {
+                cols = append(cols, col + " AS " + col)
+            } else {
+                cols = append(cols, col)
+            }
+        }
+        buf = append(buf, "SELECT COUNT(" + strings.Join(cols, ",") + ") FROM " + c.TableName...)
+    }
 
     // INNER JOIN
     if tmpBuf, tmpArgs := GenerateQueryForInnerJoin(c.InnerJoinTables, c.JoinCondition); tmpBuf != "" {

@@ -57,6 +57,7 @@ const (
     COUNTRY_CODE_BW = "bw"  // Botswana
     COUNTRY_CODE_BY = "by"  // Belarus
     COUNTRY_CODE_BZ = "bz"  // Belize
+    COUNTRY_CODE_CA = "ca"  // Canada
     COUNTRY_CODE_FR = "fr"  // France
     COUNTRY_CODE_IE = "ie"  // Ireland
     COUNTRY_CODE_IN = "in"  // India

@@ -18,7 +18,7 @@ type ReqData struct {
     Id int              `json:"id"`
     Method string       `json:"method"`
     JsonRpc string      `json:"jsonrpc"`
-    Params string       `json:"params"`
+    Params []byte       `json:"params"`
 }
 
 

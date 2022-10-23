@@ -18,8 +18,7 @@ type ReqData struct {
     Id int              `json:"id"`
     Method string       `json:"method"`
     JsonRpc string      `json:"jsonrpc"`
-    Params interface{}  `json:"params"`
-    JsonStrParams []byte
+    Params string       `json:"params"`
 }
 
 
@@ -38,11 +37,11 @@ func GetReqDataFromJsonRequest(r *http.Request) (*ReqData, error) {
     if err := json.Unmarshal(body, &reqData); err != nil {
         return nil, err
     }
-    jsonStr, err := json.Marshal(reqData.Params)
-    if err != nil {
-        return nil, err
-    }
-    reqData.JsonStrParams = jsonStr
+//    jsonStr, err := json.Marshal(reqData.Params)
+//    if err != nil {
+//        return nil, err
+//    }
+//    reqData.JsonStrParams = jsonStr
     return reqData, nil
 }
 

@@ -5,10 +5,46 @@ package account
 
 import (
     "errors"
+    "regexp"
     "strings"
     myUtil "github.com/noknow-hub/pkg-go/db/mysql/util"
     myQuery "github.com/noknow-hub/pkg-go/db/mysql/query"
 )
+
+
+//////////////////////////////////////////////////////////////////////
+// Validate COL_EMAIL
+//////////////////////////////////////////////////////////////////////
+func ValidateEmail(email string, isRequired bool) bool {
+    if !isRequired && email == "" {
+        return true
+    }
+    emailReg := regexp.MustCompile("^[a-zA-Z0-9.!#$%&'*+\\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$")
+    if isRequired && email == "" {
+        return false
+    } else if len(email) > 191 {
+        return false
+    } else if !emailRegex.MatchString(email) {
+        return false
+    }
+    return true
+}
+
+
+//////////////////////////////////////////////////////////////////////
+// Validate COL_PASSWORD
+//////////////////////////////////////////////////////////////////////
+func ValidatePassword(password string, isRequired bool) bool {
+    if !isRequired && password == "" {
+        return true
+    }
+    if isRequired && password == "" {
+        return false
+    } else if len(password) > 255 {
+        return false
+    }
+    return true
+}
 
 
 //////////////////////////////////////////////////////////////////////
@@ -169,3 +205,5 @@ func scanAccount(row *myQuery.Row, account *Account) error {
     }
     return nil
 }
+
+

@@ -227,10 +227,10 @@ func (c *AddClient) RunWithRequired(id, email string) (*myQuery.InsertResult, er
 //////////////////////////////////////////////////////////////////////
 // Run with values.
 //////////////////////////////////////////////////////////////////////
-func (c *AddClient) RunWithValues(values []*AddEditValues) (*myQuery.InsertResult, error) {
+func (c *AddClient) RunWithValues(valuesList []*AddEditValues) (*myQuery.InsertResult, error) {
     c.BaseClient.SetColNames([]string{COL_ID,COL_EMAIL,COL_STATUS,COL_NICKNAME,COL_FIRST_NAME,COL_LAST_NAME,COL_MIDDLE_NAME,COL_NATIONALITY_CODE,COL_PHONE_NUMBER,COL_AGE,COL_GENDER,COL_BIRTHDAY,COL_BIOGRAPHY,COL_PASSWORD,COL_PUBLISHABLE_TOKEN,COL_SECRET_TOKEN,COL_ADDRESS_COUNTRY_CODE,COL_ADDRESS_POSTAL_CODE,COL_ADDRESS_CITY,COL_ADDRESS,COL_ADDRESS_OPTION,COL_LAST_LOGGED_IN})
 
-    for _, o := range values {
+    for _, o := range valuesList {
         var vals []interface{}
         if o.Id != nil {
             vals = append(vals, *o.Id)

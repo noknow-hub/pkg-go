@@ -72,3 +72,28 @@ type Account struct {
     CreatedAt time.Time
     UpdatedAt time.Time
 }
+
+type AddEditValues struct {
+    Id *string
+    Email *string
+    Status *string
+    NickName *string
+    FirstName *string
+    LastName *string
+    MiddleName *string
+    NationalityCode *string
+    PhoneNumber *string
+    Age *string
+    Gender *string
+    Birthday *time.Time
+    Biography *string
+    Password *string
+    PublishableToken *string
+    SecretToken *string
+    AddressCountryCode *string
+    AddressPostalCode *string
+    AddressCity *string
+    Address *string
+    AddressOption *string
+    LastLoggedIn *time.Time
+}

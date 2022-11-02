@@ -216,9 +216,134 @@ func (o *AddClient) RunWithAll(id, email string, status, nickName, firstName, la
 //////////////////////////////////////////////////////////////////////
 // Run with required.
 //////////////////////////////////////////////////////////////////////
-func (o *AddClient) RunWithRequired(id, email string) (*myQuery.InsertResult, error) {
-    o.BaseClient.
+func (c *AddClient) RunWithRequired(id, email string) (*myQuery.InsertResult, error) {
+    c.BaseClient.
         SetColNames([]string{COL_ID, COL_EMAIL}).
         AppendValues([]interface{}{id, email})
-    return o.BaseClient.Run()
+    return c.BaseClient.Run()
+}
+
+
+//////////////////////////////////////////////////////////////////////
+// Run with values.
+//////////////////////////////////////////////////////////////////////
+func (c *AddClient) RunWithValues(values []*AddEditValues) (*myQuery.InsertResult, error) {
+    c.BaseClient.SetColNames([]string{COL_ID,COL_EMAIL,COL_STATUS,COL_NICKNAME,COL_FIRST_NAME,COL_LAST_NAME,COL_MIDDLE_NAME,COL_NATIONALITY_CODE,COL_PHONE_NUMBER,COL_AGE,COL_GENDER,COL_BIRTHDAY,COL_BIOGRAPHY,COL_PASSWORD,COL_PUBLISHABLE_TOKEN,COL_SECRET_TOKEN,COL_ADDRESS_COUNTRY_CODE,COL_ADDRESS_POSTAL_CODE,COL_ADDRESS_CITY,COL_ADDRESS,COL_ADDRESS_OPTION,COL_LAST_LOGGED_IN})
+
+    for _, o := range values {
+        var vals []interface{}
+        if o.Id != nil {
+            vals = append(vals, *o.Id)
+        } else {
+            vals = append(vals, sql.NullString{})
+        }
+        if o.Email != nil {
+            vals = append(vals, *o.Email)
+        } else {
+            vals = append(vals, sql.NullString{})
+        }
+        if o.Status != nil {
+            vals = append(vals, *o.Status)
+        } else {
+            vals = append(vals, sql.NullString{})
+        }
+        if o.NickName != nil {
+            vals = append(vals, *o.NickName)
+        } else {
+            vals = append(vals, sql.NullString{})
+        }
+        if o.FirstName != nil {
+            vals = append(vals, *o.FirstName)
+        } else {
+            vals = append(vals, sql.NullString{})
+        }
+        if o.LastName != nil {
+            vals = append(vals, *o.LastName)
+        } else {
+            vals = append(vals, sql.NullString{})
+        }
+        if o.MiddleName != nil {
+            vals = append(vals, *o.MiddleName)
+        } else {
+            vals = append(vals, sql.NullString{})
+        }
+        if o.NationalityCode != nil {
+            vals = append(vals, *o.NationalityCode)
+        } else {
+            vals = append(vals, sql.NullString{})
+        }
+        if o.PhoneNumber != nil {
+            vals = append(vals, *o.PhoneNumber)
+        } else {
+            vals = append(vals, sql.NullString{})
+        }
+        if o.Age != nil {
+            vals = append(vals, *o.Age)
+        } else {
+            vals = append(vals, sql.NullString{})
+        }
+        if o.Gender != nil {
+            vals = append(vals, *o.Gender)
+        } else {
+            vals = append(vals, sql.NullString{})
+        }
+        if o.Birthday != nil {
+            vals = append(vals, *o.Birthday)
+        } else {
+            vals = append(vals, sql.NullTime{})
+        }
+        if o.Biography != nil {
+            vals = append(vals, *o.Biography)
+        } else {
+            vals = append(vals, sql.NullString{})
+        }
+        if o.Password != nil {
+            vals = append(vals, *o.Password)
+        } else {
+            vals = append(vals, sql.NullString{})
+        }
+        if o.PublishableToken != nil {
+            vals = append(vals, *o.PublishableToken)
+        } else {
+            vals = append(vals, sql.NullString{})
+        }
+        if o.SecretToken != nil {
+            vals = append(vals, *o.SecretToken)
+        } else {
+            vals = append(vals, sql.NullString{})
+        }
+        if o.AddressCountryCode != nil {
+            vals = append(vals, *o.AddressCountryCode)
+        } else {
+            vals = append(vals, sql.NullString{})
+        }
+        if o.AddressPostalCode != nil {
+            vals = append(vals, *o.AddressPostalCode)
+        } else {
+            vals = append(vals, sql.NullString{})
+        }
+        if o.AddressCity != nil {
+            vals = append(vals, *o.AddressCity)
+        } else {
+            vals = append(vals, sql.NullString{})
+        }
+        if o.Address != nil {
+            vals = append(vals, *o.Address)
+        } else {
+            vals = append(vals, sql.NullString{})
+        }
+        if o.AddressOption != nil {
+            vals = append(vals, *o.AddressOption)
+        } else {
+            vals = append(vals, sql.NullString{})
+        }
+        if o.LastLoggedIn != nil {
+            vals = append(vals, *o.LastLoggedIn)
+        } else {
+            vals = append(vals, sql.NullTime{})
+        }
+        c.BaseClient.AppendValues(vals)
+    }
+
+    return c.BaseClient.Run()
 }

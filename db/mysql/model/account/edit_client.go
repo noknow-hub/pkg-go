@@ -145,3 +145,80 @@ func (o *EditClient) RunWithAllById(currentId string, id, email, status, nickNam
     o.BaseClient.WhereCondition.SetWhere(COL_ID, currentId)
     return o.BaseClient.Run()
 }
+
+
+//////////////////////////////////////////////////////////////////////
+// Run with values.
+//////////////////////////////////////////////////////////////////////
+func (c *EditClient) RunWithValues(currentId string, values *AddEditValues) (*myQuery.UpdateResult, error) {
+    if values.Id != nil {
+        c.BaseClient.AssignmentList.Append(COL_ID, *values.Id)
+    }
+    if values.Email != nil {
+        c.BaseClient.AssignmentList.Append(COL_EMAIL, *values.Email)
+    }
+    if values.Status != nil {
+        c.BaseClient.AssignmentList.Append(COL_STATUS, *values.Status)
+    }
+    if values.NickName != nil {
+        c.BaseClient.AssignmentList.Append(COL_NICKNAME, *values.NickName)
+    }
+    if values.FirstName != nil {
+        c.BaseClient.AssignmentList.Append(COL_FIRST_NAME, *values.FirstName)
+    }
+    if values.LastName != nil {
+        c.BaseClient.AssignmentList.Append(COL_LAST_NAME, *values.LastName)
+    }
+    if values.MiddleName != nil {
+        c.BaseClient.AssignmentList.Append(COL_MIDDLE_NAME, *values.MiddleName)
+    }
+    if values.NationalityCode != nil {
+        c.BaseClient.AssignmentList.Append(COL_NATIONALITY_CODE, *values.NationalityCode)
+    }
+    if values.PhoneNumber != nil {
+        c.BaseClient.AssignmentList.Append(COL_PHONE_NUMBER, *values.PhoneNumber)
+    }
+    if values.Age != nil {
+        c.BaseClient.AssignmentList.Append(COL_AGE, *values.Age)
+    }
+    if values.Gender != nil {
+        c.BaseClient.AssignmentList.Append(COL_GENDER, *values.Gender)
+    }
+    if values.Birthday != nil {
+        c.BaseClient.AssignmentList.Append(COL_BIRTHDAY, *values.Birthday)
+    }
+    if values.Biography != nil {
+        c.BaseClient.AssignmentList.Append(COL_BIOGRAPHY, *values.Biography)
+    }
+    if values.Password != nil {
+        c.BaseClient.AssignmentList.Append(COL_PASSWORD, *values.Password)
+    }
+    if values.PublishableToken != nil {
+        c.BaseClient.AssignmentList.Append(COL_PUBLISHABLE_TOKEN, *values.PublishableToken)
+    }
+    if values.SecretToken != nil {
+        c.BaseClient.AssignmentList.Append(COL_SECRET_TOKEN, *values.SecretToken)
+    }
+    if values.AddressCountryCode != nil {
+        c.BaseClient.AssignmentList.Append(COL_ADDRESS_COUNTRY_CODE, *values.AddressCountryCode)
+    }
+    if values.AddressPostalCode != nil {
+        c.BaseClient.AssignmentList.Append(COL_ADDRESS_POSTAL_CODE, *values.AddressPostalCode)
+    }
+    if values.AddressCity != nil {
+        c.BaseClient.AssignmentList.Append(COL_ADDRESS_CITY, *values.AddressCity)
+    }
+    if values.Address != nil {
+        c.BaseClient.AssignmentList.Append(COL_ADDRESS, *values.Address)
+    }
+    if values.AddressOption != nil {
+        c.BaseClient.AssignmentList.Append(COL_ADDRESS_OPTION, *values.AddressOption)
+    }
+    if values.LastLoggedIn != nil {
+        c.BaseClient.AssignmentList.Append(COL_LAST_LOGGED_IN, *values.LastLoggedIn)
+    }
+    
+    
+    c.BaseClient.WhereCondition.SetWhere(COL_ID, currentId)
+    return c.BaseClient.Run()
+}

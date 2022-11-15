@@ -327,13 +327,7 @@ func (c *SmtpClient) Send() error {
     }
 
     // From.
-    var from string
-    if c.FromName == "" {
-        from = c.FromEmail
-    } else {
-        from = "\"" + c.FromName + "\" <" + c.FromEmail + ">"
-    }
-    if err = sc.Mail(from); err != nil {
+    if err = sc.Mail(c.FromEmail); err != nil {
         return err
     }
 
@@ -366,6 +360,12 @@ func (c *SmtpClient) Send() error {
     body := make([]byte, 0)
 
     // Header.
+    var from string
+    if c.FromName == "" {
+        from = c.FromEmail
+    } else {
+        from = c.FromName + " <" + c.FromEmail + ">"
+    }
     body = append(body, "From: " + from + "\r\n"...)
     body = append(body, "To: " + strings.Join(c.To, ",") + "\r\n"...)
     if len(c.Cc) > 0 {

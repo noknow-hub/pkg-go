@@ -331,7 +331,7 @@ func (c *SmtpClient) Send() error {
     if c.FromName == "" {
         from = c.FromEmail
     } else {
-        from = c.FromName + " <" + c.FromEmail + ">"
+        from = "\"" + c.FromName + "\" <" + c.FromEmail + ">"
     }
     if err = sc.Mail(from); err != nil {
         return err

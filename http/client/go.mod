@@ -1,3 +1,3 @@
 module github.com/noknow-hub/pkg-go/http/client
 
-go 1.15
+go 1.18

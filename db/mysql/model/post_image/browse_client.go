@@ -147,7 +147,7 @@ func (o *BrowseClientWithPost) QueryRow() (*myQuery.SelectResultQueryRow, error)
 //////////////////////////////////////////////////////////////////////
 // Run with INNER JOIN.
 //////////////////////////////////////////////////////////////////////
-func (c *BrowseClientWithPost) RunInJoin() ([]*PostImageWithPost, *myQuery.SelectResult, error) {
+func (c *BrowseClientWithPost) Run() ([]*PostImageWithPost, *myQuery.SelectResult, error) {
     var postImages []*PostImageWithPost
     c.BaseClient.AppendInnerJoinTables(c.BaseClient.TableName, COL_POST_ID, c.RefPostTableName, nkwMysqlModelPost.COL_ID)
     result, err := c.BaseClient.Run()

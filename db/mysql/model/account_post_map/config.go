@@ -10,7 +10,7 @@ import (
 
 const (
     COL_ACCOUNT_ID = "account_id"
-    COL_POST_ID = "lang_code"
+    COL_POST_ID = "post_id"
     NUM_COLS = 2
     TABLE_NAME = "account_post_map"
 )

@@ -100,7 +100,7 @@ func (c *AddClient) RunWithValues(valuesList []*AddEditValues) (*myQuery.InsertR
         if o.Status != nil {
             vals = append(vals, *o.Status)
         } else {
-            vals = append(vals, sql.NullString{})
+            vals = append(vals, VAL_STATUS_PUBLIC)
         }
         if o.Type != nil {
             vals = append(vals, *o.Type)

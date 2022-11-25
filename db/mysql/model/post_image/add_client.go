@@ -6,6 +6,7 @@ package post_image
 import (
     "context"
     "database/sql"
+    "time"
     _ "github.com/go-sql-driver/mysql"
     myQuery "github.com/noknow-hub/pkg-go/db/mysql/query"
 )
@@ -143,7 +144,7 @@ func (c *AddClient) RunWithValues(valuesList []*AddEditValues) (*myQuery.InsertR
         if o.CreatedAt != nil {
             vals = append(vals, *o.CreatedAt)
         } else {
-            vals = append(vals, sql.NullTime{})
+            vals = append(vals, time.Now().UTC().Format("2006-01-02 15:04:05"))
         }
         c.BaseClient.AppendValues(vals)
     }

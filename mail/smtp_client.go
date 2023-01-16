@@ -388,16 +388,16 @@ func (c *SmtpClient) Send() error {
     }
     if c.BodyText != nil {
         if c.BodyHtml != nil && c.BodyText != nil {
-            body = append(body, "--" + alternativeBoundary + "\r\nContent-Type: " + c.BodyText.ContentType + "; charset=\"" + c.BodyText.Charset + "\"\r\n" + c.BodyText.Data + "\r\n"...)
+            body = append(body, "--" + alternativeBoundary + "\r\nContent-Type: " + c.BodyText.ContentType + "; charset=\"" + c.BodyText.Charset + "\"\r\n\r\n" + c.BodyText.Data + "\r\n"...)
         } else {
-            body = append(body, "Content-Type: " + c.BodyText.ContentType + "; charset=\"" + c.BodyText.Charset + "\"\r\n" + c.BodyText.Data + "\r\n"...)
+            body = append(body, "Content-Type: " + c.BodyText.ContentType + "; charset=\"" + c.BodyText.Charset + "\"\r\n\r\n" + c.BodyText.Data + "\r\n"...)
         }
     }
     if c.BodyHtml != nil {
         if c.BodyHtml != nil && c.BodyText != nil {
-            body = append(body, "--" + alternativeBoundary + "\r\nContent-Type: " + c.BodyHtml.ContentType + "; charset=\"" + c.BodyHtml.Charset + "\"\r\n" + c.BodyHtml.Data + "\r\n"...)
+            body = append(body, "--" + alternativeBoundary + "\r\nContent-Type: " + c.BodyHtml.ContentType + "; charset=\"" + c.BodyHtml.Charset + "\"\r\n\r\n" + c.BodyHtml.Data + "\r\n"...)
         } else {
-            body = append(body, "Content-Type: " + c.BodyHtml.ContentType + "; charset=\"" + c.BodyHtml.Charset + "\"\r\n" + c.BodyHtml.Data + "\r\n"...)
+            body = append(body, "Content-Type: " + c.BodyHtml.ContentType + "; charset=\"" + c.BodyHtml.Charset + "\"\r\n\r\n" + c.BodyHtml.Data + "\r\n"...)
         }
     }
     if c.BodyHtml != nil && c.BodyText != nil {
@@ -407,7 +407,7 @@ func (c *SmtpClient) Send() error {
         for _, attachment := range c.Attachments {
             body = append(body, "--" + mixedBoundary + "\r\nContent-Type: " + attachment.ContentType + "; name=\"" + attachment.FileName + "\"\r\n"...)
             body = append(body, "Content-Disposition: attachment; filename=\"" + attachment.FileName + "\"\r\n"...)
-            body = append(body, "Content-Transfer-Encoding: base64\r\n"...)
+            body = append(body, "Content-Transfer-Encoding: base64\r\n\r\n"...)
             body = append(body, attachment.Base64EncodedData + "\r\n"...)
         }
         body = append(body, "--" + mixedBoundary + "--\r\n"...)

@@ -272,9 +272,36 @@ func GetArrayString(key string) []string {
     }
     var result []string
     for _, vv := range v {
-        vvv, ok := vv.(string)
-        if ok {
+        switch vvv := vv.(type) {
+        case string:
             result = append(result, vvv)
+        case bool:
+            result = append(result, strconv.FormatBool(vvv))
+        case int:
+            result = append(result, strconv.FormatInt(int64(vvv), 10))
+        case int8:
+            result = append(result, strconv.FormatInt(int64(vvv), 10))
+        case int16:
+            result = append(result, strconv.FormatInt(int64(vvv), 10))
+        case int32:
+            result = append(result, strconv.FormatInt(int64(vvv), 10))
+        case int64:
+            result = append(result, strconv.FormatInt(vvv, 10))
+        case float32:
+            result = append(result, strconv.FormatFloat(float64(vvv), 'f', -1, 32))
+        case float64:
+            result = append(result, strconv.FormatFloat(vvv, 'f', -1, 64))
+        case uint:
+            result = append(result, strconv.FormatUint(uint64(vvv), 10))
+        case uint8:
+            result = append(result, strconv.FormatUint(uint64(vvv), 10))
+        case uint16:
+            result = append(result, strconv.FormatUint(uint64(vvv), 10))
+        case uint32:
+            result = append(result, strconv.FormatUint(uint64(vvv), 10))
+        case uint64:
+            result = append(result, strconv.FormatUint(vvv, 10))
+        default:
         }
     }
     return result

@@ -30,7 +30,6 @@ type Algorithm int
 
 type JsonClient struct {
     Algorithm
-    ExpirationSeconds time.Duration
     SecretKey string
 }
 
@@ -40,10 +39,9 @@ type JsonClient struct {
 //////////////////////////////////////////////////////////////////////
 // New JsonClient
 //////////////////////////////////////////////////////////////////////
-func NewJsonClient(algorithm Algorithm, expirationSeconds time.Duration) *JsonClient {
+func NewJsonClient(algorithm Algorithm) *JsonClient {
     return &JsonClient{
         Algorithm: algorithm,
-        ExpirationSeconds: expirationSeconds,
     }
 }
 
@@ -100,7 +98,7 @@ func (j *JsonClient) SignatureWithHMAC(jsonData []byte, key string) (string, err
 //////////////////////////////////////////////////////////////////////
 // Verify with HMAC
 //////////////////////////////////////////////////////////////////////
-func (j *JsonClient) VerifyWithHMAC(jsonData []byte, key string) (bool, error) {
+func (j *JsonClient) VerifyWithHMAC(jsonData []byte, key string, expirationSeconds time.Duration) (bool, error) {
     var data map[string]interface{}
     if err := json.Unmarshal(jsonData, &data); err != nil {
         return false, err
@@ -121,7 +119,7 @@ func (j *JsonClient) VerifyWithHMAC(jsonData []byte, key string) (bool, error) {
     default:
         return false, fmt.Errorf("The \"%s\" key is invalid.\n", DataKeyTimestamp)
     }
-    expiredTime := time.Unix(timestamp, 0).Add(j.ExpirationSeconds).UTC()
+    expiredTime := time.Unix(timestamp, 0).Add(expirationSeconds).UTC()
     if time.Now().UTC().After(expiredTime) {
         return false, fmt.Errorf("Signature is expired.\n")
     }

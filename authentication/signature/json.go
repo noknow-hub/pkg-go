@@ -22,6 +22,9 @@ const (
     SHA256
     DataKeySignature = "signature"
     DataKeyTimestamp = "timestamp"
+    ResultCodeVerified = 0
+    ResultCodeInvalid = 1
+    ResultCodeExpired = 2
 )
 
 
@@ -33,6 +36,11 @@ type JsonClient struct {
     SecretKey string
 }
 
+
+type Result struct {
+    Code int
+    Message string
+}
 
 
 
@@ -98,15 +106,22 @@ func (j *JsonClient) SignatureWithHMAC(jsonData []byte, key string) (string, err
 //////////////////////////////////////////////////////////////////////
 // Verify with HMAC
 //////////////////////////////////////////////////////////////////////
-func (j *JsonClient) VerifyWithHMAC(jsonData []byte, key string, expirationSeconds time.Duration) (bool, error) {
+func (j *JsonClient) VerifyWithHMAC(jsonData []byte, key string, expirationSeconds time.Duration) *Result {
+    result := &Result{
+        Code: ResultCodeVerified,
+    }
     var data map[string]interface{}
     if err := json.Unmarshal(jsonData, &data); err != nil {
-        return false, err
+        result.Code = ResultCodeInvalid
+        result.Message = err.Error()
+        return result
     }
 
     // Check the required parameters
     if data[DataKeySignature] == nil || data[DataKeyTimestamp] == nil {
-        return false, fmt.Errorf("The required parameters are not found. \"%s\" and \"%s\" are required.\n", DataKeySignature, DataKeyTimestamp)
+        result.Code = ResultCodeInvalid
+        result.Message = fmt.Sprintf("The required parameters are not found. \"%s\" and \"%s\" are required.", DataKeySignature, DataKeyTimestamp)
+        return result
     }
 
     // Check if the timestamp is currently
@@ -117,11 +132,15 @@ func (j *JsonClient) VerifyWithHMAC(jsonData []byte, key string, expirationSecon
     case float64:
         timestamp = int64(v)
     default:
-        return false, fmt.Errorf("The \"%s\" key is invalid.\n", DataKeyTimestamp)
+        result.Code = ResultCodeInvalid
+        result.Message = fmt.Sprintf("The \"%s\" key is invalid.", DataKeyTimestamp)
+        return result
     }
     expiredTime := time.Unix(timestamp, 0).Add(expirationSeconds).UTC()
     if time.Now().UTC().After(expiredTime) {
-        return false, fmt.Errorf("Signature is expired.\n")
+        result.Code = ResultCodeExpired
+        result.Message = "Signature is expired."
+        return result 
     }
 
     // Sort alphabetically
@@ -140,22 +159,30 @@ func (j *JsonClient) VerifyWithHMAC(jsonData []byte, key string, expirationSecon
 
     sig := data[DataKeySignature].(string)
     if sig == "" {
-        return false, fmt.Errorf("Signature is invalid.\n")
+        result.Code = ResultCodeInvalid
+        result.Message = "Signature is invalid."
+        return result
     }
 
     // Signature with the sorted data
     sortedJsonData, err := json.Marshal(sortedData)
     if err != nil {
-        return false, err
+        result.Code = ResultCodeInvalid
+        result.Message = err.Error()
+        return result
     }
     sortedJsonSig, err := j.SignatureWithHMAC(sortedJsonData, key)
     if err != nil {
-        return false, err
+        result.Code = ResultCodeInvalid
+        result.Message = err.Error()
+        return result
     }
 
     if sig != sortedJsonSig {
-        return false, fmt.Errorf("Signature is invalid.\n")
+        result.Code = ResultCodeInvalid
+        result.Message = "Signature is invalid."
+        return result
     }
 
-    return true, nil
+    return result
 }

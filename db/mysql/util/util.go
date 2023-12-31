@@ -44,7 +44,7 @@ func ConvertInterfaceToFloat64(value interface{}) (float64, error) {
 // Convert interface to int64.
 //////////////////////////////////////////////////////////////////////
 func ConvertInterfaceToInt64(value interface{}) (int64, error) {
-    if value == nil {
+    if value == nil || !reflect.ValueOf(value).CanInt() {
         return 0, nil
     }
     ni := &sql.NullInt64{}

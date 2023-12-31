@@ -5,6 +5,7 @@ package util
 
 import (
     "database/sql"
+    "reflect"
     "time"
     _ "github.com/go-sql-driver/mysql"
 )

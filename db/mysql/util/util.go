@@ -30,7 +30,7 @@ func ConvertInterfaceToBool(value interface{}) (bool, error) {
 // Convert interface to float64.
 //////////////////////////////////////////////////////////////////////
 func ConvertInterfaceToFloat64(value interface{}) (float64, error) {
-    if value == nil {
+    if value == nil || !reflect.ValueOf(value).CanFloat() {
         return 0, nil
     }
     nf := &sql.NullFloat64{}

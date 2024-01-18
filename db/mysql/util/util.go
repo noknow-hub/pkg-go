@@ -6,6 +6,7 @@ package util
 import (
     "database/sql"
     "reflect"
+    "strconv"
     "time"
     _ "github.com/go-sql-driver/mysql"
 )
@@ -30,14 +31,26 @@ func ConvertInterfaceToBool(value interface{}) (bool, error) {
 // Convert interface to float64.
 //////////////////////////////////////////////////////////////////////
 func ConvertInterfaceToFloat64(value interface{}) (float64, error) {
-    if value == nil || !reflect.ValueOf(value).CanFloat() {
+    if value == nil {
         return 0, nil
     }
-    nf := &sql.NullFloat64{}
-    if err := nf.Scan(value); err != nil {
-        return 0, err
+    if reflect.ValueOf(value).CanFloat() {
+        nf := &sql.NullFloat64{}
+        if err := nf.Scan(value); err != nil {
+            return 0, err
+        }
+        return nf.Float64, nil
+    } else {
+        ns := &sql.NullString{}
+        if err := ns.Scan(value); err != nil {
+            return 0, err
+        }
+        f, err := strconv.ParseFloat(ns.String, 64)
+        if err != nil {
+            return 0, err
+        }
+        return f, nil
     }
-    return nf.Float64, nil
 }
 
 

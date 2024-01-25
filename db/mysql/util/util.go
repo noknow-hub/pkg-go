@@ -97,3 +97,24 @@ func ConvertInterfaceToTime(value interface{}) (time.Time, error) {
     }
     return nt.Time, nil
 }
+
+
+//////////////////////////////////////////////////////////////////////
+// Convert interface to uint64.
+//////////////////////////////////////////////////////////////////////
+func ConvertInterfaceToUint64(value interface{}) (uint64, error) {
+    if value == nil {
+        return 0, nil
+    }
+    ns := &sql.NullString{}
+    if err := ns.Scan(value); err != nil {
+        return 0, err
+    }
+    i, err := strconv.ParseUint(ns.String, 10, 64)
+    if err != nil {
+        return 0, err
+    }
+    return i, nil
+}
+
+

@@ -40,6 +40,13 @@ type MultiHostsTcpServer struct {
     Port string
     MultiHostServerMuxes
 }
+type MultiHostsUnixServer struct {
+    GroupId int
+    IsFcgi bool
+    MultiHostServerMuxes
+    SocketPath string
+    UserId int
+}
 type MultiHostServerMuxes map[string]http.Handler
 
 
@@ -68,6 +75,21 @@ func NewMultiHostsTcpServer(address, port string, serverMuxes map[string]*http.S
         Address: address,
         Port: port,
         MultiHostServerMuxes: multiHostServerMuxes,
+    }
+}
+
+
+//////////////////////////////////////////////////////////////////////
+// New MultiHostsUnixServer.
+//////////////////////////////////////////////////////////////////////
+func NewMultiHostsUnixServer(socketPath string, serverMuxes map[string]*http.ServeMux) *MultiHostsUnixServer {
+    multiHostServerMuxes := make(MultiHostServerMuxes)
+    for host, mux := range serverMuxes {
+        multiHostServerMuxes[host] = mux
+    }
+    return &MultiHostsUnixServer{
+        MultiHostServerMuxes: multiHostServerMuxes,
+        SocketPath: socketPath,
     }
 }
 
@@ -141,6 +163,58 @@ func (s *MultiHostsTcpServer) SetFcgi() *MultiHostsTcpServer {
 func (s *MultiHostsTcpServer) SetTls(certFile, keyFile string) *MultiHostsTcpServer {
     s.CertFile = certFile
     s.KeyFile = keyFile
+    return s
+}
+
+
+//////////////////////////////////////////////////////////////////////
+// Run with MultiHostsUnixServer
+//////////////////////////////////////////////////////////////////////
+func (s *MultiHostsUnixServer) Run() error {
+    listener, err := net.Listen("unix", s.SocketPath)
+    if err != nil {
+        return err
+    }
+    defer listener.Close()
+    if s.UserId != 0 && s.GroupId != 0 {
+        if err := os.Chown(s.SocketPath, s.UserId, s.GroupId); err != nil {
+            return err
+        }
+        if err := os.Chmod(s.SocketPath, SOCKET_FILE_MODE); err != nil {
+            return err
+        }
+    }
+    go func() {
+        shutdown(listener)
+    }()
+    if s.IsFcgi {
+        if err := fcgi.Serve(listener, s.MultiHostServerMuxes); err != nil {
+            return err 
+        }   
+    } else {
+        if err := http.Serve(listener, s.MultiHostServerMuxes); err != nil {
+            return err
+        }
+    }
+    return nil
+}
+
+
+//////////////////////////////////////////////////////////////////////
+// Set FCGI.
+//////////////////////////////////////////////////////////////////////
+func (s *MultiHostsUnixServer) SetFcgi() *MultiHostsUnixServer {
+    s.IsFcgi = true
+    return s
+}
+
+
+//////////////////////////////////////////////////////////////////////
+// Set owner.
+//////////////////////////////////////////////////////////////////////
+func (s *MultiHostsUnixServer) SetOwner(userId, groupId int) *MultiHostsUnixServer {
+    s.UserId = userId
+    s.GroupId = groupId
     return s
 }
 

@@ -38,25 +38,28 @@ type MultiHostsTcpServer struct {
     IsFcgi bool
     KeyFile string
     Port string
-    MultiHostServerMuxes
+    *MultiHostServerMuxes
 }
 type MultiHostsUnixServer struct {
     GroupId int
     IsFcgi bool
-    MultiHostServerMuxes
+    *MultiHostServerMuxes
     SocketPath string
     UserId int
 }
-type MultiHostServerMuxes map[string]http.Handler
+type MultiHostServerMuxes struct {
+    HostHandlers map[string]http.Handler
+    RedirectUrlIfNotFound string
+}
 
 
 //////////////////////////////////////////////////////////////////////
 // Wrap ServeHTTP
 //////////////////////////////////////////////////////////////////////
 func (o MultiHostServerMuxes) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-    handler, ok := o[r.Host]
+    handler, ok := o.HostHandlers[r.Host]
     if !ok {
-        http.Error(w, "Not Found", http.StatusNotFound)
+        http.Redirect(w, r, o.RedirectUrlIfNotFound, http.StatusMovedPermanently)
         return
     }
     handler.ServeHTTP(w, r)
@@ -66,10 +69,13 @@ func (o MultiHostServerMuxes) ServeHTTP(w http.ResponseWriter, r *http.Request) 
 //////////////////////////////////////////////////////////////////////
 // New MultiHostsTcpServer.
 //////////////////////////////////////////////////////////////////////
-func NewMultiHostsTcpServer(address, port string, serverMuxes map[string]*http.ServeMux) *MultiHostsTcpServer {
-    multiHostServerMuxes := make(MultiHostServerMuxes)
+func NewMultiHostsTcpServer(address, port string, serverMuxes map[string]*http.ServeMux, redirectUrlIfNotFound string) *MultiHostsTcpServer {
+    multiHostServerMuxes := &MultiHostServerMuxes{
+        HostHandlers: make(map[string]http.Handler),
+        RedirectUrlIfNotFound: redirectUrlIfNotFound,
+    }
     for host, mux := range serverMuxes {
-        multiHostServerMuxes[host] = mux
+        multiHostServerMuxes.HostHandlers[host] = mux
     }
     return &MultiHostsTcpServer{
         Address: address,
@@ -82,10 +88,13 @@ func NewMultiHostsTcpServer(address, port string, serverMuxes map[string]*http.S
 //////////////////////////////////////////////////////////////////////
 // New MultiHostsUnixServer.
 //////////////////////////////////////////////////////////////////////
-func NewMultiHostsUnixServer(socketPath string, serverMuxes map[string]*http.ServeMux) *MultiHostsUnixServer {
-    multiHostServerMuxes := make(MultiHostServerMuxes)
+func NewMultiHostsUnixServer(socketPath string, serverMuxes map[string]*http.ServeMux, redirectUrlIfNotFound string) *MultiHostsUnixServer {
+    multiHostServerMuxes := &MultiHostServerMuxes{
+        HostHandlers: make(map[string]http.Handler),
+        RedirectUrlIfNotFound: redirectUrlIfNotFound,
+    }
     for host, mux := range serverMuxes {
-        multiHostServerMuxes[host] = mux
+        multiHostServerMuxes.HostHandlers[host] = mux
     }
     return &MultiHostsUnixServer{
         MultiHostServerMuxes: multiHostServerMuxes,
@@ -158,6 +167,15 @@ func (s *MultiHostsTcpServer) SetFcgi() *MultiHostsTcpServer {
 
 
 //////////////////////////////////////////////////////////////////////
+// Set RedirectUrlIfNotFound
+//////////////////////////////////////////////////////////////////////
+func (s *MultiHostsTcpServer) SetRedirectUrlIfNotFound(redirectUrl string) *MultiHostsTcpServer {
+    s.RedirectUrlIfNotFound = redirectUrl
+    return s
+}
+
+
+//////////////////////////////////////////////////////////////////////
 // Set TLS configuration.
 //////////////////////////////////////////////////////////////////////
 func (s *MultiHostsTcpServer) SetTls(certFile, keyFile string) *MultiHostsTcpServer {
@@ -215,6 +233,15 @@ func (s *MultiHostsUnixServer) SetFcgi() *MultiHostsUnixServer {
 func (s *MultiHostsUnixServer) SetOwner(userId, groupId int) *MultiHostsUnixServer {
     s.UserId = userId
     s.GroupId = groupId
+    return s
+}
+
+
+//////////////////////////////////////////////////////////////////////
+// Set RedirectUrlIfNotFound
+//////////////////////////////////////////////////////////////////////
+func (s *MultiHostsUnixServer) SetRedirectUrlIfNotFound(redirectUrl string) *MultiHostsUnixServer {
+    s.RedirectUrlIfNotFound = redirectUrl
     return s
 }
 

@@ -24,7 +24,6 @@ type UnixServer struct {
     SocketPath string
     UserId int
 }
-
 type TcpServer struct {
     Address string
     CertFile string
@@ -32,6 +31,44 @@ type TcpServer struct {
     KeyFile string
     Port string
     ServerMux *http.ServeMux
+}
+type MultiHostsTcpServer struct {
+    Address string
+    CertFile string
+    IsFcgi bool
+    KeyFile string
+    Port string
+    MultiHostServerMuxes
+}
+type MultiHostServerMuxes map[string]http.Handler
+
+
+//////////////////////////////////////////////////////////////////////
+// Wrap ServeHTTP
+//////////////////////////////////////////////////////////////////////
+func (o MultiHostServerMuxes) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+    handler, ok := o[r.Host]
+    if !ok {
+        http.Error(w, "Not Found", http.StatusNotFound)
+        return
+    }
+    handler.ServeHTTP(w, r)
+}
+
+
+//////////////////////////////////////////////////////////////////////
+// New MultiHostsTcpServer.
+//////////////////////////////////////////////////////////////////////
+func NewMultiHostsTcpServer(address, port string, serverMuxes map[string]*http.ServeMux) *MultiHostsTcpServer {
+    multiHostServerMuxes := make(MultiHostServerMuxes)
+    for host, mux := range serverMuxes {
+        multiHostServerMuxes[host] = mux
+    }
+    return &MultiHostsTcpServer{
+        Address: address,
+        Port: port,
+        MultiHostServerMuxes: multiHostServerMuxes,
+    }
 }
 
 
@@ -55,6 +92,56 @@ func NewTcpServer(address, port string, serverMux *http.ServeMux) *TcpServer {
         Port: port,
         ServerMux: serverMux,
     }
+}
+
+
+//////////////////////////////////////////////////////////////////////
+// Run with MultiHostsTcpServer
+//////////////////////////////////////////////////////////////////////
+func (s *MultiHostsTcpServer) Run() error {
+    listener, err := net.Listen("tcp", s.Address + ":" + s.Port)
+    if err != nil {
+       return err
+    }
+    defer listener.Close()
+    go func(){
+        shutdown(listener)
+    }()
+    if s.IsFcgi {
+        if err := fcgi.Serve(listener, s.MultiHostServerMuxes); err != nil {
+            return err
+        }
+    } else {
+        if s.CertFile != "" && s.KeyFile != "" {
+            if err := http.ServeTLS(listener, s.MultiHostServerMuxes, s.CertFile, s.KeyFile); err != nil {
+                return err
+            }
+        } else {
+            if err := http.Serve(listener, s.MultiHostServerMuxes); err != nil {
+                return err
+            }
+        }
+    }
+    return nil
+}
+
+
+//////////////////////////////////////////////////////////////////////
+// Set FCGI.
+//////////////////////////////////////////////////////////////////////
+func (s *MultiHostsTcpServer) SetFcgi() *MultiHostsTcpServer {
+    s.IsFcgi = true
+    return s
+}
+
+
+//////////////////////////////////////////////////////////////////////
+// Set TLS configuration.
+//////////////////////////////////////////////////////////////////////
+func (s *MultiHostsTcpServer) SetTls(certFile, keyFile string) *MultiHostsTcpServer {
+    s.CertFile = certFile
+    s.KeyFile = keyFile
+    return s
 }
 
 

@@ -167,15 +167,6 @@ func (s *MultiHostsTcpServer) SetFcgi() *MultiHostsTcpServer {
 
 
 //////////////////////////////////////////////////////////////////////
-// Set RedirectUrlIfNotFound
-//////////////////////////////////////////////////////////////////////
-func (s *MultiHostsTcpServer) SetRedirectUrlIfNotFound(redirectUrl string) *MultiHostsTcpServer {
-    s.RedirectUrlIfNotFound = redirectUrl
-    return s
-}
-
-
-//////////////////////////////////////////////////////////////////////
 // Set TLS configuration.
 //////////////////////////////////////////////////////////////////////
 func (s *MultiHostsTcpServer) SetTls(certFile, keyFile string) *MultiHostsTcpServer {
@@ -233,15 +224,6 @@ func (s *MultiHostsUnixServer) SetFcgi() *MultiHostsUnixServer {
 func (s *MultiHostsUnixServer) SetOwner(userId, groupId int) *MultiHostsUnixServer {
     s.UserId = userId
     s.GroupId = groupId
-    return s
-}
-
-
-//////////////////////////////////////////////////////////////////////
-// Set RedirectUrlIfNotFound
-//////////////////////////////////////////////////////////////////////
-func (s *MultiHostsUnixServer) SetRedirectUrlIfNotFound(redirectUrl string) *MultiHostsUnixServer {
-    s.RedirectUrlIfNotFound = redirectUrl
     return s
 }
 

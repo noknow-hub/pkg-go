@@ -14,7 +14,7 @@ import (
 
 
 var (
-    Config map[interface{}]interface{}
+    Config  = make(map[interface{}]interface{})
 )
 
 
@@ -23,17 +23,33 @@ var (
 //////////////////////////////////////////////////////////////////////
 func Init() {
     env := flag.String("yaml", "", "/yaml_path/config.yaml")
+    envList := flag.String("yamls", "", "/yaml_path/config.yaml,/yaml_path/config.yaml")
     flag.Parse()
-    if *env == "" {
-        log.Fatalf("[FATAL] Need the -yaml option. The value must be yaml_config_path. Usage: BUILDED_APP_FILE -yaml /yaml_path/config.yaml.\n")
+    if *env == "" && *envList == "" {
+        log.Fatalf("[FATAL] Need the -yaml or -yamls option. The value must be yaml_config_path. Usage: BUILDED_APP_FILE -yaml /yaml_path/config.yaml.\n")
     }
-    bytes, err := ioutil.ReadFile(*env)
-    if err != nil {
-        log.Fatalf("[FATAL] %s\n", err)
+
+    if *env != "" {
+        bytes, err := ioutil.ReadFile(*env)
+        if err != nil {
+            log.Fatalf("[FATAL] %s\n", err)
+        }
+        if err = yaml.Unmarshal(bytes, &Config); err != nil {
+            log.Fatalf("[FATAL] %s\n", err)
+        }
+    } else {
+        for _, filePath := range strings.Split(*envList, ",") {
+            bytes, err := ioutil.ReadFile(filePath)
+            if err != nil {
+                log.Fatalf("[FATAL] %s\n", err)
+            }
+            tempConfig := make(map[interface{}]interface{})
+            if err = yaml.Unmarshal(bytes, &tempConfig); err != nil {
+                log.Fatalf("[FATAL] %s\n", err)
+            }
+            mergeConfig(Config, tempConfig)
+        }
     }
-    if err = yaml.Unmarshal(bytes, &Config); err != nil {
-        log.Fatalf("[FATAL] %s\n", err)
-    }    
 }
 
 
@@ -328,4 +344,22 @@ func getInterfaceValue(key string) interface{} {
         }
     }
     return v
+}
+
+
+//////////////////////////////////////////////////////////////////////
+// Merge Config
+//////////////////////////////////////////////////////////////////////
+func mergeConfig(dst, src map[interface{}]interface{}) {
+    for key, value := range src {
+        if mapValue, ok := value.(map[interface{}]interface{}); ok {
+            if dstMap, ok := dst[key].(map[interface{}]interface{}); ok {
+                mergeConfig(dstMap, mapValue)
+            } else {
+                dst[key] = mapValue
+            }
+        } else {
+            dst[key] = value
+        }
+    }
 }

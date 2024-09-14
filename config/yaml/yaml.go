@@ -22,34 +22,56 @@ var (
 // Initialize.
 //////////////////////////////////////////////////////////////////////
 func Init() {
-    env := flag.String("yaml", "", "/yaml_path/config.yaml")
-    envList := flag.String("yamls", "", "/yaml_path/config.yaml,/yaml_path/config.yaml")
+    var yamlPaths []string
+    flag.Func("yaml", "Path to yaml config file (can be specified multiple times)", func(s string) error {
+        yamlPaths = append(yamlPaths, s)
+        return nil
+    })
     flag.Parse()
-    if *env == "" && *envList == "" {
-        log.Fatalf("[FATAL] Need the -yaml or -yamls option. The value must be yaml_config_path. Usage: BUILDED_APP_FILE -yaml /yaml_path/config.yaml.\n")
+
+    if len(yamlPaths) == 0 {
+        log.Fatalf("[FATAL] Need at least one -yaml option. The value must be yaml type. Usage: BUILDED_APP_FILE -yaml /yaml_path/config.yaml. -yaml /yaml_path/config2.yaml.\n")
     }
 
-    if *env != "" {
-        bytes, err := ioutil.ReadFile(*env)
+    for _, path := range yamlPaths {
+        bytes, err := ioutil.ReadFile(path)
         if err != nil {
             log.Fatalf("[FATAL] %s\n", err)
         }
-        if err = yaml.Unmarshal(bytes, &Config); err != nil {
+        tmpConfig := make(map[interface{}]interface{})
+        if err = yaml.Unmarshal(bytes, &tmpConfig); err != nil {
             log.Fatalf("[FATAL] %s\n", err)
         }
-    } else {
-        for _, filePath := range strings.Split(*envList, ",") {
-            bytes, err := ioutil.ReadFile(filePath)
-            if err != nil {
-                log.Fatalf("[FATAL] %s\n", err)
-            }
-            tempConfig := make(map[interface{}]interface{})
-            if err = yaml.Unmarshal(bytes, &tempConfig); err != nil {
-                log.Fatalf("[FATAL] %s\n", err)
-            }
-            mergeConfig(Config, tempConfig)
-        }
+        mergeConfig(Config, tmpConfig)
     }
+
+//    env := flag.String("yaml", "", "/yaml_path/config.yaml")
+//    envList := flag.String("yamls", "", "/yaml_path/config.yaml,/yaml_path/config.yaml")
+//    flag.Parse()
+//    if *env == "" && *envList == "" {
+//    }
+// 
+//    if *env != "" {
+//        bytes, err := ioutil.ReadFile(*env)
+//        if err != nil {
+//            log.Fatalf("[FATAL] %s\n", err)
+//        }
+//        if err = yaml.Unmarshal(bytes, &Config); err != nil {
+//            log.Fatalf("[FATAL] %s\n", err)
+//        }
+//    } else {
+//        for _, filePath := range strings.Split(*envList, ",") {
+//            bytes, err := ioutil.ReadFile(filePath)
+//            if err != nil {
+//                log.Fatalf("[FATAL] %s\n", err)
+//            }
+//            tempConfig := make(map[interface{}]interface{})
+//            if err = yaml.Unmarshal(bytes, &tempConfig); err != nil {
+//                log.Fatalf("[FATAL] %s\n", err)
+//            }
+//            mergeConfig(Config, tempConfig)
+//        }
+//    }
 }
 
 

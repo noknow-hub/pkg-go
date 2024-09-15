@@ -31,6 +31,7 @@ type CreateTableClient struct {
     TableName string
     Tx *sql.Tx
     UniqueKeys []string
+    SeparatedUniqueKeys []string
 }
 
 type ColumnDefinition struct {
@@ -290,6 +291,15 @@ func (c *CreateTableClient) SetUniqueKeys(uniqueKeys []string) *CreateTableClien
 
 
 //////////////////////////////////////////////////////////////////////
+// Set separated unique keys.
+//////////////////////////////////////////////////////////////////////
+func (c *CreateTableClient) SetSeparatedUniqueKeys(uniqueKeys []string) *CreateTableClient {
+    c.SeparatedUniqueKeys = uniqueKeys
+    return c
+}
+
+
+//////////////////////////////////////////////////////////////////////
 // Generate query.
 //////////////////////////////////////////////////////////////////////
 func (c *CreateTableClient) generateQuery() string {
@@ -328,6 +338,11 @@ func (c *CreateTableClient) generateQuery() string {
     }
     if len(c.UniqueKeys) > 0 {
         buf = append(buf, ", UNIQUE KEY (" + strings.Join(c.UniqueKeys, ",") + ")"...)
+    }
+    if len(c.SeparatedUniqueKeys) > 0 {
+        for _, uniqueKey := range c.SeparatedUniqueKeys {
+            buf = append(buf, ", UNIQUE KEY `" + uniqueKey + "` (`" + uniqueKey + "`)"...)
+        }
     }
     if len(c.Constraints) > 0 {
         for _, c := range c.Constraints {

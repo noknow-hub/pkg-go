@@ -14,7 +14,7 @@ import (
 
 
 var (
-    Config  = make(map[interface{}]interface{})
+    Config  = make(map[string]interface{})
 )
 
 
@@ -38,7 +38,7 @@ func Init() {
         if err != nil {
             log.Fatalf("[FATAL] %s\n", err)
         }
-        tmpConfig := make(map[interface{}]interface{})
+        tmpConfig := make(map[string]interface{})
         if err = yaml.Unmarshal(bytes, &tmpConfig); err != nil {
             log.Fatalf("[FATAL] %s\n", err)
         }
@@ -372,14 +372,13 @@ func getInterfaceValue(key string) interface{} {
 //////////////////////////////////////////////////////////////////////
 // Merge Config
 //////////////////////////////////////////////////////////////////////
-func mergeConfig(srcConfig, overrideConfig map[interface{}]interface{}) {
-log.Printf("[TEST] srcConfig: %v, overrideConfig: %v\n", srcConfig, overrideConfig)
+func mergeConfig(srcConfig, overrideConfig map[string]interface{}) {
     for key, value := range overrideConfig {
         if srcVal, ok := srcConfig[key]; ok {
             // If the key exists, cast data to map type.
-            if srcMap, ok := srcVal.(map[interface{}]interface{}); ok {
+            if srcMap, ok := srcVal.(map[string]interface{}); ok {
                 // If the override value is map, merge this map data recursively.
-                if overrideMap, ok := value.(map[interface{}]interface{}); ok {
+                if overrideMap, ok := value.(map[string]interface{}); ok {
                     mergeConfig(srcMap, overrideMap)
                     continue
                 }
@@ -387,6 +386,5 @@ log.Printf("[TEST] srcConfig: %v, overrideConfig: %v\n", srcConfig, overrideConf
         }
         // Set data if the key does not exists.
         srcConfig[key] = value
-log.Printf("[TEST] key: %v, value: %v\n", key, value)
     }
 }

@@ -372,16 +372,19 @@ func getInterfaceValue(key string) interface{} {
 //////////////////////////////////////////////////////////////////////
 // Merge Config
 //////////////////////////////////////////////////////////////////////
-func mergeConfig(dst, src map[interface{}]interface{}) {
-    for key, value := range src {
-        if mapValue, ok := value.(map[interface{}]interface{}); ok {
-            if dstMap, ok := dst[key].(map[interface{}]interface{}); ok {
-                mergeConfig(dstMap, mapValue)
-            } else {
-                dst[key] = mapValue
+func mergeConfig(srcConfig, overrideConfig map[interface{}]interface{}) {
+    for key, value := range overrideConfig {
+        if srcVal, ok := srcConfig[key]; ok {
+            // If the key exists, cast data to map type.
+            if srcMap, ok := srcVal.(map[interface{}]interface{}); ok {
+                // If the override value is map, merge this map data recursively.
+                if overrideMap, ok := value.(map[interface{}]interface{}); ok {
+                    mergeConfig(srcMap, overrideMap)
+                    continue
+                }
             }
-        } else {
-            dst[key] = value
         }
+        // Set data if the key does not exists.
+        srcConfig[key] = value
     }
 }

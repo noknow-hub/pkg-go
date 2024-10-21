@@ -373,6 +373,7 @@ func getInterfaceValue(key string) interface{} {
 // Merge Config
 //////////////////////////////////////////////////////////////////////
 func mergeConfig(srcConfig, overrideConfig map[interface{}]interface{}) {
+log.Printf("[TEST] srcConfig: %v, overrideConfig: %v\n", srcConfig, overrideConfig)
     for key, value := range overrideConfig {
         if srcVal, ok := srcConfig[key]; ok {
             // If the key exists, cast data to map type.
@@ -386,6 +387,6 @@ func mergeConfig(srcConfig, overrideConfig map[interface{}]interface{}) {
         }
         // Set data if the key does not exists.
         srcConfig[key] = value
-log.Printf("[TEST] srcConfig: %v, %v, %v\n", srcConfig, key, value)
+log.Printf("[TEST] key: %v, value: %v\n", key, value)
     }
 }

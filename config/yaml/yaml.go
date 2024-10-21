@@ -386,5 +386,6 @@ func mergeConfig(srcConfig, overrideConfig map[interface{}]interface{}) {
         }
         // Set data if the key does not exists.
         srcConfig[key] = value
+log.Printf("[TEST] srcConfig: %v, %v, %v\n", srcConfig, key, value)
     }
 }
